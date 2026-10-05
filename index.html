@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -162,170 +162,58 @@ nav button:not(.active):hover{color:var(--text);background:rgba(255,255,255,.05)
 .cap-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--ok),var(--accent2));border-radius:10px;transition:width .5s}
 .cap-bar.full i{background:linear-gradient(90deg,var(--danger),#b71c1c)}
 
-/* ============================================================
-   ВИНТИКИ И ДОЩЕЧКИ v4 — прогрессия
-   ============================================================ */
+/* Винтики и дощечки */
 .sw-header{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
 .sw-stat{font-size:11.5px;color:var(--muted);font-weight:600;background:rgba(0,0,0,.35);border:1px solid var(--line);padding:7px 8px;border-radius:9px;text-align:center}
 .sw-stat b{color:var(--accent2);display:block;font-size:14px;margin-top:2px}
-.sw-stat.warn{color:var(--danger);border-color:rgba(229,57,53,.4);background:rgba(229,57,53,.12)}
-.sw-stat.warn b{color:#ff8a80}
-
 .sw-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:8px;font-size:10.5px;font-weight:800;letter-spacing:.4px}
 .sw-badge.easy{background:rgba(56,211,159,.16);color:var(--ok);border:1px solid rgba(56,211,159,.4)}
 .sw-badge.medium{background:rgba(255,179,71,.16);color:var(--accent2);border:1px solid rgba(255,179,71,.4)}
 .sw-badge.hard{background:rgba(255,61,0,.16);color:#ff8a80;border:1px solid rgba(255,61,0,.4)}
 .sw-badge.insane{background:linear-gradient(135deg,#e53935,#b71c1c);color:#fff;border:1px solid transparent;animation:insanePulse 2s infinite}
 @keyframes insanePulse{0%,100%{box-shadow:0 0 12px rgba(229,57,53,.4)}50%{box-shadow:0 0 20px rgba(229,57,53,.8)}}
-
-.sw-rules{
-  background:linear-gradient(160deg,rgba(255,107,26,.1),rgba(255,255,255,.02));
-  border:1px solid rgba(255,107,26,.25);
-  border-radius:12px;padding:10px 13px;
-  font-size:11.5px;color:var(--muted);line-height:1.5;
-  margin-bottom:10px;
-}
+.sw-rules{background:linear-gradient(160deg,rgba(255,107,26,.1),rgba(255,255,255,.02));border:1px solid rgba(255,107,26,.25);border-radius:12px;padding:10px 13px;font-size:11.5px;color:var(--muted);line-height:1.5;margin-bottom:10px}
 .sw-rules b{color:var(--text);font-weight:700}
 .sw-rules .lock{color:var(--danger);font-weight:700}
-
 .sw-stage{position:relative;padding:12px 5px 5px;background:linear-gradient(180deg,#1a1410,#0c0906);border-radius:16px;border:1px solid rgba(255,255,255,.06);min-height:240px;max-height:64vh;overflow-y:auto;overflow-x:hidden}
 .sw-stage::-webkit-scrollbar{width:5px}
 .sw-stage::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:3px}
 .sw-stage::before{content:'';position:absolute;left:0;right:0;bottom:0;height:26px;background:linear-gradient(180deg,transparent,#050403 70%);pointer-events:none;z-index:2}
 .sw-ground{position:absolute;left:8%;right:8%;bottom:10px;height:10px;background:linear-gradient(180deg,#3a2418,#1a0f08);border-radius:5px;box-shadow:0 4px 12px rgba(0,0,0,.7);z-index:1}
-
 .sw-stack{position:relative;z-index:3;padding-bottom:26px;min-height:180px;display:flex;flex-direction:column;justify-content:flex-end;gap:5px}
-
-.sw-board{
-  position:relative;
-  margin:0 auto;
-  padding:10px 12px;
-  border-radius:9px;
-  background:
-    linear-gradient(180deg,rgba(255,255,255,.1) 0%,transparent 22%,transparent 78%,rgba(0,0,0,.3) 100%),
-    repeating-linear-gradient(92deg,rgba(0,0,0,.07) 0 3px,transparent 3px 12px),
-    linear-gradient(180deg,#a37a52 0%,#7c5a3a 45%,#5a3d26 100%);
-  box-shadow:
-    0 7px 14px rgba(0,0,0,.55),
-    inset 0 2px 0 rgba(255,255,255,.25),
-    inset 0 -3px 6px rgba(0,0,0,.45);
-  border:1px solid #4a2f1e;
-  display:flex;align-items:center;justify-content:center;gap:9px;
-  transition:transform .5s cubic-bezier(.4,.05,.9,.5),opacity .4s ease,box-shadow .2s,filter .25s;
-  transform-origin:center;
-  will-change:transform;
-}
+.sw-board{position:relative;margin:0 auto;padding:10px 12px;border-radius:9px;background:linear-gradient(180deg,rgba(255,255,255,.1) 0%,transparent 22%,transparent 78%,rgba(0,0,0,.3) 100%),repeating-linear-gradient(92deg,rgba(0,0,0,.07) 0 3px,transparent 3px 12px),linear-gradient(180deg,#a37a52 0%,#7c5a3a 45%,#5a3d26 100%);box-shadow:0 7px 14px rgba(0,0,0,.55),inset 0 2px 0 rgba(255,255,255,.25),inset 0 -3px 6px rgba(0,0,0,.45);border:1px solid #4a2f1e;display:flex;align-items:center;justify-content:center;gap:9px;transition:transform .5s cubic-bezier(.4,.05,.9,.5),opacity .4s ease,box-shadow .2s,filter .25s;transform-origin:center;will-change:transform}
 .sw-board.compact{padding:8px 8px;gap:6px}
 .sw-board.tiny{padding:6px 6px;gap:5px}
-
-.sw-board.locked{
-  filter:brightness(.55) saturate(.5);
-  box-shadow:0 4px 10px rgba(0,0,0,.6),inset 0 2px 0 rgba(255,255,255,.1);
-  cursor:not-allowed;
-}
-.sw-board.locked::after{
-  content:'🔒';
-  position:absolute;top:-9px;right:-9px;
-  font-size:16px;
-  background:#2a1a10;
-  border:2px solid #4a2f1e;
-  border-radius:50%;
-  width:26px;height:26px;
-  display:grid;place-items:center;
-  z-index:5;
-  box-shadow:0 3px 6px rgba(0,0,0,.6);
-}
-.sw-board.active{
-  box-shadow:
-    0 7px 14px rgba(0,0,0,.55),
-    0 0 0 2px rgba(255,179,71,.5),
-    0 0 20px rgba(255,179,71,.3),
-    inset 0 2px 0 rgba(255,255,255,.25),
-    inset 0 -3px 6px rgba(0,0,0,.45);
-}
-.sw-board.falling{
-  transform:translateY(420px) rotate(-8deg) scale(.9);
-  opacity:0;
-  pointer-events:none;
-}
-
-.sw-hole{
-  width:42px;height:42px;border-radius:50%;
-  position:relative;
-  background:radial-gradient(circle at 50% 40%,#3a2418,#1a0d06 78%);
-  box-shadow:inset 0 5px 9px rgba(0,0,0,.9),inset 0 -2px 3px rgba(255,255,255,.06);
-  display:grid;place-items:center;
-  flex-shrink:0;
-  transition:transform .15s,box-shadow .2s;
-}
+.sw-board.locked{filter:brightness(.55) saturate(.5);box-shadow:0 4px 10px rgba(0,0,0,.6),inset 0 2px 0 rgba(255,255,255,.1);cursor:not-allowed}
+.sw-board.locked::after{content:'🔒';position:absolute;top:-9px;right:-9px;font-size:16px;background:#2a1a10;border:2px solid #4a2f1e;border-radius:50%;width:26px;height:26px;display:grid;place-items:center;z-index:5;box-shadow:0 3px 6px rgba(0,0,0,.6)}
+.sw-board.active{box-shadow:0 7px 14px rgba(0,0,0,.55),0 0 0 2px rgba(255,179,71,.5),0 0 20px rgba(255,179,71,.3),inset 0 2px 0 rgba(255,255,255,.25),inset 0 -3px 6px rgba(0,0,0,.45)}
+.sw-board.falling{transform:translateY(420px) rotate(-8deg) scale(.9);opacity:0;pointer-events:none}
+.sw-hole{width:42px;height:42px;border-radius:50%;position:relative;background:radial-gradient(circle at 50% 40%,#3a2418,#1a0d06 78%);box-shadow:inset 0 5px 9px rgba(0,0,0,.9),inset 0 -2px 3px rgba(255,255,255,.06);display:grid;place-items:center;flex-shrink:0;transition:transform .15s,box-shadow .2s}
 .sw-board.compact .sw-hole{width:36px;height:36px}
 .sw-board.tiny .sw-hole{width:32px;height:32px}
-
-.sw-hole.empty{
-  background:radial-gradient(circle at 50% 45%,#241609,#0b0705 80%);
-  box-shadow:inset 0 5px 9px rgba(0,0,0,.95);
-}
-.sw-hole.can-drop{
-  box-shadow:
-    inset 0 5px 9px rgba(0,0,0,.9),
-    0 0 0 2px rgba(56,211,159,.7),
-    0 0 14px rgba(56,211,159,.6);
-  cursor:pointer;
-}
-.sw-hole.can-drop:hover{
-  background:radial-gradient(circle at 50% 45%,#1e4a3a,#0a1a14 80%);
-}
-.sw-hole.selected{
-  box-shadow:
-    inset 0 5px 9px rgba(0,0,0,.9),
-    0 0 0 3px var(--accent2),
-    0 0 22px 4px rgba(255,179,71,.7);
-  transform:scale(1.08);
-}
+.sw-hole.empty{background:radial-gradient(circle at 50% 45%,#241609,#0b0705 80%);box-shadow:inset 0 5px 9px rgba(0,0,0,.95)}
+.sw-hole.can-drop{box-shadow:inset 0 5px 9px rgba(0,0,0,.9),0 0 0 2px rgba(56,211,159,.7),0 0 14px rgba(56,211,159,.6);cursor:pointer}
+.sw-hole.can-drop:hover{background:radial-gradient(circle at 50% 45%,#1e4a3a,#0a1a14 80%)}
+.sw-hole.selected{box-shadow:inset 0 5px 9px rgba(0,0,0,.9),0 0 0 3px var(--accent2),0 0 22px 4px rgba(255,179,71,.7);transform:scale(1.08)}
 .sw-hole.clickable{cursor:pointer}
-
-.screw{
-  width:30px;height:30px;border-radius:50%;
-  position:relative;
-  box-shadow:
-    inset 0 -4px 8px rgba(0,0,0,.5),
-    inset 0 3px 6px rgba(255,255,255,.55),
-    0 3px 5px rgba(0,0,0,.65);
-  transition:transform .2s;
-}
+.screw{width:30px;height:30px;border-radius:50%;position:relative;box-shadow:inset 0 -4px 8px rgba(0,0,0,.5),inset 0 3px 6px rgba(255,255,255,.55),0 3px 5px rgba(0,0,0,.65);transition:transform .2s}
 .sw-board.compact .screw{width:26px;height:26px}
 .sw-board.tiny .screw{width:22px;height:22px}
-
-.screw::before,.screw::after{
-  content:'';position:absolute;top:50%;left:50%;
-  background:rgba(0,0,0,.7);border-radius:2px;
-  box-shadow:0 0 1px rgba(255,255,255,.35);
-}
+.screw::before,.screw::after{content:'';position:absolute;top:50%;left:50%;background:rgba(0,0,0,.7);border-radius:2px;box-shadow:0 0 1px rgba(255,255,255,.35)}
 .screw::before{width:15px;height:3px;transform:translate(-50%,-50%)}
 .screw::after{width:3px;height:15px;transform:translate(-50%,-50%)}
 .sw-board.compact .screw::before{width:12px;height:2.5px}
 .sw-board.compact .screw::after{width:2.5px;height:12px}
 .sw-board.tiny .screw::before{width:10px;height:2px}
 .sw-board.tiny .screw::after{width:2px;height:10px}
-
 .sw-hole.clickable:hover .screw{transform:scale(1.12) rotate(20deg)}
 .sw-hole.selected .screw{transform:scale(1.12) rotate(20deg)}
-
-.sw-hole.merging .screw{
-  animation:screwMerge .55s cubic-bezier(.4,0,.9,.2) forwards;
-}
-@keyframes screwMerge{
-  0%{transform:scale(1) rotate(0)}
-  60%{transform:scale(1.35) rotate(540deg);filter:brightness(1.8)}
-  100%{transform:scale(0) rotate(1080deg);opacity:0}
-}
-
+.sw-hole.merging .screw{animation:screwMerge .55s cubic-bezier(.4,0,.9,.2) forwards}
+@keyframes screwMerge{0%{transform:scale(1) rotate(0)}60%{transform:scale(1.35) rotate(540deg);filter:brightness(1.8)}100%{transform:scale(0) rotate(1080deg);opacity:0}}
 .sw-actions{display:flex;gap:8px;margin-top:12px;justify-content:center;flex-wrap:wrap}
 .sw-actions .btn{width:auto;flex:1;min-width:110px;padding:11px 14px;margin-top:0;font-size:12.5px}
-
 .sw-nav{display:flex;gap:8px;justify-content:center;margin-bottom:10px;flex-wrap:wrap}
 .sw-nav .btn{width:auto;padding:8px 13px;margin-top:0;font-size:12px;min-width:auto}
-
 .sw-overlay{position:absolute;inset:0;display:grid;place-items:center;background:rgba(8,10,14,.94);border-radius:16px;z-index:20;animation:fade .3s ease}
 .sw-overlay.win{background:radial-gradient(ellipse at center,rgba(56,211,159,.15),rgba(8,10,14,.96) 65%)}
 .sw-overlay.lose{background:radial-gradient(ellipse at center,rgba(229,57,53,.15),rgba(8,10,14,.96) 65%)}
@@ -336,13 +224,7 @@ nav button:not(.active):hover{color:var(--text);background:rgba(255,255,255,.05)
 .sw-overlay.lose h3{color:var(--danger)}
 .sw-overlay p{color:var(--muted);font-size:13px;margin-bottom:16px;line-height:1.5}
 .sw-overlay .btn{max-width:260px;margin:8px auto 0}
-
-.sw-hint{
-  text-align:center;font-size:11.5px;color:var(--muted);
-  padding:8px 12px;border-radius:9px;
-  background:rgba(0,0,0,.3);border:1px solid var(--line);
-  margin-top:10px;line-height:1.5;
-}
+.sw-hint{text-align:center;font-size:11.5px;color:var(--muted);padding:8px 12px;border-radius:9px;background:rgba(0,0,0,.3);border:1px solid var(--line);margin-top:10px;line-height:1.5}
 
 /* Админ */
 .admin-tab-bar{display:flex;gap:6px;background:rgba(156,39,176,.1);border:1px solid rgba(156,39,176,.3);border-radius:14px;padding:5px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none}
@@ -412,8 +294,6 @@ nav button:not(.active):hover{color:var(--text);background:rgba(255,255,255,.05)
   .screw::before{width:13px;height:2.5px}
   .screw::after{width:2.5px;height:13px}
   .sw-board{padding:8px 8px;gap:6px}
-  .sw-board.compact{padding:6px 6px;gap:5px}
-  .sw-board.tiny{padding:5px 5px;gap:4px}
 }
 </style>
 </head>
@@ -453,7 +333,6 @@ nav button:not(.active):hover{color:var(--text);background:rgba(255,255,255,.05)
       <div class="hpoints" id="hPoints">0<small>РЕЙТИНГ</small></div>
     </div>
   </header>
-
   <nav id="mainNav">
     <button data-tab="home" class="active"><span class="ic">🏠</span>Главная</button>
     <button data-tab="tasks"><span class="ic">📋</span>Задания</button>
@@ -463,7 +342,6 @@ nav button:not(.active):hover{color:var(--text);background:rgba(255,255,255,.05)
     <button data-tab="support"><span class="ic">💬</span>Поддержка</button>
     <button data-tab="admin" class="admin-btn" style="display:none"><span class="ic">🛡️</span>Админ</button>
   </nav>
-
   <main id="view"></main>
 </div>
 
@@ -472,68 +350,48 @@ nav button:not(.active):hover{color:var(--text);background:rgba(255,255,255,.05)
 
 <script>
 /* =========================================================
-   СЕРВЕР
+   СЕРВЕР (localStorage)
    ========================================================= */
 const SERVER_KEY = 'omz_steel_path_server_v1';
 const DEFAULT_ADMIN_PASS = 'omz2024';
 
 function serverLoad(){
-  try{
-    const r = localStorage.getItem(SERVER_KEY);
-    if(r) return JSON.parse(r);
-  }catch(e){}
-  return { players:{}, pendingEvents:[], reports:[], nextId:1, adminPass:DEFAULT_ADMIN_PASS };
+  try{const r=localStorage.getItem(SERVER_KEY);if(r)return JSON.parse(r);}catch(e){}
+  return {players:{},pendingEvents:[],reports:[],nextId:1,adminPass:DEFAULT_ADMIN_PASS};
 }
-function serverSave(srv){ try{ localStorage.setItem(SERVER_KEY, JSON.stringify(srv)); }catch(e){} }
-function serverNextId(srv){ return srv.nextId++; }
+function serverSave(srv){try{localStorage.setItem(SERVER_KEY,JSON.stringify(srv));}catch(e){}}
+function serverNextId(srv){return srv.nextId++;}
 
 function syncPlayerToServer(){
-  if(!S || S.isAdmin) return;
-  const srv = serverLoad();
-  const existing = srv.players[S.name] || {};
-  srv.players[S.name] = {
-    name:S.name, points:S.points, rank:rankOf(S.points).name,
-    banned:existing.banned || S.banned || false,
-    banReason:existing.banReason || S.banReason || '',
-    lastSeen:Date.now(), events:S.events.length,
-    gamesPlayed:S.gamesPlayed || 0,
-    created:existing.created || S.created || Date.now()
-  };
+  if(!S||S.isAdmin)return;
+  const srv=serverLoad();const existing=srv.players[S.name]||{};
+  srv.players[S.name]={name:S.name,points:S.points,rank:rankOf(S.points).name,
+    banned:existing.banned||S.banned||false,banReason:existing.banReason||S.banReason||'',
+    lastSeen:Date.now(),events:S.events.length,gamesPlayed:S.gamesPlayed||0,
+    created:existing.created||S.created||Date.now()};
   serverSave(srv);
 }
 
 function checkBanOnBoot(){
-  const srv = serverLoad();
-  const p = srv.players[S.name];
-  if(p && p.banned){
-    S.banned = true;
-    S.banReason = p.banReason || 'Нарушение правил игры';
-    save();
-    showBanScreen();
-    return true;
-  }
+  const srv=serverLoad();const p=srv.players[S.name];
+  if(p&&p.banned){S.banned=true;S.banReason=p.banReason||'Нарушение правил игры';save();showBanScreen();return true;}
   return false;
 }
-
 function showBanScreen(){
-  const el = document.createElement('div');
-  el.className = 'ban-banner';
-  el.innerHTML = `<div>
-      <div class="b-ic">🚫</div>
-      <h2>ДОСТУП ЗАБЛОКИРОВАН</h2>
-      <p>Ваш аккаунт заблокирован администратором игры «Стальной путь».</p>
-      <div class="reason">Причина: ${S.banReason || 'Не указана'}</div>
-      <p style="font-size:12.5px;margin-top:16px">Обратитесь в администрацию ДК «Металлург».</p>
-  </div>`;
+  const el=document.createElement('div');el.className='ban-banner';
+  el.innerHTML=`<div><div class="b-ic">🚫</div><h2>ДОСТУП ЗАБЛОКИРОВАН</h2>
+    <p>Ваш аккаунт заблокирован администратором игры «Стальной путь».</p>
+    <div class="reason">Причина: ${S.banReason||'Не указана'}</div>
+    <p style="font-size:12.5px;margin-top:16px">Обратитесь в администрацию ДК «Металлург».</p></div>`;
   document.body.appendChild(el);
 }
 
 /* =========================================================
    ДАННЫЕ
    ========================================================= */
-const KEY = 'omz_steel_path_v6';
+const KEY='omz_steel_path_v6';
 
-const RANKS = [
+const RANKS=[
   {name:'Слесарь-ученик',icon:'🔧',min:0},
   {name:'Подручный сталевара',icon:'🔩',min:500},
   {name:'Слесарь-ремонтник',icon:'🛠️',min:1200},
@@ -552,7 +410,7 @@ const RANKS = [
   {name:'Генеральный директор',icon:'👑',min:70000}
 ];
 
-const QUIZ = [
+const QUIZ=[
   {q:'Какой металл плавится при самой высокой температуре?',a:['Медь','Вольфрам','Алюминий','Свинец'],c:1},
   {q:'Что является основным компонентом стали?',a:['Железо и углерод','Медь и цинк','Алюминий и кремний','Титан и никель'],c:0},
   {q:'Какой металл самый распространённый в земной коре?',a:['Железо','Алюминий','Медь','Кремний'],c:1},
@@ -664,7 +522,7 @@ const QUIZ = [
   {q:'Кто такой наладчик?',a:['Специалист по настройке оборудования','Измеритель','Снабженец','Уборщик'],c:0}
 ];
 
-const EVENTS = [
+const EVENTS=[
   {id:'e1',title:'Концерт «Голоса Металлургов»',place:'ДК «Металлург», большой зал',date:'12 октября, 18:00',points:3500,tag:'Концерт',desc:'Праздничный концерт ко Дню работника металлургической промышленности.',q:{q:'Какой цвет преобладал на баннере у главного входа в зал?',a:['Синий','Оранжевый','Зелёный','Фиолетовый'],c:1}},
   {id:'e2',title:'Выставка «Огни завода»',place:'ДК «Металлург», фойе 2 этажа',date:'15–20 октября',points:3000,tag:'Выставка',desc:'Фотовыставка об истории завода и людях, которые создавали его славу.',q:{q:'Сколько стендов с фотографиями расположено в фойе?',a:['Четыре','Шесть','Восемь','Двенадцать'],c:2}},
   {id:'e3',title:'Квиз «Индустриальная история»',place:'ДК «Металлург», малый зал',date:'22 октября, 17:30',points:4000,tag:'Квиз',desc:'Командная интеллектуальная игра об истории металлургии.',q:{q:'Сколько раундов было в квизе?',a:['Три','Пять','Семь','Девять'],c:1}},
@@ -672,7 +530,7 @@ const EVENTS = [
   {id:'e5',title:'Ярмарка «Город мастеров»',place:'Площадь перед ДК «Металлург»',date:'3 ноября, 11:00',points:3100,tag:'Ярмарка',desc:'Городская ярмарка мастеров, ремёсел и уличной музыки.',q:{q:'Какой мастер-класс проходил на центральной площадке?',a:['Гончарное дело','Кузнечное дело','Роспись по дереву','Плетение из лозы'],c:1}}
 ];
 
-const NPCS = [
+const NPCS=[
   {n:'Иван Кузнецов',p:75000,r:'Генеральный директор'},
   {n:'Алексей Ковалёв',p:58000,r:'Директор завода'},
   {n:'Марина Стрелкова',p:47000,r:'Первый заместитель директора'},
@@ -691,14 +549,13 @@ const NPCS = [
   {n:'Максим Орлов',p:150,r:'Слесарь-ученик'}
 ];
 
-const DAILY_GAME_CAP = 120;
-const DAILY_PUZZLE_CAP = 60;
+const DAILY_GAME_CAP=120;
+const DAILY_PUZZLE_CAP=60;
 
 /* =========================================================
    СОСТОЯНИЕ
    ========================================================= */
 function today(){return new Date().toISOString().slice(0,10);}
-
 function defaultState(){
   return {
     name:'',points:0,created:Date.now(),lastVisit:today(),streak:1,daily:null,
@@ -708,7 +565,6 @@ function defaultState(){
     adminSubTab:'photos'
   };
 }
-
 let S=null;
 function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null;}catch(e){return null;}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
@@ -720,8 +576,7 @@ function nextRank(p){const i=rankIndex(p);return i<RANKS.length-1?RANKS[i+1]:nul
 
 function toast(msg,type=''){
   const t=document.createElement('div');
-  t.className='toast '+type;
-  t.textContent=msg;
+  t.className='toast '+type;t.textContent=msg;
   document.getElementById('toasts').appendChild(t);
   setTimeout(()=>{t.style.transition='opacity .4s,transform .4s';t.style.opacity='0';t.style.transform='translateY(-14px)';setTimeout(()=>t.remove(),400);},2600);
 }
@@ -742,20 +597,17 @@ function makeDaily(){
     {id:'game3',name:'Три игры за день',sub:'Сыграй в мини-игры 3 раза',reward:35,done:false,prog:0,goal:3}
   ]};
 }
-
 function ensureDaily(){
   if(!S.daily||S.daily.date!==today()){
     S.daily=makeDaily();
     const last=S.lastVisit,d1=new Date(last),d2=new Date(today());
     const diff=Math.round((d2-d1)/86400000);
-    if(diff===1)S.streak=(S.streak||1)+1;
-    else if(diff>1)S.streak=1;
+    if(diff===1)S.streak=(S.streak||1)+1;else if(diff>1)S.streak=1;
     S.lastVisit=today();save();
   }
   if(S.daily.gamePointsToday===undefined)S.daily.gamePointsToday=0;
   if(S.daily.puzzlePointsToday===undefined)S.daily.puzzlePointsToday=0;
 }
-
 function completeTask(id){
   if(!S.daily)return;
   const t=S.daily.tasks.find(x=>x.id===id);
@@ -823,8 +675,7 @@ function render(){
 function updateNavBadge(){
   const adminBtn=document.querySelector('[data-tab="admin"]');
   adminBtn.style.display=S.isAdmin?'flex':'none';
-  let existing=adminBtn.querySelector('.nav-badge');
-  if(existing)existing.remove();
+  let existing=adminBtn.querySelector('.nav-badge');if(existing)existing.remove();
   if(S.isAdmin){
     const srv=serverLoad();
     const pending=srv.pendingEvents.filter(p=>p.status==='pending').length;
@@ -835,15 +686,14 @@ function updateNavBadge(){
     const srv=serverLoad();
     const unreadReplies=srv.reports.filter(r=>r.from===S.name&&r.adminReply&&!r.playerRead).length;
     const supportBtn=document.querySelector('[data-tab="support"]');
-    let b=supportBtn.querySelector('.nav-badge');
-    if(b)b.remove();
+    let b=supportBtn.querySelector('.nav-badge');if(b)b.remove();
     if(unreadReplies>0){const nb=document.createElement('span');nb.className='nav-badge';nb.textContent=unreadReplies;supportBtn.appendChild(nb);}
   }
 }
 
 /* ---------- ГЛАВНАЯ ---------- */
 function viewHome(){
-  if(S.isAdmin) return viewAdminHome();
+  if(S.isAdmin)return viewAdminHome();
   const r=rankOf(S.points),nr=nextRank(S.points);
   const prevMin=r.min,nextMin=nr?nr.min:r.min;
   const pct=nr?Math.min(100,((S.points-prevMin)/(nextMin-prevMin))*100):100;
@@ -1015,7 +865,6 @@ function viewSupport(){
     <button class="btn" data-action="send-support">Отправить</button>
   </div><div class="section-h">Мои обращения</div>${reportsHtml}`;
 }
-
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
 /* ---------- АДМИНКА ---------- */
@@ -1298,7 +1147,7 @@ function setupForge(){
 }
 
 /* ============================================================
-   ВИНТИКИ И ДОЩЕЧКИ v4
+   ВИНТИКИ И ДОЩЕЧКИ
    ============================================================ */
 const SCREW_COLORS=['#ef5350','#42a5f5','#66bb6a','#fdd835','#ab47bc','#ff9800','#26c6da','#ec407a','#8d6e63'];
 
@@ -1306,193 +1155,126 @@ function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=a;t=Math.im
 
 function screwsConfig(level){
   const n=Math.max(1,Math.min(500,level));
-  let boards, colors, slotsPerBoard=4;
-  if(n<=2){boards=2; colors=2;}
-  else if(n<=5){boards=3; colors=2;}
-  else if(n<=10){boards=3; colors=3;}
-  else if(n<=18){boards=4; colors=3;}
-  else if(n<=30){boards=4; colors=4;}
-  else if(n<=45){boards=5; colors=4;}
-  else if(n<=65){boards=5; colors=5;}
-  else if(n<=90){boards=6; colors=5;}
-  else if(n<=120){boards=6; colors=6;}
-  else if(n<=160){boards=7; colors=6;}
-  else if(n<=210){boards=7; colors=7;}
-  else if(n<=270){boards=8; colors=7;}
-  else if(n<=340){boards=8; colors=8;}
-  else if(n<=420){boards=9; colors=8;}
-  else {boards=9; colors=9;}
-  return {boards, colors, slotsPerBoard};
+  let boards,colors,slotsPerBoard=4;
+  if(n<=2){boards=2;colors=2;}
+  else if(n<=5){boards=3;colors=2;}
+  else if(n<=10){boards=3;colors=3;}
+  else if(n<=18){boards=4;colors=3;}
+  else if(n<=30){boards=4;colors=4;}
+  else if(n<=45){boards=5;colors=4;}
+  else if(n<=65){boards=5;colors=5;}
+  else if(n<=90){boards=6;colors=5;}
+  else if(n<=120){boards=6;colors=6;}
+  else if(n<=160){boards=7;colors=6;}
+  else if(n<=210){boards=7;colors=7;}
+  else if(n<=270){boards=8;colors=7;}
+  else if(n<=340){boards=8;colors=8;}
+  else if(n<=420){boards=9;colors=8;}
+  else{boards=9;colors=9;}
+  return {boards,colors,slotsPerBoard};
 }
 
 function screwsDifficulty(level){
   const n=Math.max(1,Math.min(500,level));
-  if(n<=10) return {label:'ЛЕГКО', cls:'easy'};
-  if(n<=60) return {label:'СРЕДНЕ', cls:'medium'};
-  if(n<=200) return {label:'СЛОЖНО', cls:'hard'};
-  return {label:'ХАРДКОР', cls:'insane'};
+  if(n<=10)return {label:'ЛЕГКО',cls:'easy'};
+  if(n<=60)return {label:'СРЕДНЕ',cls:'medium'};
+  if(n<=200)return {label:'СЛОЖНО',cls:'hard'};
+  return {label:'ХАРДКОР',cls:'insane'};
 }
 
 function generateScrewsLevel(level){
   const cfg=screwsConfig(level);
   const rng=mulberry32(level*104729+7);
   const totalScrews=cfg.colors*3;
-
-  // Bag: 3 каждого цвета
   const bag=[];
-  for(let c=0;c<cfg.colors;c++) bag.push(c,c,c);
-  // Shuffle
-  for(let i=bag.length-1;i>0;i--){
-    const j=Math.floor(rng()*(i+1));
-    [bag[i],bag[j]]=[bag[j],bag[i]];
-  }
-
-  // Boards
+  for(let c=0;c<cfg.colors;c++)bag.push(c,c,c);
+  for(let i=bag.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[bag[i],bag[j]]=[bag[j],bag[i]];}
   const boards=[];
-  for(let b=0;b<cfg.boards;b++){
-    boards.push({id:b,slots:new Array(cfg.slotsPerBoard).fill(null),fallen:false,falling:false});
-  }
-
-  // Распределяем screws по boards равномерно
+  for(let b=0;b<cfg.boards;b++)boards.push({id:b,slots:new Array(cfg.slotsPerBoard).fill(null),fallen:false,falling:false});
   const screwsPerBoard=[];
   let remaining=totalScrews;
   for(let b=0;b<cfg.boards;b++){
-    const target=Math.min(cfg.slotsPerBoard-1, Math.ceil(remaining/(cfg.boards-b)));
-    screwsPerBoard.push(target);
-    remaining-=target;
+    const target=Math.min(cfg.slotsPerBoard-1,Math.ceil(remaining/(cfg.boards-b)));
+    screwsPerBoard.push(target);remaining-=target;
   }
-  // Если остаток — добавим к первой
-  if(remaining>0){
-    for(let b=0;b<cfg.boards && remaining>0;b++){
-      if(screwsPerBoard[b]<cfg.slotsPerBoard){screwsPerBoard[b]++;remaining--;}
-    }
-  }
-
-  // Теперь распределяем цвета по board, избегая 3-х одинаковых
+  if(remaining>0){for(let b=0;b<cfg.boards&&remaining>0;b++){if(screwsPerBoard[b]<cfg.slotsPerBoard){screwsPerBoard[b]++;remaining--;}}}
   for(let b=0;b<cfg.boards;b++){
-    const count=screwsPerBoard[b];
-    const picked=[];
-    const colorCount={};
+    const count=screwsPerBoard[b];const picked=[];const colorCount={};
     for(let k=0;k<count;k++){
-      // Ищем цвет с наименьшим счётчиком на этой доске
       let bestIdx=0,bestCount=Infinity;
-      for(let i=0;i<bag.length;i++){
-        const c=colorCount[bag[i]]||0;
-        if(c<bestCount){bestCount=c;bestIdx=i;if(c===0)break;}
-      }
-      const color=bag[bestIdx];
-      bag.splice(bestIdx,1);
-      picked.push(color);
-      colorCount[color]=(colorCount[color]||0)+1;
+      for(let i=0;i<bag.length;i++){const c=colorCount[bag[i]]||0;if(c<bestCount){bestCount=c;bestIdx=i;if(c===0)break;}}
+      const color=bag[bestIdx];bag.splice(bestIdx,1);picked.push(color);colorCount[color]=(colorCount[color]||0)+1;
     }
-    // Кладём в первые count слотов
-    for(let k=0;k<picked.length;k++) boards[b].slots[k]={color:picked[k]};
-    // Перемешать позиции внутри доски
-    for(let i=cfg.slotsPerBoard-1;i>0;i--){
-      const j=Math.floor(rng()*(i+1));
-      [boards[b].slots[i],boards[b].slots[j]]=[boards[b].slots[j],boards[b].slots[i]];
-    }
+    for(let k=0;k<picked.length;k++)boards[b].slots[k]={color:picked[k]};
+    for(let i=cfg.slotsPerBoard-1;i>0;i--){const j=Math.floor(rng()*(i+1));[boards[b].slots[i],boards[b].slots[j]]=[boards[b].slots[j],boards[b].slots[i]];}
   }
-
-  return {boards, slotsPerBoard:cfg.slotsPerBoard};
+  return {boards,slotsPerBoard:cfg.slotsPerBoard};
 }
 
 let screwsState=null;
 
 function viewScrews(){
   const lvl=S.screws.unlocked;
-  if(!screwsState||screwsState.level!==lvl) initScrewsLevel(lvl);
+  if(!screwsState||screwsState.level!==lvl)initScrewsLevel(lvl);
   return renderScrewsBoard();
 }
 
 function initScrewsLevel(level){
   const d=generateScrewsLevel(level);
-  screwsState={
-    level, boards:d.boards, slotsPerBoard:d.slotsPerBoard,
-    selected:null, busy:false, won:false, lost:false, moves:0
-  };
+  screwsState={level,boards:d.boards,slotsPerBoard:d.slotsPerBoard,selected:null,busy:false,won:false,lost:false,moves:0};
 }
 
 function isBoardAccessible(idx){
-  for(let j=0;j<idx;j++){
-    const b=screwsState.boards[j];
-    if(!b.fallen && !b.falling && b.slots.some(x=>x)) return false;
-  }
+  for(let j=0;j<idx;j++){const b=screwsState.boards[j];if(!b.fallen&&!b.falling&&b.slots.some(x=>x))return false;}
   return true;
 }
 
 function renderScrewsBoard(){
-  const s=screwsState;
-  if(!s) return '';
-
+  const s=screwsState;if(!s)return '';
   const activeBoards=s.boards.filter(b=>!b.fallen);
   const totalScrewsLeft=activeBoards.reduce((sum,b)=>sum+b.slots.filter(x=>x).length,0);
   const accessible=new Set();
-  for(let i=0;i<s.boards.length;i++){
-    if(isBoardAccessible(i) && !s.boards[i].fallen && !s.boards[i].falling) accessible.add(i);
-  }
-
-  // Классы для компактности
+  for(let i=0;i<s.boards.length;i++){if(isBoardAccessible(i)&&!s.boards[i].fallen&&!s.boards[i].falling)accessible.add(i);}
   const boardCount=s.boards.length;
-  const sizeCls = boardCount>=8 ? 'tiny' : (boardCount>=6 ? 'compact' : '');
-
+  const sizeCls=boardCount>=8?'tiny':(boardCount>=6?'compact':'');
   let stackHtml='';
   s.boards.forEach((b,bi)=>{
-    if(b.fallen) return;
+    if(b.fallen)return;
     const isEmpty=b.slots.every(x=>!x);
     const isAccessible=accessible.has(bi);
     const cls='sw-board '+(isEmpty?'empty ':'')+(b.falling?'falling ':'')+(!isAccessible?'locked ':'')+(isAccessible&&!isEmpty?'active ':'')+sizeCls;
-
     let holesHtml=b.slots.map((sc,si)=>{
-      if(!sc){
-        const canDrop=s.selected&&s.selected.boardIdx!==bi;
-        return `<div class="sw-hole empty ${canDrop?'can-drop':''}" data-board="${bi}" data-slot="${si}" data-empty="1"></div>`;
-      }
+      if(!sc){const canDrop=s.selected&&s.selected.boardIdx!==bi;return `<div class="sw-hole empty ${canDrop?'can-drop':''}" data-board="${bi}" data-slot="${si}" data-empty="1"></div>`;}
       const color=SCREW_COLORS[sc.color];
       const isSel=s.selected&&s.selected.boardIdx===bi&&s.selected.slotIdx===si;
-      const canClick=isAccessible;
-      const merging=sc.merging?'merging':'';
+      const canClick=isAccessible;const merging=sc.merging?'merging':'';
       return `<div class="sw-hole filled ${isSel?'selected':''} ${canClick?'clickable':''} ${merging}" data-board="${bi}" data-slot="${si}" data-filled="1"><div class="screw" style="background:${color}"></div></div>`;
     }).join('');
-
     stackHtml+=`<div class="${cls}" data-board-outer="${bi}">${holesHtml}</div>`;
   });
-
-  if(!stackHtml) stackHtml='<div style="text-align:center;padding:40px;color:var(--muted);font-size:13px">Все доски упали</div>';
-
+  if(!stackHtml)stackHtml='<div style="text-align:center;padding:40px;color:var(--muted);font-size:13px">Все доски упали</div>';
   const diff=screwsDifficulty(s.level);
-
   let overlay='';
   if(s.won){
-    overlay=`<div class="sw-overlay win"><div class="sw-card">
-      <div class="sw-ic">🏆</div>
-      <h3>Уровень ${s.level} пройден!</h3>
-      <p>Ходов: <b style="color:var(--accent2)">${s.moves}</b></p>
+    overlay=`<div class="sw-overlay win"><div class="sw-card"><div class="sw-ic">🏆</div>
+      <h3>Уровень ${s.level} пройден!</h3><p>Ходов: <b style="color:var(--accent2)">${s.moves}</b></p>
       ${s.level<500?`<button class="btn" data-action="screw-next">Следующий ›</button>`:`<div style="color:var(--accent2);font-weight:800;margin-bottom:12px">🎉 Все 500!</div>`}
       <button class="btn ghost" data-action="screw-retry" style="margin-top:8px">Заново</button>
     </div></div>`;
   } else if(s.lost){
-    overlay=`<div class="sw-overlay lose"><div class="sw-card">
-      <div class="sw-ic">💥</div>
-      <h3>Тупик!</h3>
-      <p>Нет свободных гнёзд и нечего собирать.</p>
+    overlay=`<div class="sw-overlay lose"><div class="sw-card"><div class="sw-ic">💥</div>
+      <h3>Тупик!</h3><p>Нет свободных гнёзд и нечего собирать.</p>
       <button class="btn danger" data-action="screw-retry">↻ Переиграть</button>
       <button class="btn ghost" data-action="screw-reshuffle" style="margin-top:8px">🔀 Перемешать</button>
     </div></div>`;
   }
-
   const navBar=`<div class="sw-nav">
     ${s.level>1?`<button class="btn ghost" data-action="screw-prev">‹ Ур. ${s.level-1}</button>`:''}
-    ${s.level<500 && s.level<S.screws.unlocked?`<button class="btn ghost" data-action="screw-next">Ур. ${s.level+1} ›</button>`:''}
+    ${s.level<500&&s.level<S.screws.unlocked?`<button class="btn ghost" data-action="screw-next">Ур. ${s.level+1} ›</button>`:''}
   </div>`;
-
   let hint='';
-  if(s.selected){
-    hint=`<div class="sw-hint" style="color:var(--accent2);font-weight:700;border-color:rgba(255,179,71,.4);background:rgba(255,179,71,.08)">🔩 Винтик выбран — тапни пустое гнездо</div>`;
-  } else {
-    hint=`<div class="sw-hint">👉 Тапни винтик на активной доске — затем пустое гнездо</div>`;
-  }
-
+  if(s.selected){hint=`<div class="sw-hint" style="color:var(--accent2);font-weight:700;border-color:rgba(255,179,71,.4);background:rgba(255,179,71,.08)">🔩 Винтик выбран — тапни пустое гнездо</div>`;}
+  else{hint=`<div class="sw-hint">👉 Тапни винтик на активной доске — затем пустое гнездо</div>`;}
   return `<button class="back-btn" data-action="back-games">‹ Назад</button>
   <div class="card" style="position:relative">
     ${overlay}
@@ -1511,10 +1293,7 @@ function renderScrewsBoard(){
       <b>📌</b> Пустая доска падает, только когда все нижние упали.<br>
       <b>⚠️</b> Нет пустых гнёзд — тупик.
     </div>
-    <div class="sw-stage">
-      <div class="sw-stack">${stackHtml}</div>
-      <div class="sw-ground"></div>
-    </div>
+    <div class="sw-stage"><div class="sw-stack">${stackHtml}</div><div class="sw-ground"></div></div>
     ${hint}
     <div class="sw-actions">
       <button class="btn ghost" data-action="screw-retry">↻ Заново</button>
@@ -1527,30 +1306,23 @@ function renderScrewsBoard(){
 }
 
 function setupScrews(){
-  const container=document.getElementById('view');
-  if(!container)return;
-  container.querySelectorAll('.sw-hole').forEach(hole=>{
-    hole.addEventListener('click',()=>tapHole(hole));
-  });
+  const container=document.getElementById('view');if(!container)return;
+  container.querySelectorAll('.sw-hole').forEach(hole=>{hole.addEventListener('click',()=>tapHole(hole));});
   gameCleanup=()=>{};
 }
 
 function tapHole(hole){
-  const s=screwsState;
-  if(!s||s.busy||s.won||s.lost)return;
+  const s=screwsState;if(!s||s.busy||s.won||s.lost)return;
   const bi=Number(hole.dataset.board),si=Number(hole.dataset.slot);
-  const board=s.boards[bi];
-  if(!board||board.fallen||board.falling)return;
+  const board=s.boards[bi];if(!board||board.fallen||board.falling)return;
   const isFilled=hole.dataset.filled==='1';
-
   if(isFilled){
     if(!isBoardAccessible(bi))return;
     if(s.selected){
       if(s.selected.boardIdx===bi&&s.selected.slotIdx===si){s.selected=null;refreshScrewsBoard();return;}
       s.selected={boardIdx:bi,slotIdx:si};refreshScrewsBoard();return;
     }
-    s.selected={boardIdx:bi,slotIdx:si};refreshScrewsBoard();
-    return;
+    s.selected={boardIdx:bi,slotIdx:si};refreshScrewsBoard();return;
   }
   if(!s.selected)return;
   if(s.selected.boardIdx===bi)return;
@@ -1558,32 +1330,20 @@ function tapHole(hole){
 }
 
 function moveScrew(fromBi,fromSi,toBi,toSi){
-  const s=screwsState;
-  if(s.busy)return;
+  const s=screwsState;if(s.busy)return;
   const fromBoard=s.boards[fromBi],toBoard=s.boards[toBi];
   if(!fromBoard||fromBoard.fallen||fromBoard.falling)return;
   if(!toBoard||toBoard.fallen||toBoard.falling)return;
   const fromScrew=fromBoard.slots[fromSi],toScrew=toBoard.slots[toSi];
   if(!fromScrew)return;
-
   s.busy=true;s.moves++;s.selected=null;
-
-  if(toScrew){
-    fromBoard.slots[fromSi]=toScrew;toBoard.slots[toSi]=fromScrew;
-  } else {
-    fromBoard.slots[fromSi]=null;toBoard.slots[toSi]=fromScrew;
-  }
+  if(toScrew){fromBoard.slots[fromSi]=toScrew;toBoard.slots[toSi]=fromScrew;}
+  else{fromBoard.slots[fromSi]=null;toBoard.slots[toSi]=fromScrew;}
   refreshScrewsBoard();
-
   setTimeout(()=>{
     const anyMerge=checkAndMarkMerges();
-    if(anyMerge){
-      refreshScrewsBoard();
-      setTimeout(()=>applyMerges(),600);
-    } else {
-      s.busy=false;
-      setTimeout(()=>checkFalls(),100);
-    }
+    if(anyMerge){refreshScrewsBoard();setTimeout(()=>applyMerges(),600);}
+    else{s.busy=false;setTimeout(()=>checkFalls(),100);}
   },250);
 }
 
@@ -1593,90 +1353,60 @@ function checkAndMarkMerges(){
     if(b.fallen||b.falling)continue;
     const byColor={};
     b.slots.forEach((sc,i)=>{if(sc&&!sc.merging){if(!byColor[sc.color])byColor[sc.color]=[];byColor[sc.color].push(i);}});
-    for(const c in byColor){
-      if(byColor[c].length>=3){byColor[c].slice(0,3).forEach(i=>{b.slots[i].merging=true;});any=true;}
-    }
+    for(const c in byColor){if(byColor[c].length>=3){byColor[c].slice(0,3).forEach(i=>{b.slots[i].merging=true;});any=true;}}
   }
   return any;
 }
-
 function applyMerges(){
   const s=screwsState;
-  for(const b of s.boards){
-    if(b.fallen||b.falling)continue;
-    b.slots.forEach((sc,i)=>{if(sc&&sc.merging)b.slots[i]=null;});
-  }
+  for(const b of s.boards){if(b.fallen||b.falling)continue;b.slots.forEach((sc,i)=>{if(sc&&sc.merging)b.slots[i]=null;});}
   refreshScrewsBoard();
   setTimeout(()=>{s.busy=false;checkFalls();},200);
 }
-
 function checkFalls(){
-  const s=screwsState;
-  if(!s)return;
+  const s=screwsState;if(!s)return;
   for(let i=s.boards.length-1;i>=0;i--){
-    const b=s.boards[i];
-    if(b.fallen||b.falling)continue;
-    const isEmpty=b.slots.every(x=>!x);
-    if(!isEmpty)continue;
+    const b=s.boards[i];if(b.fallen||b.falling)continue;
+    const isEmpty=b.slots.every(x=>!x);if(!isEmpty)continue;
     let allBelowFallen=true;
-    for(let j=i+1;j<s.boards.length;j++){
-      if(!s.boards[j].fallen){allBelowFallen=false;break;}
-    }
+    for(let j=i+1;j<s.boards.length;j++){if(!s.boards[j].fallen){allBelowFallen=false;break;}}
     if(!allBelowFallen)continue;
-    b.falling=true;
-    refreshScrewsBoard();
-    setTimeout(()=>{
-      b.falling=false;b.fallen=true;
-      refreshScrewsBoard();
-      setTimeout(()=>{checkFalls();checkWin();},100);
-    },650);
+    b.falling=true;refreshScrewsBoard();
+    setTimeout(()=>{b.falling=false;b.fallen=true;refreshScrewsBoard();setTimeout(()=>{checkFalls();checkWin();},100);},650);
     return;
   }
   setTimeout(()=>checkStuck(),150);
 }
-
 function checkStuck(){
-  const s=screwsState;
-  if(s.won||s.lost||s.busy)return;
-  const active=s.boards.filter(b=>!b.fallen&&!b.falling);
-  if(active.length===0)return;
-  let hasEmpty=false;
-  for(const b of active){if(b.slots.some(x=>!x)){hasEmpty=true;break;}}
+  const s=screwsState;if(s.won||s.lost||s.busy)return;
+  const active=s.boards.filter(b=>!b.fallen&&!b.falling);if(active.length===0)return;
+  let hasEmpty=false;for(const b of active){if(b.slots.some(x=>!x)){hasEmpty=true;break;}}
   if(hasEmpty)return;
   s.lost=true;refreshScrewsBoard();
 }
-
 function checkWin(){
-  const s=screwsState;
-  if(s.won||s.lost)return;
+  const s=screwsState;if(s.won||s.lost)return;
   const active=s.boards.filter(b=>!b.fallen);
   if(active.length===0){
-    s.won=true;
-    const reward=5+Math.floor(s.level/25);
+    s.won=true;const reward=5+Math.floor(s.level/25);
     S.screws.completed=Math.max(S.screws.completed,s.level);
     if(s.level>=S.screws.unlocked&&S.screws.unlocked<500)S.screws.unlocked=s.level+1;
     save();registerPuzzlePlayed(reward);refreshScrewsBoard();
   }
 }
-
 function refreshScrewsBoard(){
   if(!screwsState)return;
-  const c=document.getElementById('view');
-  if(!c)return;
-  c.innerHTML=renderScrewsBoard();
-  setupScrews();
+  const c=document.getElementById('view');if(!c)return;
+  c.innerHTML=renderScrewsBoard();setupScrews();
 }
-
 function reshuffleScrews(){
-  const s=screwsState;
-  if(!s)return;
+  const s=screwsState;if(!s)return;
   const newData=generateScrewsLevel(s.level);
   s.boards=newData.boards;s.slotsPerBoard=newData.slotsPerBoard;
   s.selected=null;s.busy=false;s.won=false;s.lost=false;s.moves=0;
   refreshScrewsBoard();
 }
 
-/* ---------- ДИСПЕТЧЕР ---------- */
 function setupGame(){
   if(currentGameId==='smelt')setupSmelt();
   else if(currentGameId==='sort')setupSort();
@@ -1693,30 +1423,25 @@ function closeModal(){modal.classList.remove('on');modal.innerHTML='';}
 modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
 
 function openEvent(id){
-  const ev=EVENTS.find(x=>x.id===id);
-  if(!ev||S.events.includes(id))return;
-  modal.innerHTML=`<div class="modal-box">
-    <h2>${ev.title}</h2>
+  const ev=EVENTS.find(x=>x.id===id);if(!ev||S.events.includes(id))return;
+  modal.innerHTML=`<div class="modal-box"><h2>${ev.title}</h2>
     <p>${ev.place} • ${ev.date}<br><br>Награда: <b style="color:var(--accent2)">+${fmt(ev.points)} очков</b><br><br>
     <b>Вариант 1:</b> фотоотчёт — проверит администратор.<br>
     <b>Вариант 2:</b> ответ на вопрос по локации — засчитается сразу.</p>
     <button class="opt" data-action="ev-photo" data-id="${id}">📸 Загрузить фотоотчёт</button>
     <button class="opt" data-action="ev-quiz" data-id="${id}">❓ Ответить на вопрос</button>
-    <button class="btn ghost" data-action="close">Отмена</button>
-  </div>`;
+    <button class="btn ghost" data-action="close">Отмена</button></div>`;
   modal.classList.add('on');
 }
 function openEventPhoto(id){
   const ev=EVENTS.find(x=>x.id===id);
-  modal.innerHTML=`<div class="modal-box">
-    <h2>Фотоотчёт</h2>
+  modal.innerHTML=`<div class="modal-box"><h2>Фотоотчёт</h2>
     <p>Сделай фото на мероприятии «${ev.title}». Администратор проверит и начислит ${fmt(ev.points)} очков.</p>
     <label class="upload-zone" for="photoInput"><span class="u-ic">📷</span>Выбрать фото</label>
     <input type="file" id="photoInput" accept="image/*" style="display:none">
     <div id="photoArea"></div>
     <button class="btn" id="confirmPhoto" disabled>Отправить</button>
-    <button class="btn ghost" data-action="close">Отмена</button>
-  </div>`;
+    <button class="btn ghost" data-action="close">Отмена</button></div>`;
   modal.classList.add('on');
   const input=document.getElementById('photoInput'),area=document.getElementById('photoArea'),confirm=document.getElementById('confirmPhoto');
   input.addEventListener('change',()=>{
@@ -1727,21 +1452,18 @@ function openEventPhoto(id){
   });
 }
 function submitPhoto(eventId,imageData){
-  const ev=EVENTS.find(x=>x.id===eventId);
-  const srv=serverLoad();const id=serverNextId(srv);
+  const ev=EVENTS.find(x=>x.id===eventId);const srv=serverLoad();const id=serverNextId(srv);
   srv.pendingEvents.push({id,playerName:S.name,eventId,eventTitle:ev.title,eventPoints:ev.points,image:imageData,date:Date.now(),status:'pending',adminNote:''});
   serverSave(srv);closeModal();toast('📸 Фото отправлено на проверку','gold');
   if(activeTab==='events')render();
 }
 function openEventQuiz(id){
   const ev=EVENTS.find(x=>x.id===id);
-  modal.innerHTML=`<div class="modal-box">
-    <h2>Вопрос по локации</h2>
+  modal.innerHTML=`<div class="modal-box"><h2>Вопрос по локации</h2>
     <p>Ответь правильно — участие подтвердится сразу (+${fmt(ev.points)}).</p>
     <div style="font-size:14.5px;font-weight:600;line-height:1.5;margin-bottom:16px">${ev.q.q}</div>
     ${ev.q.a.map((a,i)=>`<button class="opt" data-action="ev-answer" data-id="${id}" data-i="${i}">${a}</button>`).join('')}
-    <button class="btn ghost" data-action="close">Отмена</button>
-  </div>`;
+    <button class="btn ghost" data-action="close">Отмена</button></div>`;
   modal.classList.add('on');
 }
 function answerEvent(id,i){
@@ -1840,13 +1562,10 @@ function resetServer(){
    ОБРАБОТЧИКИ
    ========================================================= */
 document.addEventListener('click',e=>{
-  const el=e.target.closest('[data-action]');
-  if(!el)return;
+  const el=e.target.closest('[data-action]');if(!el)return;
   const action=el.dataset.action;
-
   if(action==='close'){closeModal();return;}
   if(action==='go'){switchTab(el.dataset.tab);return;}
-
   if(action==='quiz'){
     const task=taskById('quiz');if(!task||task.done)return;
     const q=QUIZ[S.daily.quizIndex];const i=Number(el.dataset.i);
@@ -1856,12 +1575,10 @@ document.addEventListener('click',e=>{
     else{toast('Неверно','');const t=taskById('quiz');if(t){t.done=true;t.reward=0;save();}setTimeout(render,900);}
     return;
   }
-
   if(action==='event'){openEvent(el.dataset.id);return;}
   if(action==='ev-photo'){openEventPhoto(el.dataset.id);return;}
   if(action==='ev-quiz'){openEventQuiz(el.dataset.id);return;}
   if(action==='ev-answer'){answerEvent(el.dataset.id,Number(el.dataset.i));return;}
-
   if(action==='send-support'){
     const msg=document.getElementById('supportMsg').value.trim();
     if(!msg){toast('Введите сообщение','');return;}
@@ -1872,15 +1589,12 @@ document.addEventListener('click',e=>{
     serverSave(srv);toast('✓ Отправлено','ok');render();
     return;
   }
-
   if(action==='open-game'){currentGameId=el.dataset.id;screwsState=null;render();return;}
   if(action==='back-games'){stopCurrentGame();currentGameId=null;screwsState=null;render();return;}
-
   if(action==='screw-retry'){initScrewsLevel(screwsState.level);refreshScrewsBoard();toast('Перезапуск','');return;}
   if(action==='screw-reshuffle'){reshuffleScrews();toast('Поле перемешано','');return;}
   if(action==='screw-next'){const n=Math.min(screwsState.level+1,500);initScrewsLevel(n);refreshScrewsBoard();return;}
   if(action==='screw-prev'){const p=Math.max(screwsState.level-1,1);initScrewsLevel(p);refreshScrewsBoard();return;}
-
   if(action==='admin-tab'){S.adminSubTab=el.dataset.sub;save();render();return;}
   if(action==='approve-photo'){approvePhoto(Number(el.dataset.id));return;}
   if(action==='reject-photo'){rejectPhoto(Number(el.dataset.id));return;}
@@ -1918,7 +1632,6 @@ function switchTab(tab){
   render();
   window.scrollTo({top:0,behavior:'smooth'});
 }
-
 document.querySelectorAll('nav button').forEach(b=>{b.addEventListener('click',()=>switchTab(b.dataset.tab));});
 
 /* =========================================================
@@ -1950,7 +1663,6 @@ document.getElementById('startBtn').addEventListener('click',()=>{
   const name=document.getElementById('nameInput').value.trim();
   const pass=document.getElementById('passInput').value.trim();
   if(name.length<2){toast('Введи имя (минимум 2 символа)');return;}
-
   if(name.toLowerCase()==='admin'){
     const srv=serverLoad();
     if(pass!==srv.adminPass){toast('Неверный пароль','danger');return;}
@@ -1961,7 +1673,6 @@ document.getElementById('startBtn').addEventListener('click',()=>{
     setTimeout(()=>toast('🛡️ Вход в админ-панель','admin'),350);
     return;
   }
-
   const srv=serverLoad();
   if(srv.players[name]&&srv.players[name].banned){
     S=defaultState();S.name=name;S.banned=true;
@@ -1971,7 +1682,6 @@ document.getElementById('startBtn').addEventListener('click',()=>{
     showBanScreen();
     return;
   }
-
   S=defaultState();S.name=name;S.daily=makeDaily();save();
   syncPlayerToServer();
   const lt=taskById('login');if(lt&&!lt.done)completeTask('login');
