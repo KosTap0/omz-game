@@ -174,19 +174,16 @@ nav button:not(.active):hover{color:var(--text);background:rgba(255,255,255,.05)
 @keyframes insanePulse{0%,100%{box-shadow:0 0 12px rgba(229,57,53,.4)}50%{box-shadow:0 0 20px rgba(229,57,53,.8)}}
 .sw-rules{background:linear-gradient(160deg,rgba(255,107,26,.1),rgba(255,255,255,.02));border:1px solid rgba(255,107,26,.25);border-radius:12px;padding:10px 13px;font-size:11.5px;color:var(--muted);line-height:1.5;margin-bottom:10px}
 .sw-rules b{color:var(--text);font-weight:700}
-.sw-rules .lock{color:var(--danger);font-weight:700}
 .sw-stage{position:relative;padding:12px 5px 5px;background:linear-gradient(180deg,#1a1410,#0c0906);border-radius:16px;border:1px solid rgba(255,255,255,.06);min-height:240px;max-height:64vh;overflow-y:auto;overflow-x:hidden}
 .sw-stage::-webkit-scrollbar{width:5px}
 .sw-stage::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:3px}
 .sw-stage::before{content:'';position:absolute;left:0;right:0;bottom:0;height:26px;background:linear-gradient(180deg,transparent,#050403 70%);pointer-events:none;z-index:2}
 .sw-ground{position:absolute;left:8%;right:8%;bottom:10px;height:10px;background:linear-gradient(180deg,#3a2418,#1a0f08);border-radius:5px;box-shadow:0 4px 12px rgba(0,0,0,.7);z-index:1}
 .sw-stack{position:relative;z-index:3;padding-bottom:26px;min-height:180px;display:flex;flex-direction:column;justify-content:flex-end;gap:5px}
-.sw-board{position:relative;margin:0 auto;padding:10px 12px;border-radius:9px;background:linear-gradient(180deg,rgba(255,255,255,.1) 0%,transparent 22%,transparent 78%,rgba(0,0,0,.3) 100%),repeating-linear-gradient(92deg,rgba(0,0,0,.07) 0 3px,transparent 3px 12px),linear-gradient(180deg,#a37a52 0%,#7c5a3a 45%,#5a3d26 100%);box-shadow:0 7px 14px rgba(0,0,0,.55),inset 0 2px 0 rgba(255,255,255,.25),inset 0 -3px 6px rgba(0,0,0,.45);border:1px solid #4a2f1e;display:flex;align-items:center;justify-content:center;gap:9px;transition:transform .5s cubic-bezier(.4,.05,.9,.5),opacity .4s ease,box-shadow .2s,filter .25s;transform-origin:center;will-change:transform}
+.sw-board{position:relative;margin:0 auto;padding:10px 12px;border-radius:9px;background:linear-gradient(180deg,rgba(255,255,255,.1) 0%,transparent 22%,transparent 78%,rgba(0,0,0,.3) 100%),repeating-linear-gradient(92deg,rgba(0,0,0,.07) 0 3px,transparent 3px 12px),linear-gradient(180deg,#a37a52 0%,#7c5a3a 45%,#5a3d26 100%);box-shadow:0 7px 14px rgba(0,0,0,.55),inset 0 2px 0 rgba(255,255,255,.25),inset 0 -3px 6px rgba(0,0,0,.45);border:1px solid #4a2f1e;display:flex;align-items:center;justify-content:center;gap:9px;transition:transform .5s cubic-bezier(.4,.05,.9,.5),opacity .4s ease,box-shadow .2s;transform-origin:center;will-change:transform}
 .sw-board.compact{padding:8px 8px;gap:6px}
 .sw-board.tiny{padding:6px 6px;gap:5px}
-.sw-board.locked{filter:brightness(.55) saturate(.5);box-shadow:0 4px 10px rgba(0,0,0,.6),inset 0 2px 0 rgba(255,255,255,.1);cursor:not-allowed}
-.sw-board.locked::after{content:'🔒';position:absolute;top:-9px;right:-9px;font-size:16px;background:#2a1a10;border:2px solid #4a2f1e;border-radius:50%;width:26px;height:26px;display:grid;place-items:center;z-index:5;box-shadow:0 3px 6px rgba(0,0,0,.6)}
-.sw-board.active{box-shadow:0 7px 14px rgba(0,0,0,.55),0 0 0 2px rgba(255,179,71,.5),0 0 20px rgba(255,179,71,.3),inset 0 2px 0 rgba(255,255,255,.25),inset 0 -3px 6px rgba(0,0,0,.45)}
+.sw-board.active{box-shadow:0 7px 14px rgba(0,0,0,.55),0 0 0 2px rgba(255,179,71,.35),inset 0 2px 0 rgba(255,255,255,.25),inset 0 -3px 6px rgba(0,0,0,.45)}
 .sw-board.falling{transform:translateY(420px) rotate(-8deg) scale(.9);opacity:0;pointer-events:none}
 .sw-hole{width:42px;height:42px;border-radius:50%;position:relative;background:radial-gradient(circle at 50% 40%,#3a2418,#1a0d06 78%);box-shadow:inset 0 5px 9px rgba(0,0,0,.9),inset 0 -2px 3px rgba(255,255,255,.06);display:grid;place-items:center;flex-shrink:0;transition:transform .15s,box-shadow .2s}
 .sw-board.compact .sw-hole{width:36px;height:36px}
@@ -226,7 +223,6 @@ nav button:not(.active):hover{color:var(--text);background:rgba(255,255,255,.05)
 .sw-overlay .btn{max-width:260px;margin:8px auto 0}
 .sw-hint{text-align:center;font-size:11.5px;color:var(--muted);padding:8px 12px;border-radius:9px;background:rgba(0,0,0,.3);border:1px solid var(--line);margin-top:10px;line-height:1.5}
 
-/* Админ */
 .admin-tab-bar{display:flex;gap:6px;background:rgba(156,39,176,.1);border:1px solid rgba(156,39,176,.3);border-radius:14px;padding:5px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none}
 .admin-tab-bar::-webkit-scrollbar{display:none}
 .admin-tab-bar button{flex:1;min-width:90px;padding:10px 8px;border:none;border-radius:10px;background:transparent;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit}
@@ -349,16 +345,10 @@ nav button:not(.active):hover{color:var(--text);background:rgba(255,255,255,.05)
 <div id="toasts"></div>
 
 <script>
-/* =========================================================
-   СЕРВЕР (localStorage)
-   ========================================================= */
-const SERVER_KEY = 'omz_steel_path_server_v1';
-const DEFAULT_ADMIN_PASS = 'omz2024';
+const SERVER_KEY='omz_steel_path_server_v1';
+const DEFAULT_ADMIN_PASS='omz2024';
 
-function serverLoad(){
-  try{const r=localStorage.getItem(SERVER_KEY);if(r)return JSON.parse(r);}catch(e){}
-  return {players:{},pendingEvents:[],reports:[],nextId:1,adminPass:DEFAULT_ADMIN_PASS};
-}
+function serverLoad(){try{const r=localStorage.getItem(SERVER_KEY);if(r)return JSON.parse(r);}catch(e){}return {players:{},pendingEvents:[],reports:[],nextId:1,adminPass:DEFAULT_ADMIN_PASS};}
 function serverSave(srv){try{localStorage.setItem(SERVER_KEY,JSON.stringify(srv));}catch(e){}}
 function serverNextId(srv){return srv.nextId++;}
 
@@ -371,7 +361,6 @@ function syncPlayerToServer(){
     created:existing.created||S.created||Date.now()};
   serverSave(srv);
 }
-
 function checkBanOnBoot(){
   const srv=serverLoad();const p=srv.players[S.name];
   if(p&&p.banned){S.banned=true;S.banReason=p.banReason||'Нарушение правил игры';save();showBanScreen();return true;}
@@ -386,10 +375,7 @@ function showBanScreen(){
   document.body.appendChild(el);
 }
 
-/* =========================================================
-   ДАННЫЕ
-   ========================================================= */
-const KEY='omz_steel_path_v6';
+const KEY='omz_steel_path_v7';
 
 const RANKS=[
   {name:'Слесарь-ученик',icon:'🔧',min:0},
@@ -552,18 +538,12 @@ const NPCS=[
 const DAILY_GAME_CAP=120;
 const DAILY_PUZZLE_CAP=60;
 
-/* =========================================================
-   СОСТОЯНИЕ
-   ========================================================= */
 function today(){return new Date().toISOString().slice(0,10);}
 function defaultState(){
-  return {
-    name:'',points:0,created:Date.now(),lastVisit:today(),streak:1,daily:null,
+  return {name:'',points:0,created:Date.now(),lastVisit:today(),streak:1,daily:null,
     events:[],gamesPlayed:0,quizzesCorrect:0,totalTasks:0,
     screws:{unlocked:1,completed:0},
-    isAdmin:false,banned:false,banReason:'',
-    adminSubTab:'photos'
-  };
+    isAdmin:false,banned:false,banReason:'',adminSubTab:'photos'};
 }
 let S=null;
 function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null;}catch(e){return null;}}
@@ -575,8 +555,7 @@ function rankOf(p){return RANKS[rankIndex(p)];}
 function nextRank(p){const i=rankIndex(p);return i<RANKS.length-1?RANKS[i+1]:null;}
 
 function toast(msg,type=''){
-  const t=document.createElement('div');
-  t.className='toast '+type;t.textContent=msg;
+  const t=document.createElement('div');t.className='toast '+type;t.textContent=msg;
   document.getElementById('toasts').appendChild(t);
   setTimeout(()=>{t.style.transition='opacity .4s,transform .4s';t.style.opacity='0';t.style.transform='translateY(-14px)';setTimeout(()=>t.remove(),400);},2600);
 }
@@ -610,8 +589,7 @@ function ensureDaily(){
 }
 function completeTask(id){
   if(!S.daily)return;
-  const t=S.daily.tasks.find(x=>x.id===id);
-  if(!t||t.done)return;
+  const t=S.daily.tasks.find(x=>x.id===id);if(!t||t.done)return;
   t.done=true;S.totalTasks=(S.totalTasks||0)+1;
   save();addPoints(t.reward,t.name);
   if(activeTab==='tasks')render();
@@ -691,7 +669,6 @@ function updateNavBadge(){
   }
 }
 
-/* ---------- ГЛАВНАЯ ---------- */
 function viewHome(){
   if(S.isAdmin)return viewAdminHome();
   const r=rankOf(S.points),nr=nextRank(S.points);
@@ -766,7 +743,6 @@ function viewAdminHome(){
     </div>`;
 }
 
-/* ---------- ЗАДАНИЯ ---------- */
 function viewTasks(){
   if(S.isAdmin)return viewAdminHome();
   if(!S.daily)return '<div class="empty">Загрузка…</div>';
@@ -791,7 +767,6 @@ function viewTasks(){
 }
 function taskIcon(id){return{login:'📅',quiz:'❓',game:'🎮',game3:'🏅'}[id]||'📌';}
 
-/* ---------- ИВЕНТЫ ---------- */
 function viewEvents(){
   if(S.isAdmin)return viewAdminHome();
   const srv=serverLoad();
@@ -819,7 +794,6 @@ function viewEvents(){
   return html;
 }
 
-/* ---------- РЕЙТИНГ ---------- */
 function viewTop(){
   if(S.isAdmin)return viewAdminHome();
   const srv=serverLoad(),myRank=rankOf(S.points),list=[];
@@ -840,7 +814,6 @@ function viewTop(){
     </div></div><div class="section-h">Таблица лидеров</div>${rows}`;
 }
 
-/* ---------- ПОДДЕРЖКА ---------- */
 function viewSupport(){
   if(S.isAdmin)return viewAdminHome();
   const srv=serverLoad();
@@ -867,7 +840,6 @@ function viewSupport(){
 }
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
-/* ---------- АДМИНКА ---------- */
 function viewAdmin(){
   if(!S.isAdmin)return viewAdminHome();
   const sub=S.adminSubTab||'photos';let body='';
@@ -945,9 +917,6 @@ function viewAdminSettings(){
     <button class="btn ghost" data-action="logout-admin">🚪 Выйти из админки</button></div>`;
 }
 
-/* =========================================================
-   МИНИ-ИГРЫ
-   ========================================================= */
 let currentGameId=null;
 let gameCleanup=null;
 
@@ -1025,7 +994,6 @@ function viewGameSelector(){
   </div>`;
 }
 
-/* Плавка */
 function viewSmelt(){return `<button class="back-btn" data-action="back-games">‹ Назад</button>
   <div class="card game-wrap"><div class="card-title" style="justify-content:center"><span class="dot"></span>Плавка стали</div>
   <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px">Останови стрелку в зелёной зоне.</p>
@@ -1043,20 +1011,16 @@ function setupSmelt(){
   function stop(){if(state!=='run')return;cancelAnimationFrame(raf);raf=null;state='idle';last=0;
     const inZone=pos>=zoneStart&&pos<=zoneStart+zoneW;if(inZone)hits++;hitsEl.textContent=hits;
     resEl.textContent=inZone?'✅ Норма!':'❌ Мимо';resEl.style.color=inZone?'var(--ok)':'var(--hot)';
-    if(round>=3){finish();return;}round++;roundEl.textContent=round+'/3';speed+=.42;setZone();btn.textContent='Дальше';btn.onclick=start;
-  }
+    if(round>=3){finish();return;}round++;roundEl.textContent=round+'/3';speed+=.42;setZone();btn.textContent='Дальше';btn.onclick=start;}
   function finish(){if(done)return;done=true;const reward=hits*5;
     resEl.innerHTML=hits===3?`🏆 Идеально! +${reward}`:`Попаданий: ${hits}/3 • +${reward}`;
-    resEl.style.color='var(--accent2)';btn.textContent='Снова';btn.onclick=()=>render();registerGamePlayed(reward);
-  }
+    resEl.style.color='var(--accent2)';btn.textContent='Снова';btn.onclick=()=>render();registerGamePlayed(reward);}
   function reset(){cancelAnimationFrame(raf);raf=null;state='idle';round=1;hits=0;pos=0;dir=1;speed=1.15;last=0;done=false;
     roundEl.textContent='1/3';hitsEl.textContent='0';needle.style.left='0%';setZone();
-    resEl.textContent='Нажми «Старт»';resEl.style.color='';btn.textContent='Старт';btn.onclick=start;
-  }
+    resEl.textContent='Нажми «Старт»';resEl.style.color='';btn.textContent='Старт';btn.onclick=start;}
   reset();gameCleanup=()=>{cancelAnimationFrame(raf);raf=null;};
 }
 
-/* Сортировка */
 function viewSort(){return `<button class="back-btn" data-action="back-games">‹ Назад</button>
   <div class="card"><div class="card-title"><span class="dot"></span>Сортировка металла</div>
   <div class="game-info" style="margin-bottom:6px"><span>Вопрос: <b id="sortProgress" style="color:var(--accent2)">0/8</b></span><span>Очки: <b id="sortScore" style="color:var(--ok)">0</b></span></div>
@@ -1077,23 +1041,19 @@ function setupSort(){
     optsEl.innerHTML=CATS.map((c,i)=>`<button class="opt" data-sort="${i}">${c}</button>`).join('');
     optsEl.querySelectorAll('[data-sort]').forEach(b=>{b.onclick=()=>answer(Number(b.dataset.sort));});
     timeLeft=6;timerEl.style.width='100%';resultEl.textContent='';clearInterval(timerId);
-    timerId=setInterval(()=>{timeLeft-=.1;timerEl.style.width=Math.max(0,(timeLeft/6)*100)+'%';if(timeLeft<=0){clearInterval(timerId);answer(-1);}},100);
-  }
+    timerId=setInterval(()=>{timeLeft-=.1;timerEl.style.width=Math.max(0,(timeLeft/6)*100)+'%';if(timeLeft<=0){clearInterval(timerId);answer(-1);}},100);}
   function answer(i){clearInterval(timerId);optsEl.querySelectorAll('button').forEach(b=>b.disabled=true);
     if(i===current.cat){score+=30;scoreEl.textContent=score;resultEl.textContent='✅';resultEl.style.color='var(--ok)';}
     else{resultEl.textContent=i===-1?'⏰':'❌';resultEl.style.color='var(--hot)';}
-    setTimeout(nextQuestion,600);
-  }
+    setTimeout(nextQuestion,600);}
   function finish(){if(done)return;done=true;const reward=Math.floor(score/10);
     qEl.textContent='Готово!';optsEl.innerHTML='';timerEl.style.width='0%';
     resultEl.innerHTML=`Итог: <b style="color:var(--accent2)">${reward} очков</b>`;
-    btn.textContent='Снова';btn.disabled=false;btn.onclick=()=>render();registerGamePlayed(reward);
-  }
+    btn.textContent='Снова';btn.disabled=false;btn.onclick=()=>render();registerGamePlayed(reward);}
   btn.onclick=()=>{qIndex=0;score=0;done=false;scoreEl.textContent='0';btn.disabled=true;nextQuestion();};
   gameCleanup=()=>{clearInterval(timerId);timerId=null;};
 }
 
-/* Память */
 function viewMemory(){return `<button class="back-btn" data-action="back-games">‹ Назад</button>
   <div class="card"><div class="card-title"><span class="dot"></span>Память сталевара</div>
   <div class="game-info" style="margin-bottom:8px"><span>Раунд: <b id="memRound" style="color:var(--accent2)">1/8</b></span><span>Очки: <b id="memScore" style="color:var(--ok)">0</b></span></div>
@@ -1115,7 +1075,6 @@ function setupMemory(){
   gameCleanup=()=>{clearInterval(seqTimer);seqTimer=null;};
 }
 
-/* Кузнец */
 function viewForge(){return `<button class="back-btn" data-action="back-games">‹ Назад</button>
   <div class="card"><div class="card-title"><span class="dot"></span>Кузнец</div>
   <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;text-align:center">Максимум ударов за 10 секунд!</p>
@@ -1141,13 +1100,12 @@ function setupForge(){
     const base=clicks*5;let bonus=0;if(clicks>=20)bonus+=30;if(clicks>=40)bonus+=60;if(clicks>=60)bonus+=100;if(clicks>=80)bonus+=150;
     const total=Math.floor((base+bonus)/10);
     scoreEl.textContent=total;resultEl.innerHTML=`Удары: <b>${clicks}</b> • Очки: <b style="color:var(--accent2)">${total}</b>`;
-    registerGamePlayed(total);
-  }
+    registerGamePlayed(total);}
   gameCleanup=()=>{clearInterval(timerId);timerId=null;};
 }
 
 /* ============================================================
-   ВИНТИКИ И ДОЩЕЧКИ
+   ВИНТИКИ И ДОЩЕЧКИ — все доски доступны всегда
    ============================================================ */
 const SCREW_COLORS=['#ef5350','#42a5f5','#66bb6a','#fdd835','#ab47bc','#ff9800','#26c6da','#ec407a','#8d6e63'];
 
@@ -1191,6 +1149,7 @@ function generateScrewsLevel(level){
   for(let i=bag.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[bag[i],bag[j]]=[bag[j],bag[i]];}
   const boards=[];
   for(let b=0;b<cfg.boards;b++)boards.push({id:b,slots:new Array(cfg.slotsPerBoard).fill(null),fallen:false,falling:false});
+  
   const screwsPerBoard=[];
   let remaining=totalScrews;
   for(let b=0;b<cfg.boards;b++){
@@ -1198,6 +1157,7 @@ function generateScrewsLevel(level){
     screwsPerBoard.push(target);remaining-=target;
   }
   if(remaining>0){for(let b=0;b<cfg.boards&&remaining>0;b++){if(screwsPerBoard[b]<cfg.slotsPerBoard){screwsPerBoard[b]++;remaining--;}}}
+  
   for(let b=0;b<cfg.boards;b++){
     const count=screwsPerBoard[b];const picked=[];const colorCount={};
     for(let k=0;k<count;k++){
@@ -1208,6 +1168,13 @@ function generateScrewsLevel(level){
     for(let k=0;k<picked.length;k++)boards[b].slots[k]={color:picked[k]};
     for(let i=cfg.slotsPerBoard-1;i>0;i--){const j=Math.floor(rng()*(i+1));[boards[b].slots[i],boards[b].slots[j]]=[boards[b].slots[j],boards[b].slots[i]];}
   }
+  
+  // Проверка: хотя бы одно пустое гнездо в стартовой раскладке
+  const totalEmpty=boards.reduce((sum,b)=>sum+b.slots.filter(x=>!x).length,0);
+  if(totalEmpty===0){
+    boards[0].slots[boards[0].slots.length-1]=null;
+  }
+  
   return {boards,slotsPerBoard:cfg.slotsPerBoard};
 }
 
@@ -1224,31 +1191,26 @@ function initScrewsLevel(level){
   screwsState={level,boards:d.boards,slotsPerBoard:d.slotsPerBoard,selected:null,busy:false,won:false,lost:false,moves:0};
 }
 
-function isBoardAccessible(idx){
-  for(let j=0;j<idx;j++){const b=screwsState.boards[j];if(!b.fallen&&!b.falling&&b.slots.some(x=>x))return false;}
-  return true;
-}
-
 function renderScrewsBoard(){
   const s=screwsState;if(!s)return '';
   const activeBoards=s.boards.filter(b=>!b.fallen);
   const totalScrewsLeft=activeBoards.reduce((sum,b)=>sum+b.slots.filter(x=>x).length,0);
-  const accessible=new Set();
-  for(let i=0;i<s.boards.length;i++){if(isBoardAccessible(i)&&!s.boards[i].fallen&&!s.boards[i].falling)accessible.add(i);}
   const boardCount=s.boards.length;
   const sizeCls=boardCount>=8?'tiny':(boardCount>=6?'compact':'');
   let stackHtml='';
   s.boards.forEach((b,bi)=>{
     if(b.fallen)return;
     const isEmpty=b.slots.every(x=>!x);
-    const isAccessible=accessible.has(bi);
-    const cls='sw-board '+(isEmpty?'empty ':'')+(b.falling?'falling ':'')+(!isAccessible?'locked ':'')+(isAccessible&&!isEmpty?'active ':'')+sizeCls;
+    const cls='sw-board '+(isEmpty?'empty ':'')+(b.falling?'falling ':'')+(!isEmpty?'active ':'')+sizeCls;
     let holesHtml=b.slots.map((sc,si)=>{
-      if(!sc){const canDrop=s.selected&&s.selected.boardIdx!==bi;return `<div class="sw-hole empty ${canDrop?'can-drop':''}" data-board="${bi}" data-slot="${si}" data-empty="1"></div>`;}
+      if(!sc){
+        const canDrop=s.selected&&s.selected.boardIdx!==bi;
+        return `<div class="sw-hole empty ${canDrop?'can-drop':''}" data-board="${bi}" data-slot="${si}" data-empty="1"></div>`;
+      }
       const color=SCREW_COLORS[sc.color];
       const isSel=s.selected&&s.selected.boardIdx===bi&&s.selected.slotIdx===si;
-      const canClick=isAccessible;const merging=sc.merging?'merging':'';
-      return `<div class="sw-hole filled ${isSel?'selected':''} ${canClick?'clickable':''} ${merging}" data-board="${bi}" data-slot="${si}" data-filled="1"><div class="screw" style="background:${color}"></div></div>`;
+      const merging=sc.merging?'merging':'';
+      return `<div class="sw-hole filled ${isSel?'selected':''} clickable ${merging}" data-board="${bi}" data-slot="${si}" data-filled="1"><div class="screw" style="background:${color}"></div></div>`;
     }).join('');
     stackHtml+=`<div class="${cls}" data-board-outer="${bi}">${holesHtml}</div>`;
   });
@@ -1273,8 +1235,11 @@ function renderScrewsBoard(){
     ${s.level<500&&s.level<S.screws.unlocked?`<button class="btn ghost" data-action="screw-next">Ур. ${s.level+1} ›</button>`:''}
   </div>`;
   let hint='';
-  if(s.selected){hint=`<div class="sw-hint" style="color:var(--accent2);font-weight:700;border-color:rgba(255,179,71,.4);background:rgba(255,179,71,.08)">🔩 Винтик выбран — тапни пустое гнездо</div>`;}
-  else{hint=`<div class="sw-hint">👉 Тапни винтик на активной доске — затем пустое гнездо</div>`;}
+  if(s.selected){
+    hint=`<div class="sw-hint" style="color:var(--accent2);font-weight:700;border-color:rgba(255,179,71,.4);background:rgba(255,179,71,.08)">🔩 Винтик выбран — тапни пустое гнездо на любой доске</div>`;
+  } else {
+    hint=`<div class="sw-hint">👉 Тапни винтик — затем пустое гнездо на любой доске</div>`;
+  }
   return `<button class="back-btn" data-action="back-games">‹ Назад</button>
   <div class="card" style="position:relative">
     ${overlay}
@@ -1288,10 +1253,10 @@ function renderScrewsBoard(){
     </div>
     ${navBar}
     <div class="sw-rules">
-      <b>🎯</b> Собери <b>3 одного цвета</b> на одной доске — они затянутся.<br>
-      <b>🔒</b> <span class="lock">Нижние доски под замком, пока сверху есть винтики.</span><br>
-      <b>📌</b> Пустая доска падает, только когда все нижние упали.<br>
-      <b>⚠️</b> Нет пустых гнёзд — тупик.
+      <b>🎯</b> Собери <b>3 одного цвета</b> на одной доске — они затянутся и исчезнут.<br>
+      <b>👆</b> Винтики можно переставлять между <b>любыми</b> досками.<br>
+      <b>📌</b> Пустая доска падает, когда все доски под ней уже упали.<br>
+      <b>⚠️</b> Нет пустых гнёзд и нет троек — тупик (жми «Перемешать»).
     </div>
     <div class="sw-stage"><div class="sw-stack">${stackHtml}</div><div class="sw-ground"></div></div>
     ${hint}
@@ -1317,7 +1282,6 @@ function tapHole(hole){
   const board=s.boards[bi];if(!board||board.fallen||board.falling)return;
   const isFilled=hole.dataset.filled==='1';
   if(isFilled){
-    if(!isBoardAccessible(bi))return;
     if(s.selected){
       if(s.selected.boardIdx===bi&&s.selected.slotIdx===si){s.selected=null;refreshScrewsBoard();return;}
       s.selected={boardIdx:bi,slotIdx:si};refreshScrewsBoard();return;
@@ -1415,9 +1379,6 @@ function setupGame(){
   else if(currentGameId==='screws')setupScrews();
 }
 
-/* =========================================================
-   МОДАЛКА: ИВЕНТЫ
-   ========================================================= */
 const modal=document.getElementById('modal');
 function closeModal(){modal.classList.remove('on');modal.innerHTML='';}
 modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
@@ -1482,9 +1443,6 @@ function completeEvent(id,method){
   if(activeTab==='events'||activeTab==='home')render();
 }
 
-/* =========================================================
-   ADMIN ACTIONS
-   ========================================================= */
 function approvePhoto(id){
   const srv=serverLoad();const pe=srv.pendingEvents.find(p=>p.id===id);
   if(!pe||pe.status!=='pending')return;
@@ -1558,9 +1516,6 @@ function resetServer(){
   modal.classList.add('on');
 }
 
-/* =========================================================
-   ОБРАБОТЧИКИ
-   ========================================================= */
 document.addEventListener('click',e=>{
   const el=e.target.closest('[data-action]');if(!el)return;
   const action=el.dataset.action;
@@ -1634,9 +1589,6 @@ function switchTab(tab){
 }
 document.querySelectorAll('nav button').forEach(b=>{b.addEventListener('click',()=>switchTab(b.dataset.tab));});
 
-/* =========================================================
-   СТАРТ
-   ========================================================= */
 function boot(){
   setTimeout(()=>{
     document.getElementById('splash').classList.add('hide');
