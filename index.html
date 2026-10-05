@@ -1,0 +1,1990 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ОМЗ • Стальной Путь</title>
+<style>
+:root{
+  --bg:#0b0d12;--bg2:#12151c;--card:rgba(255,255,255,.045);--card2:rgba(255,255,255,.07);
+  --line:rgba(255,255,255,.09);--accent:#ff6b1a;--accent2:#ffb347;--hot:#ff3d00;
+  --steel:#8b96ab;--text:#e8ecf3;--muted:#8b96ab;--ok:#38d39f;--danger:#e53935;--radius:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;background:#0b0d12;color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+#bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 80% 60% at 15% 0%, rgba(255,107,26,.18), transparent 60%),radial-gradient(ellipse 70% 50% at 90% 100%, rgba(255,61,0,.12), transparent 60%),radial-gradient(ellipse 60% 50% at 50% 50%, #171b24, #0b0d12 75%)}
+#sparks{position:fixed;inset:0;z-index:1;pointer-events:none}
+
+#splash{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;background:radial-gradient(ellipse at 50% 45%,#1d1208,#08090d 70%);transition:opacity .8s ease,visibility .8s}
+#splash.hide{opacity:0;visibility:hidden}
+.splash-logo{width:104px;height:104px;border-radius:26px;display:grid;place-items:center;background:linear-gradient(145deg,#ff8a3d,#c73c00);box-shadow:0 0 60px rgba(255,107,26,.55),inset 0 2px 0 rgba(255,255,255,.35);font-size:52px;animation:pulse 2s infinite ease-in-out}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.splash-title{font-size:28px;font-weight:800;letter-spacing:3px}
+.splash-sub{color:var(--muted);font-size:13px;letter-spacing:5px;text-transform:uppercase}
+.loader{width:200px;height:3px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+.loader i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));animation:load 1.9s ease forwards}
+@keyframes load{to{width:100%}}
+
+#app{position:relative;z-index:2;max-width:920px;margin:0 auto;padding:0 14px 110px;display:none}
+#app.on{display:block}
+
+#login{position:relative;z-index:3;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-card{width:100%;max-width:400px;background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.025));border:1px solid var(--line);border-radius:26px;padding:36px 28px;backdrop-filter:blur(18px);box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.login-card h1{font-size:24px;margin:18px 0 6px;text-align:center}
+.login-card p{color:var(--muted);font-size:14px;text-align:center;margin-bottom:26px;line-height:1.5}
+.login-logo{width:76px;height:76px;margin:0 auto;border-radius:22px;display:grid;place-items:center;font-size:38px;background:linear-gradient(145deg,#ff8a3d,#c73c00);box-shadow:0 0 44px rgba(255,107,26,.45),inset 0 2px 0 rgba(255,255,255,.3)}
+.field{width:100%;padding:15px 18px;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.3);color:var(--text);font-size:15px;outline:none;transition:.2s;margin-bottom:10px}
+.field:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(255,107,26,.13)}
+textarea.field{resize:vertical;min-height:100px;font-family:inherit}
+.btn{width:100%;padding:15px;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--hot));color:#fff;margin-top:14px;transition:.2s;letter-spacing:.4px;box-shadow:0 10px 26px rgba(255,61,0,.32);font-family:inherit}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(255,61,0,.45)}
+.btn:active{transform:translateY(0)}
+.btn.ghost{background:rgba(255,255,255,.06);border:1px solid var(--line);box-shadow:none;color:var(--text)}
+.btn.ghost:hover{background:rgba(255,255,255,.1);box-shadow:none}
+.btn.danger{background:linear-gradient(135deg,#e53935,#b71c1c);box-shadow:0 10px 26px rgba(229,57,53,.32)}
+.btn.success{background:linear-gradient(135deg,#38d39f,#1a9c72);box-shadow:0 10px 26px rgba(56,211,159,.32)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important;box-shadow:none}
+.btn.sm{padding:9px 14px;font-size:12.5px;margin-top:0;width:auto;min-width:auto;flex:0 0 auto}
+
+header{position:sticky;top:0;z-index:20;margin:0 -14px 18px;padding:16px 18px 14px;background:linear-gradient(180deg,rgba(11,13,18,.96) 60%,rgba(11,13,18,0));backdrop-filter:blur(14px)}
+.hrow{display:flex;align-items:center;gap:13px}
+.avatar{width:50px;height:50px;border-radius:15px;display:grid;place-items:center;font-size:22px;flex-shrink:0;background:linear-gradient(145deg,#ff8a3d,#c73c00);box-shadow:0 0 22px rgba(255,107,26,.4),inset 0 2px 0 rgba(255,255,255,.3)}
+.avatar.admin{background:linear-gradient(145deg,#9c27b0,#4a148c);box-shadow:0 0 22px rgba(156,39,176,.5),inset 0 2px 0 rgba(255,255,255,.3)}
+.hinfo{flex:1;min-width:0}
+.hname{font-weight:700;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hrank{font-size:12.5px;color:var(--accent2);font-weight:600;letter-spacing:.3px}
+.admin-badge{display:inline-block;padding:2px 8px;background:linear-gradient(135deg,#9c27b0,#4a148c);color:#fff;font-size:10px;font-weight:800;border-radius:6px;margin-left:6px;letter-spacing:1px;vertical-align:middle}
+.hpoints{text-align:right;font-weight:800;font-size:19px;color:var(--accent2);text-shadow:0 0 18px rgba(255,179,71,.45);white-space:nowrap}
+.hpoints small{display:block;font-size:10px;color:var(--muted);font-weight:600;letter-spacing:1px}
+
+nav{display:flex;gap:6px;background:rgba(255,255,255,.045);border:1px solid var(--line);border-radius:16px;padding:5px;margin-bottom:20px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{flex:1;min-width:66px;padding:10px 6px;border:none;border-radius:12px;background:transparent;color:var(--muted);font-size:11.5px;font-weight:700;cursor:pointer;transition:.2s;display:flex;flex-direction:column;align-items:center;gap:3px;font-family:inherit;position:relative}
+nav button .ic{font-size:17px}
+nav button.active{background:linear-gradient(135deg,var(--accent),var(--hot));color:#fff;box-shadow:0 6px 18px rgba(255,61,0,.35)}
+nav button.admin-btn.active{background:linear-gradient(135deg,#9c27b0,#4a148c);box-shadow:0 6px 18px rgba(156,39,176,.35)}
+nav button:not(.active):hover{color:var(--text);background:rgba(255,255,255,.05)}
+.nav-badge{position:absolute;top:4px;right:8px;min-width:16px;height:16px;padding:0 4px;background:var(--danger);border-radius:8px;font-size:10px;font-weight:800;color:#fff;display:grid;place-items:center;line-height:1}
+
+.card{background:linear-gradient(160deg,rgba(255,255,255,.062),rgba(255,255,255,.022));border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px;backdrop-filter:blur(10px)}
+.card.admin-card{background:linear-gradient(160deg,rgba(156,39,176,.12),rgba(255,255,255,.02));border-color:rgba(156,39,176,.3)}
+.card-title{font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card-title .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+.card.admin-card .card-title .dot{background:#9c27b0;box-shadow:0 0 12px #9c27b0}
+.section-h{font-size:12px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);font-weight:700;margin:22px 4px 10px}
+
+.rank-badge{display:flex;align-items:center;gap:14px;padding:16px;border-radius:16px;background:linear-gradient(135deg,rgba(255,107,26,.16),rgba(255,61,0,.05));border:1px solid rgba(255,107,26,.28);margin-bottom:14px}
+.rank-ic{font-size:34px;filter:drop-shadow(0 0 12px rgba(255,140,60,.6))}
+.rank-name{font-size:17px;font-weight:800}
+.rank-next{font-size:12px;color:var(--muted);margin-top:2px}
+.progress{height:9px;border-radius:9px;background:rgba(0,0,0,.42);overflow:hidden;margin-top:10px;border:1px solid rgba(255,255,255,.05)}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:9px;transition:width .7s cubic-bezier(.2,.9,.3,1);box-shadow:0 0 14px rgba(255,140,60,.6)}
+
+.ladder{display:flex;flex-direction:column;gap:7px}
+.step{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid transparent;transition:.25s}
+.step.done{background:rgba(56,211,159,.07);border-color:rgba(56,211,159,.22)}
+.step.current{background:rgba(255,107,26,.12);border-color:rgba(255,107,26,.4);box-shadow:0 0 22px rgba(255,107,26,.14)}
+.step .s-ic{font-size:19px;width:26px;text-align:center;filter:grayscale(1);opacity:.45}
+.step.done .s-ic,.step.current .s-ic{filter:none;opacity:1}
+.step .s-name{flex:1;font-size:13.5px;font-weight:600;color:var(--muted)}
+.step.done .s-name,.step.current .s-name{color:var(--text)}
+.step .s-pts{font-size:11.5px;color:var(--muted);font-weight:700}
+.step.done .s-pts{color:var(--ok)}
+
+.task{display:flex;align-items:center;gap:13px;padding:14px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid var(--line);margin-bottom:9px;transition:.25s}
+.task.done{background:rgba(56,211,159,.07);border-color:rgba(56,211,159,.25)}
+.task .t-ic{font-size:21px;width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:rgba(255,255,255,.06);flex-shrink:0}
+.task.done .t-ic{background:rgba(56,211,159,.15)}
+.task .t-body{flex:1;min-width:0}
+.task .t-name{font-size:13.5px;font-weight:600;line-height:1.35}
+.task .t-sub{font-size:11.5px;color:var(--muted);margin-top:3px}
+.task .t-reward{font-size:12px;font-weight:800;color:var(--accent2);white-space:nowrap;background:rgba(255,107,26,.12);padding:6px 11px;border-radius:10px;border:1px solid rgba(255,107,26,.22)}
+.task.done .t-reward{color:var(--ok);background:rgba(56,211,159,.12);border-color:rgba(56,211,159,.25)}
+
+.event{border-radius:18px;padding:0;overflow:hidden;margin-bottom:14px;border:1px solid var(--line);background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.02))}
+.event-top{height:92px;position:relative;display:flex;align-items:flex-end;padding:14px 16px;background:linear-gradient(135deg,#3a1d08,#1a1f2b)}
+.event-top::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,rgba(255,107,26,.4),transparent 55%),repeating-linear-gradient(115deg,rgba(255,255,255,.03) 0 3px,transparent 3px 9px)}
+.event-top h3{position:relative;z-index:1;font-size:16px;font-weight:800;text-shadow:0 2px 10px rgba(0,0,0,.7)}
+.event-body{padding:15px 16px}
+.event-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:11px}
+.chip{font-size:11px;padding:5px 11px;border-radius:9px;background:rgba(255,255,255,.07);color:var(--muted);font-weight:600;border:1px solid var(--line)}
+.chip.hot{color:var(--accent2);background:rgba(255,107,26,.14);border-color:rgba(255,107,26,.3)}
+.chip.mega{color:#fff;background:linear-gradient(135deg,#ff6b1a,#ff3d00);border-color:transparent;font-weight:800;letter-spacing:.3px}
+.chip.pending{color:#ffb347;background:rgba(255,179,71,.14);border-color:rgba(255,179,71,.35)}
+.chip.approved{color:var(--ok);background:rgba(56,211,159,.14);border-color:rgba(56,211,159,.35)}
+.chip.rejected{color:var(--danger);background:rgba(229,57,53,.14);border-color:rgba(229,57,53,.35)}
+.chip.banned{color:#fff;background:linear-gradient(135deg,#e53935,#b71c1c);border-color:transparent}
+.event p{font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:13px}
+
+.lb-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.032);margin-bottom:7px;border:1px solid transparent}
+.lb-row.me{background:linear-gradient(135deg,rgba(255,107,26,.16),rgba(255,107,26,.05));border-color:rgba(255,107,26,.35);box-shadow:0 0 26px rgba(255,107,26,.13)}
+.lb-pos{width:30px;font-weight:800;font-size:15px;color:var(--muted);text-align:center;flex-shrink:0}
+.lb-row:nth-child(1) .lb-pos{color:#ffd35c}
+.lb-row:nth-child(2) .lb-pos{color:#cfd6e2}
+.lb-row:nth-child(3) .lb-pos{color:#e0954f}
+.lb-av{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;font-size:13px;font-weight:800;background:rgba(255,255,255,.08);flex-shrink:0;color:var(--muted)}
+.lb-row.me .lb-av{background:linear-gradient(145deg,#ff8a3d,#c73c00);color:#fff}
+.lb-name{flex:1;font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lb-rank{font-size:11px;color:var(--muted);margin-top:2px;font-weight:500}
+.lb-pts{font-weight:800;font-size:14px;color:var(--accent2);white-space:nowrap}
+
+.game-wrap{text-align:center}
+.gauge{position:relative;height:56px;border-radius:16px;background:rgba(0,0,0,.45);border:1px solid var(--line);overflow:hidden;margin:8px 0 6px}
+.gauge .zone{position:absolute;top:0;bottom:0;background:linear-gradient(90deg,rgba(56,211,159,.28),rgba(56,211,159,.5));border-left:2px solid var(--ok);border-right:2px solid var(--ok)}
+.gauge .needle{position:absolute;top:-3px;bottom:-3px;width:5px;border-radius:4px;background:linear-gradient(180deg,#fff,var(--accent));box-shadow:0 0 18px var(--accent);transform:translateX(-50%)}
+.gauge .heat{position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,61,0,.35),rgba(255,179,71,.05),rgba(255,61,0,.35));opacity:.5}
+.game-info{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);font-weight:600;padding:0 4px}
+.game-result{font-size:15px;font-weight:700;margin:14px 0 4px;min-height:22px}
+
+.game-card{display:flex;align-items:center;gap:14px;padding:16px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid var(--line);margin-bottom:10px;cursor:pointer;transition:.2s}
+.game-card:hover{background:rgba(255,107,26,.1);border-color:rgba(255,107,26,.35);transform:translateX(3px)}
+.game-card.locked{opacity:.55;cursor:not-allowed}
+.game-card.locked:hover{background:rgba(255,255,255,.035);border-color:var(--line);transform:none}
+
+.back-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--muted);cursor:pointer;font-size:12px;font-weight:700;margin-bottom:14px;font-family:inherit;transition:.2s}
+.back-btn:hover{color:var(--text);background:rgba(255,255,255,.1)}
+
+.timer-bar{height:8px;background:rgba(0,0,0,.4);border-radius:8px;overflow:hidden;margin:12px 0;border:1px solid var(--line)}
+.timer-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--ok),var(--accent));transition:width .1s linear;border-radius:8px}
+
+.mem-pad{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.mem-btn{aspect-ratio:1;border-radius:20px;border:2px solid var(--line);background:rgba(255,255,255,.05);display:grid;place-items:center;font-size:44px;cursor:pointer;transition:.15s;user-select:none}
+.mem-btn.flash{background:linear-gradient(145deg,#ff8a3d,#c73c00);border-color:#ff8a3d;box-shadow:0 0 40px rgba(255,107,26,.6);transform:scale(.96)}
+
+.forge-btn{width:100%;padding:36px 20px;border-radius:20px;border:none;font-size:22px;font-weight:800;background:linear-gradient(145deg,#ff8a3d,#c73c00);color:#fff;cursor:pointer;box-shadow:0 10px 30px rgba(255,61,0,.4);transition:.08s;font-family:inherit;letter-spacing:1px}
+.forge-btn:active{transform:scale(.97);box-shadow:0 4px 14px rgba(255,61,0,.7)}
+.forge-btn:disabled{opacity:.4;cursor:not-allowed}
+
+.big-stat{font-size:44px;font-weight:800;color:var(--accent2);text-align:center;text-shadow:0 0 26px rgba(255,179,71,.5);margin:8px 0}
+
+.cap-bar{height:10px;border-radius:10px;background:rgba(0,0,0,.4);overflow:hidden;border:1px solid var(--line);margin:6px 0 12px}
+.cap-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--ok),var(--accent2));border-radius:10px;transition:width .5s}
+.cap-bar.full i{background:linear-gradient(90deg,var(--danger),#b71c1c)}
+
+/* ============================================================
+   ВИНТИКИ И ДОЩЕЧКИ v4 — прогрессия
+   ============================================================ */
+.sw-header{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+.sw-stat{font-size:11.5px;color:var(--muted);font-weight:600;background:rgba(0,0,0,.35);border:1px solid var(--line);padding:7px 8px;border-radius:9px;text-align:center}
+.sw-stat b{color:var(--accent2);display:block;font-size:14px;margin-top:2px}
+.sw-stat.warn{color:var(--danger);border-color:rgba(229,57,53,.4);background:rgba(229,57,53,.12)}
+.sw-stat.warn b{color:#ff8a80}
+
+.sw-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:8px;font-size:10.5px;font-weight:800;letter-spacing:.4px}
+.sw-badge.easy{background:rgba(56,211,159,.16);color:var(--ok);border:1px solid rgba(56,211,159,.4)}
+.sw-badge.medium{background:rgba(255,179,71,.16);color:var(--accent2);border:1px solid rgba(255,179,71,.4)}
+.sw-badge.hard{background:rgba(255,61,0,.16);color:#ff8a80;border:1px solid rgba(255,61,0,.4)}
+.sw-badge.insane{background:linear-gradient(135deg,#e53935,#b71c1c);color:#fff;border:1px solid transparent;animation:insanePulse 2s infinite}
+@keyframes insanePulse{0%,100%{box-shadow:0 0 12px rgba(229,57,53,.4)}50%{box-shadow:0 0 20px rgba(229,57,53,.8)}}
+
+.sw-rules{
+  background:linear-gradient(160deg,rgba(255,107,26,.1),rgba(255,255,255,.02));
+  border:1px solid rgba(255,107,26,.25);
+  border-radius:12px;padding:10px 13px;
+  font-size:11.5px;color:var(--muted);line-height:1.5;
+  margin-bottom:10px;
+}
+.sw-rules b{color:var(--text);font-weight:700}
+.sw-rules .lock{color:var(--danger);font-weight:700}
+
+.sw-stage{position:relative;padding:12px 5px 5px;background:linear-gradient(180deg,#1a1410,#0c0906);border-radius:16px;border:1px solid rgba(255,255,255,.06);min-height:240px;max-height:64vh;overflow-y:auto;overflow-x:hidden}
+.sw-stage::-webkit-scrollbar{width:5px}
+.sw-stage::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:3px}
+.sw-stage::before{content:'';position:absolute;left:0;right:0;bottom:0;height:26px;background:linear-gradient(180deg,transparent,#050403 70%);pointer-events:none;z-index:2}
+.sw-ground{position:absolute;left:8%;right:8%;bottom:10px;height:10px;background:linear-gradient(180deg,#3a2418,#1a0f08);border-radius:5px;box-shadow:0 4px 12px rgba(0,0,0,.7);z-index:1}
+
+.sw-stack{position:relative;z-index:3;padding-bottom:26px;min-height:180px;display:flex;flex-direction:column;justify-content:flex-end;gap:5px}
+
+.sw-board{
+  position:relative;
+  margin:0 auto;
+  padding:10px 12px;
+  border-radius:9px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.1) 0%,transparent 22%,transparent 78%,rgba(0,0,0,.3) 100%),
+    repeating-linear-gradient(92deg,rgba(0,0,0,.07) 0 3px,transparent 3px 12px),
+    linear-gradient(180deg,#a37a52 0%,#7c5a3a 45%,#5a3d26 100%);
+  box-shadow:
+    0 7px 14px rgba(0,0,0,.55),
+    inset 0 2px 0 rgba(255,255,255,.25),
+    inset 0 -3px 6px rgba(0,0,0,.45);
+  border:1px solid #4a2f1e;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  transition:transform .5s cubic-bezier(.4,.05,.9,.5),opacity .4s ease,box-shadow .2s,filter .25s;
+  transform-origin:center;
+  will-change:transform;
+}
+.sw-board.compact{padding:8px 8px;gap:6px}
+.sw-board.tiny{padding:6px 6px;gap:5px}
+
+.sw-board.locked{
+  filter:brightness(.55) saturate(.5);
+  box-shadow:0 4px 10px rgba(0,0,0,.6),inset 0 2px 0 rgba(255,255,255,.1);
+  cursor:not-allowed;
+}
+.sw-board.locked::after{
+  content:'🔒';
+  position:absolute;top:-9px;right:-9px;
+  font-size:16px;
+  background:#2a1a10;
+  border:2px solid #4a2f1e;
+  border-radius:50%;
+  width:26px;height:26px;
+  display:grid;place-items:center;
+  z-index:5;
+  box-shadow:0 3px 6px rgba(0,0,0,.6);
+}
+.sw-board.active{
+  box-shadow:
+    0 7px 14px rgba(0,0,0,.55),
+    0 0 0 2px rgba(255,179,71,.5),
+    0 0 20px rgba(255,179,71,.3),
+    inset 0 2px 0 rgba(255,255,255,.25),
+    inset 0 -3px 6px rgba(0,0,0,.45);
+}
+.sw-board.falling{
+  transform:translateY(420px) rotate(-8deg) scale(.9);
+  opacity:0;
+  pointer-events:none;
+}
+
+.sw-hole{
+  width:42px;height:42px;border-radius:50%;
+  position:relative;
+  background:radial-gradient(circle at 50% 40%,#3a2418,#1a0d06 78%);
+  box-shadow:inset 0 5px 9px rgba(0,0,0,.9),inset 0 -2px 3px rgba(255,255,255,.06);
+  display:grid;place-items:center;
+  flex-shrink:0;
+  transition:transform .15s,box-shadow .2s;
+}
+.sw-board.compact .sw-hole{width:36px;height:36px}
+.sw-board.tiny .sw-hole{width:32px;height:32px}
+
+.sw-hole.empty{
+  background:radial-gradient(circle at 50% 45%,#241609,#0b0705 80%);
+  box-shadow:inset 0 5px 9px rgba(0,0,0,.95);
+}
+.sw-hole.can-drop{
+  box-shadow:
+    inset 0 5px 9px rgba(0,0,0,.9),
+    0 0 0 2px rgba(56,211,159,.7),
+    0 0 14px rgba(56,211,159,.6);
+  cursor:pointer;
+}
+.sw-hole.can-drop:hover{
+  background:radial-gradient(circle at 50% 45%,#1e4a3a,#0a1a14 80%);
+}
+.sw-hole.selected{
+  box-shadow:
+    inset 0 5px 9px rgba(0,0,0,.9),
+    0 0 0 3px var(--accent2),
+    0 0 22px 4px rgba(255,179,71,.7);
+  transform:scale(1.08);
+}
+.sw-hole.clickable{cursor:pointer}
+
+.screw{
+  width:30px;height:30px;border-radius:50%;
+  position:relative;
+  box-shadow:
+    inset 0 -4px 8px rgba(0,0,0,.5),
+    inset 0 3px 6px rgba(255,255,255,.55),
+    0 3px 5px rgba(0,0,0,.65);
+  transition:transform .2s;
+}
+.sw-board.compact .screw{width:26px;height:26px}
+.sw-board.tiny .screw{width:22px;height:22px}
+
+.screw::before,.screw::after{
+  content:'';position:absolute;top:50%;left:50%;
+  background:rgba(0,0,0,.7);border-radius:2px;
+  box-shadow:0 0 1px rgba(255,255,255,.35);
+}
+.screw::before{width:15px;height:3px;transform:translate(-50%,-50%)}
+.screw::after{width:3px;height:15px;transform:translate(-50%,-50%)}
+.sw-board.compact .screw::before{width:12px;height:2.5px}
+.sw-board.compact .screw::after{width:2.5px;height:12px}
+.sw-board.tiny .screw::before{width:10px;height:2px}
+.sw-board.tiny .screw::after{width:2px;height:10px}
+
+.sw-hole.clickable:hover .screw{transform:scale(1.12) rotate(20deg)}
+.sw-hole.selected .screw{transform:scale(1.12) rotate(20deg)}
+
+.sw-hole.merging .screw{
+  animation:screwMerge .55s cubic-bezier(.4,0,.9,.2) forwards;
+}
+@keyframes screwMerge{
+  0%{transform:scale(1) rotate(0)}
+  60%{transform:scale(1.35) rotate(540deg);filter:brightness(1.8)}
+  100%{transform:scale(0) rotate(1080deg);opacity:0}
+}
+
+.sw-actions{display:flex;gap:8px;margin-top:12px;justify-content:center;flex-wrap:wrap}
+.sw-actions .btn{width:auto;flex:1;min-width:110px;padding:11px 14px;margin-top:0;font-size:12.5px}
+
+.sw-nav{display:flex;gap:8px;justify-content:center;margin-bottom:10px;flex-wrap:wrap}
+.sw-nav .btn{width:auto;padding:8px 13px;margin-top:0;font-size:12px;min-width:auto}
+
+.sw-overlay{position:absolute;inset:0;display:grid;place-items:center;background:rgba(8,10,14,.94);border-radius:16px;z-index:20;animation:fade .3s ease}
+.sw-overlay.win{background:radial-gradient(ellipse at center,rgba(56,211,159,.15),rgba(8,10,14,.96) 65%)}
+.sw-overlay.lose{background:radial-gradient(ellipse at center,rgba(229,57,53,.15),rgba(8,10,14,.96) 65%)}
+.sw-overlay .sw-card{text-align:center;padding:24px;max-width:320px}
+.sw-overlay .sw-ic{font-size:52px;margin-bottom:12px;filter:drop-shadow(0 0 24px rgba(255,179,71,.6))}
+.sw-overlay h3{font-size:20px;margin-bottom:8px}
+.sw-overlay.win h3{color:var(--ok)}
+.sw-overlay.lose h3{color:var(--danger)}
+.sw-overlay p{color:var(--muted);font-size:13px;margin-bottom:16px;line-height:1.5}
+.sw-overlay .btn{max-width:260px;margin:8px auto 0}
+
+.sw-hint{
+  text-align:center;font-size:11.5px;color:var(--muted);
+  padding:8px 12px;border-radius:9px;
+  background:rgba(0,0,0,.3);border:1px solid var(--line);
+  margin-top:10px;line-height:1.5;
+}
+
+/* Админ */
+.admin-tab-bar{display:flex;gap:6px;background:rgba(156,39,176,.1);border:1px solid rgba(156,39,176,.3);border-radius:14px;padding:5px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none}
+.admin-tab-bar::-webkit-scrollbar{display:none}
+.admin-tab-bar button{flex:1;min-width:90px;padding:10px 8px;border:none;border-radius:10px;background:transparent;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit}
+.admin-tab-bar button.active{background:linear-gradient(135deg,#9c27b0,#4a148c);color:#fff;box-shadow:0 4px 14px rgba(156,39,176,.4)}
+.report-card{border-radius:14px;background:rgba(255,255,255,.035);border:1px solid var(--line);padding:14px;margin-bottom:10px}
+.report-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.report-from{font-size:13px;font-weight:700;color:var(--accent2)}
+.report-date{font-size:11px;color:var(--muted);font-weight:600}
+.report-text{font-size:13.5px;color:var(--text);line-height:1.55;margin-bottom:12px;white-space:pre-wrap;word-break:break-word}
+.report-img{width:100%;max-height:220px;object-fit:cover;border-radius:10px;border:1px solid var(--line);margin-bottom:12px;display:block}
+.report-actions{display:flex;gap:8px;flex-wrap:wrap}
+.report-actions .btn{width:auto;padding:9px 14px;font-size:12.5px;margin-top:0;flex:1;min-width:100px}
+.player-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.032);margin-bottom:7px;border:1px solid transparent;flex-wrap:wrap}
+.player-row.banned{background:rgba(229,57,53,.08);border-color:rgba(229,57,53,.3)}
+.player-row .p-av{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:16px;background:rgba(255,255,255,.08);flex-shrink:0}
+.player-row .p-info{flex:1;min-width:120px}
+.player-row .p-name{font-size:13.5px;font-weight:700}
+.player-row .p-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.player-row .p-pts{font-weight:800;color:var(--accent2);font-size:14px;white-space:nowrap}
+.player-row .p-actions{display:flex;gap:6px;flex-wrap:wrap}
+.ban-banner{position:fixed;inset:0;z-index:500;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 50%,#2a0a0a,#08090d);padding:20px;text-align:center}
+.ban-banner .b-ic{font-size:72px;margin-bottom:16px;filter:drop-shadow(0 0 30px rgba(229,57,53,.7))}
+.ban-banner h2{font-size:24px;color:var(--danger);margin-bottom:12px;letter-spacing:2px}
+.ban-banner p{color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:8px;max-width:400px}
+.ban-banner .reason{color:var(--text);font-weight:700;background:rgba(229,57,53,.15);padding:10px 16px;border-radius:10px;border:1px solid rgba(229,57,53,.35);margin:14px 0;font-size:13.5px}
+
+#modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(5,6,9,.82);backdrop-filter:blur(8px)}
+#modal.on{display:flex;animation:fade .25s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.modal-box{width:100%;max-width:440px;max-height:88vh;overflow-y:auto;border-radius:24px;padding:26px;background:linear-gradient(160deg,#1a1e27,#101319);border:1px solid var(--line);box-shadow:0 30px 90px rgba(0,0,0,.75);animation:pop .3s cubic-bezier(.2,.9,.3,1)}
+@keyframes pop{from{transform:scale(.93) translateY(14px);opacity:0}to{transform:none;opacity:1}}
+.modal-box h2{font-size:19px;margin-bottom:8px}
+.modal-box p{font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:16px}
+.opt{display:block;width:100%;text-align:left;padding:14px 16px;border-radius:13px;margin-bottom:9px;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--text);font-size:13.5px;cursor:pointer;transition:.2s;font-family:inherit;font-weight:600}
+.opt:hover{background:rgba(255,107,26,.14);border-color:rgba(255,107,26,.4)}
+.opt.correct{background:rgba(56,211,159,.16)!important;border-color:var(--ok)!important}
+.opt.wrong{background:rgba(255,61,0,.16)!important;border-color:var(--hot)!important}
+.opt:disabled{cursor:default}
+
+#toasts{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:600;display:flex;flex-direction:column;gap:9px;align-items:center;width:calc(100% - 28px);max-width:400px;pointer-events:none}
+.toast{padding:13px 20px;border-radius:15px;font-size:13.5px;font-weight:700;width:100%;text-align:center;background:linear-gradient(135deg,rgba(255,107,26,.95),rgba(255,61,0,.95));color:#fff;box-shadow:0 12px 34px rgba(255,61,0,.4);animation:slideDown .35s cubic-bezier(.2,.9,.3,1)}
+.toast.ok{background:linear-gradient(135deg,rgba(56,211,159,.95),rgba(30,160,120,.95));box-shadow:0 12px 34px rgba(56,211,159,.35)}
+.toast.gold{background:linear-gradient(135deg,#ffd35c,#ff9a1a);color:#2a1600;box-shadow:0 12px 34px rgba(255,179,71,.45)}
+.toast.danger{background:linear-gradient(135deg,#e53935,#b71c1c);box-shadow:0 12px 34px rgba(229,57,53,.4)}
+.toast.admin{background:linear-gradient(135deg,#9c27b0,#4a148c);box-shadow:0 12px 34px rgba(156,39,176,.4)}
+@keyframes slideDown{from{transform:translateY(-22px);opacity:0}to{transform:none;opacity:1}}
+
+.photo-prev{width:100%;border-radius:14px;margin:12px 0;border:1px solid var(--line);display:block}
+.upload-zone{border:2px dashed rgba(255,255,255,.18);border-radius:16px;padding:28px;text-align:center;cursor:pointer;transition:.25s;color:var(--muted);font-size:13px;display:block}
+.upload-zone:hover{border-color:var(--accent);background:rgba(255,107,26,.06);color:var(--text)}
+.upload-zone .u-ic{font-size:30px;display:block;margin-bottom:8px}
+.empty{text-align:center;padding:34px 18px;color:var(--muted);font-size:13.5px}
+.empty .e-ic{font-size:38px;display:block;margin-bottom:12px;opacity:.5}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.stat{background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:14px;padding:13px 9px;text-align:center}
+.stat .s-val{font-size:19px;font-weight:800;color:var(--accent2)}
+.stat .s-lbl{font-size:10.5px;color:var(--muted);margin-top:3px;font-weight:600;letter-spacing:.4px}
+
+@media(max-width:520px){
+  .hpoints{font-size:16px}
+  nav button{font-size:11px;min-width:60px}
+  .card{padding:15px}
+  .sw-hole{width:36px;height:36px}
+  .screw{width:26px;height:26px}
+  .screw::before{width:13px;height:2.5px}
+  .screw::after{width:2.5px;height:13px}
+  .sw-board{padding:8px 8px;gap:6px}
+  .sw-board.compact{padding:6px 6px;gap:5px}
+  .sw-board.tiny{padding:5px 5px;gap:4px}
+}
+</style>
+</head>
+<body>
+
+<div id="bg"></div>
+<canvas id="sparks"></canvas>
+
+<div id="splash">
+  <div class="splash-logo">🏭</div>
+  <div style="text-align:center">
+    <div class="splash-title">СТАЛЬНОЙ ПУТЬ</div>
+    <div class="splash-sub">Омутнинский металлургический завод</div>
+  </div>
+  <div class="loader"><i></i></div>
+</div>
+
+<div id="login" style="display:none">
+  <div class="login-card">
+    <div class="login-logo">🏭</div>
+    <h1>Стальной путь</h1>
+    <p>Карьера от слесаря-ученика до генерального директора.<br>Основной рейтинг — за посещение мероприятий ДК.</p>
+    <input class="field" id="nameInput" placeholder="Введи своё имя" maxlength="20" autocomplete="off">
+    <input class="field" id="passInput" type="password" placeholder="Пароль (только для админа)" autocomplete="off">
+    <button class="btn" id="startBtn">Начать карьеру</button>
+  </div>
+</div>
+
+<div id="app">
+  <header>
+    <div class="hrow">
+      <div class="avatar" id="hAvatar">🔧</div>
+      <div class="hinfo">
+        <div class="hname" id="hName">Игрок</div>
+        <div class="hrank" id="hRank">Слесарь-ученик</div>
+      </div>
+      <div class="hpoints" id="hPoints">0<small>РЕЙТИНГ</small></div>
+    </div>
+  </header>
+
+  <nav id="mainNav">
+    <button data-tab="home" class="active"><span class="ic">🏠</span>Главная</button>
+    <button data-tab="tasks"><span class="ic">📋</span>Задания</button>
+    <button data-tab="events"><span class="ic">🎭</span>Ивенты</button>
+    <button data-tab="game"><span class="ic">🎮</span>Игры</button>
+    <button data-tab="top"><span class="ic">🏆</span>Рейтинг</button>
+    <button data-tab="support"><span class="ic">💬</span>Поддержка</button>
+    <button data-tab="admin" class="admin-btn" style="display:none"><span class="ic">🛡️</span>Админ</button>
+  </nav>
+
+  <main id="view"></main>
+</div>
+
+<div id="modal"></div>
+<div id="toasts"></div>
+
+<script>
+/* =========================================================
+   СЕРВЕР
+   ========================================================= */
+const SERVER_KEY = 'omz_steel_path_server_v1';
+const DEFAULT_ADMIN_PASS = 'omz2024';
+
+function serverLoad(){
+  try{
+    const r = localStorage.getItem(SERVER_KEY);
+    if(r) return JSON.parse(r);
+  }catch(e){}
+  return { players:{}, pendingEvents:[], reports:[], nextId:1, adminPass:DEFAULT_ADMIN_PASS };
+}
+function serverSave(srv){ try{ localStorage.setItem(SERVER_KEY, JSON.stringify(srv)); }catch(e){} }
+function serverNextId(srv){ return srv.nextId++; }
+
+function syncPlayerToServer(){
+  if(!S || S.isAdmin) return;
+  const srv = serverLoad();
+  const existing = srv.players[S.name] || {};
+  srv.players[S.name] = {
+    name:S.name, points:S.points, rank:rankOf(S.points).name,
+    banned:existing.banned || S.banned || false,
+    banReason:existing.banReason || S.banReason || '',
+    lastSeen:Date.now(), events:S.events.length,
+    gamesPlayed:S.gamesPlayed || 0,
+    created:existing.created || S.created || Date.now()
+  };
+  serverSave(srv);
+}
+
+function checkBanOnBoot(){
+  const srv = serverLoad();
+  const p = srv.players[S.name];
+  if(p && p.banned){
+    S.banned = true;
+    S.banReason = p.banReason || 'Нарушение правил игры';
+    save();
+    showBanScreen();
+    return true;
+  }
+  return false;
+}
+
+function showBanScreen(){
+  const el = document.createElement('div');
+  el.className = 'ban-banner';
+  el.innerHTML = `<div>
+      <div class="b-ic">🚫</div>
+      <h2>ДОСТУП ЗАБЛОКИРОВАН</h2>
+      <p>Ваш аккаунт заблокирован администратором игры «Стальной путь».</p>
+      <div class="reason">Причина: ${S.banReason || 'Не указана'}</div>
+      <p style="font-size:12.5px;margin-top:16px">Обратитесь в администрацию ДК «Металлург».</p>
+  </div>`;
+  document.body.appendChild(el);
+}
+
+/* =========================================================
+   ДАННЫЕ
+   ========================================================= */
+const KEY = 'omz_steel_path_v6';
+
+const RANKS = [
+  {name:'Слесарь-ученик',icon:'🔧',min:0},
+  {name:'Подручный сталевара',icon:'🔩',min:500},
+  {name:'Слесарь-ремонтник',icon:'🛠️',min:1200},
+  {name:'Сталевар',icon:'⚗️',min:2200},
+  {name:'Мастер смены',icon:'⚙️',min:3500},
+  {name:'Старший мастер',icon:'🔨',min:5200},
+  {name:'Инженер-технолог',icon:'📐',min:7500},
+  {name:'Ведущий инженер',icon:'📊',min:10000},
+  {name:'Начальник участка',icon:'📋',min:13500},
+  {name:'Начальник цеха',icon:'🏭',min:18000},
+  {name:'Главный инженер',icon:'🔬',min:24000},
+  {name:'Начальник производства',icon:'🏗️',min:31000},
+  {name:'Заместитель директора',icon:'💼',min:39000},
+  {name:'Первый заместитель директора',icon:'🎖️',min:48000},
+  {name:'Директор завода',icon:'🎩',min:58000},
+  {name:'Генеральный директор',icon:'👑',min:70000}
+];
+
+const QUIZ = [
+  {q:'Какой металл плавится при самой высокой температуре?',a:['Медь','Вольфрам','Алюминий','Свинец'],c:1},
+  {q:'Что является основным компонентом стали?',a:['Железо и углерод','Медь и цинк','Алюминий и кремний','Титан и никель'],c:0},
+  {q:'Какой металл самый распространённый в земной коре?',a:['Железо','Алюминий','Медь','Кремний'],c:1},
+  {q:'Какой металл остаётся жидким при комнатной температуре?',a:['Свинец','Олово','Ртуть','Кадмий'],c:2},
+  {q:'Какой сплав состоит из меди и цинка?',a:['Бронза','Латунь','Мельхиор','Дюраль'],c:1},
+  {q:'Какой сплав состоит из меди и олова?',a:['Латунь','Бронза','Нихром','Баббит'],c:1},
+  {q:'Что такое чугун?',a:['Сплав железа с углеродом более 2,14%','Чистое железо','Сплав меди с никелем','Сплав алюминия с магнием'],c:0},
+  {q:'Какой металл используют для нитей накаливания?',a:['Медь','Вольфрам','Никель','Серебро'],c:1},
+  {q:'Какой металл называют «крылатым»?',a:['Титан','Алюминий','Магний','Литий'],c:1},
+  {q:'Какой природный металл самый тяжёлый?',a:['Платина','Осмий','Свинец','Золото'],c:1},
+  {q:'Какой металл не тонет в воде?',a:['Алюминий','Литий','Магний','Натрий'],c:1},
+  {q:'Какой сплав железа с углеродом содержит менее 2,14% углерода?',a:['Чугун','Сталь','Булат','Дамаск'],c:1},
+  {q:'Какой элемент придаёт стали твёрдость?',a:['Кислород','Углерод','Азот','Водород'],c:1},
+  {q:'Какой элемент делает сталь нержавеющей?',a:['Никель','Хром','Молибден','Титан'],c:1},
+  {q:'Что такое легирование?',a:['Очистка металла','Добавление элементов в сплав','Нагрев металла','Прокатка металла'],c:1},
+  {q:'Сколько минимум хрома в нержавеющей стали?',a:['5%','8%','12%','20%'],c:2},
+  {q:'Какой сплав алюминия с кремнием?',a:['Силумин','Дюраль','Баббит','Инвар'],c:0},
+  {q:'Сплав алюминия с медью и магнием — это…',a:['Силумин','Дюралюминий','Нихром','Латунь'],c:1},
+  {q:'Сплав никеля и хрома для нагревателей — это…',a:['Нихром','Инвар','Баббит','Мельхиор'],c:0},
+  {q:'Сплав меди и никеля — это…',a:['Латунь','Бронза','Мельхиор','Дюраль'],c:2},
+  {q:'Для чего нужна доменная печь?',a:['Для прокатки листа','Для получения чугуна из руды','Для резки металла','Для покраски деталей'],c:1},
+  {q:'Что такое прокатный стан?',a:['Печь для обжига','Машина для обработки металла давлением','Прибор для замера температуры','Станок для сверления'],c:1},
+  {q:'Что такое шлак?',a:['Готовый металл','Побочный продукт плавки','Вид топлива','Огнеупорный кирпич'],c:1},
+  {q:'Какой агрегат выплавляет сталь продувкой кислорода?',a:['Домна','Конвертер','Мартен','Вагранка'],c:1},
+  {q:'Что такое мартеновская печь?',a:['Печь для выплавки стали','Печь для обжига руды','Кузнечный горн','Сушильная камера'],c:0},
+  {q:'Что такое руда?',a:['Топливо','Минеральное сырьё с металлом','Огнеупор','Сплав'],c:1},
+  {q:'Что такое кокс?',a:['Топливо из каменного угля','Мелкий металл','Огнеупорный материал','Отходы плавки'],c:0},
+  {q:'Какую роль играет известняк в домне?',a:['Топливо','Флюс для удаления примесей','Окислитель','Катализатор'],c:1},
+  {q:'Что такое агломерация руды?',a:['Дробление','Окускование мелкой руды','Обогащение','Плавка'],c:1},
+  {q:'Что такое литник?',a:['Канал подачи металла в форму','Отходы литья','Тигель','Изложница'],c:0},
+  {q:'Что такое слиток?',a:['Готовая деталь','Отливка для дальнейшей обработки','Заготовка из проката','Шлак'],c:1},
+  {q:'Что такое МНЛЗ?',a:['Машина непрерывного литья заготовок','Мартеновская печь','Молот','Прокатный стан'],c:0},
+  {q:'Что такое блюм?',a:['Круглый пруток','Заготовка квадратного сечения','Лист','Полоса'],c:1},
+  {q:'Что такое сляб?',a:['Круглый прокат','Заготовка для листа прямоугольного сечения','Проволока','Труба'],c:1},
+  {q:'Что такое прокатка?',a:['Обработка давлением между валками','Резка металла','Сварка','Литьё'],c:0},
+  {q:'Что такое волочение?',a:['Протягивание металла через отверстие','Скручивание','Ковка','Штамповка'],c:0},
+  {q:'Что такое прессование металла?',a:['Выдавливание через матрицу','Резка','Сварка','Точение'],c:0},
+  {q:'Что такое горячая прокатка?',a:['Прокатка при высокой температуре','Прокатка с нагревом валков','Прокатка с охлаждением','Ручная прокатка'],c:0},
+  {q:'Что такое холодная прокатка?',a:['Прокатка при комнатной температуре','Прокатка зимой','Прокатка с водой','Медленная прокатка'],c:0},
+  {q:'Что такое ковка?',a:['Обработка металла давлением с нагревом','Резка','Литьё','Сверление'],c:0},
+  {q:'Что такое штамповка?',a:['Обработка давлением в штампе','Литьё','Сварка','Пайка'],c:0},
+  {q:'Что делают на блюминге?',a:['Обжимают слитки в блюмы','Режут металл','Сверлят отверстия','Полируют'],c:0},
+  {q:'Что такое усадка металла?',a:['Уменьшение объёма при застывании','Нагревание','Расширение','Испарение'],c:0},
+  {q:'Что такое ликвация?',a:['Неоднородность сплава по составу','Очистка','Закалка','Резка'],c:0},
+  {q:'Какой инструмент используют для внутренней резьбы?',a:['Напильник','Метчик','Плашка','Зубило'],c:1},
+  {q:'Какой инструмент используют для наружной резьбы?',a:['Метчик','Плашка','Керн','Развёртка'],c:1},
+  {q:'Что такое зубило?',a:['Инструмент для рубки металла','Для сверления','Для измерения','Для резьбы'],c:0},
+  {q:'Что такое керн?',a:['Инструмент для разметки','Резак','Напильник','Тиски'],c:0},
+  {q:'Что измеряет штангенциркуль?',a:['Размеры с точностью 0,1 мм','Температуру','Твёрдость','Угол'],c:0},
+  {q:'Что измеряет микрометр?',a:['Точные размеры до 0,01 мм','Массу','Твёрдость','Электросопротивление'],c:0},
+  {q:'Что такое нутромер?',a:['Прибор для внутренних размеров','Для наружных','Для резьбы','Для углов'],c:0},
+  {q:'Что такое зенкер?',a:['Инструмент для обработки отверстий','Для резьбы','Для рубки','Для разметки'],c:0},
+  {q:'Что такое развёртка?',a:['Инструмент для точной обработки отверстий','Для резьбы','Для рубки','Для разметки'],c:0},
+  {q:'Что такое фреза?',a:['Инструмент для фрезерования','Для точения','Для сверления','Для шлифовки'],c:0},
+  {q:'Что такое токарный станок?',a:['Станок для точения','Для фрезерования','Для сверления','Для шлифовки'],c:0},
+  {q:'Что такое шлифование?',a:['Обработка абразивом','Резка','Литьё','Сварка'],c:0},
+  {q:'Какой газ чаще всего используют при газовой сварке?',a:['Кислород','Ацетилен','Гелий','Азот'],c:1},
+  {q:'Что такое электрод?',a:['Стержень для дуговой сварки','Тигель','Огнеупор','Изложница'],c:0},
+  {q:'Что такое пайка?',a:['Соединение металлов припоем','Сварка','Резка','Литьё'],c:0},
+  {q:'Что такое припой?',a:['Сплав для пайки с низкой температурой','Флюс','Электрод','Шлак'],c:0},
+  {q:'Что такое TIG-сварка?',a:['Сварка в аргоне вольфрамовым электродом','Сварка под флюсом','Контактная сварка','Газовая сварка'],c:0},
+  {q:'Что такое MIG/MAG-сварка?',a:['Сварка плавящимся электродом в защитном газе','Ручная дуговая','Газовая','Контактная'],c:0},
+  {q:'Что такое наплавка?',a:['Нанесение слоя металла на поверхность','Резка','Сверление','Полировка'],c:0},
+  {q:'Что такое сверло?',a:['Инструмент для сверления','Для резьбы','Для рубки','Для разметки'],c:0},
+  {q:'Что такое тиски?',a:['Зажимное приспособление','Измеритель','Резак','Нагреватель'],c:0},
+  {q:'Что такое напильник?',a:['Инструмент для снятия стружки','Для измерения','Для резьбы','Для сварки'],c:0},
+  {q:'Что такое надфиль?',a:['Мелкий напильник','Большой молот','Ключ','Сверло'],c:0},
+  {q:'Что такое чертилка?',a:['Инструмент для разметки','Для сварки','Для резьбы','Для шлифовки'],c:0},
+  {q:'Что такое молоток?',a:['Ударный инструмент','Измеритель','Резак','Зажим'],c:0},
+  {q:'Что такое «отпуск» в металлургии?',a:['Выходной день','Вид термообработки','Сплав меди','Дефект литья'],c:1},
+  {q:'Что такое закалка?',a:['Нагрев и быстрое охлаждение','Медленное охлаждение','Только нагрев','Только охлаждение'],c:0},
+  {q:'Что такое отжиг?',a:['Нагрев и медленное охлаждение','Быстрое охлаждение','Только нагрев','Прокатка'],c:0},
+  {q:'Что такое нормализация?',a:['Нагрев и охлаждение на воздухе','Закалка в воде','Отжиг в печи','Цементация'],c:0},
+  {q:'Что такое цементация?',a:['Насыщение поверхности углеродом','Насыщение азотом','Покрытие хромом','Покрытие цинком'],c:0},
+  {q:'Что такое азотирование?',a:['Насыщение поверхности азотом','Углеродом','Хромом','Бором'],c:0},
+  {q:'Что такое ТВЧ-закалка?',a:['Закалка токами высокой частоты','Закалка в воде','Закалка в масле','Закалка на воздухе'],c:0},
+  {q:'Какая структура стали самая твёрдая?',a:['Феррит','Перлит','Мартенсит','Аустенит'],c:2},
+  {q:'Что такое аустенит?',a:['Структура стали','Сплав меди','Тип печи','Вид руды'],c:0},
+  {q:'Что такое перлит?',a:['Структурная составляющая стали','Минерал','Сплав','Флюс'],c:0},
+  {q:'Что такое феррит?',a:['Структура железа','Сплав','Руда','Шлак'],c:0},
+  {q:'Что такое цементит?',a:['Карбид железа','Сплав меди','Флюс','Топливо'],c:0},
+  {q:'Что измеряет твёрдомер?',a:['Плотность','Твёрдость материала','Вязкость','Электропроводность'],c:1},
+  {q:'Что измеряет термопара?',a:['Температуру','Давление','Твёрдость','Размер'],c:0},
+  {q:'Что такое пирометр?',a:['Бесконтактный измеритель температуры','Манометр','Штангенциркуль','Микрометр'],c:0},
+  {q:'Какая единица твёрдости по Роквеллу?',a:['HRC','HB','HV','МПа'],c:0},
+  {q:'Что такое предел прочности?',a:['Максимальное напряжение до разрушения','Твёрдость','Плотность','Вязкость'],c:0},
+  {q:'Что такое предел текучести?',a:['Напряжение начала пластической деформации','Прочность','Твёрдость','Упругость'],c:0},
+  {q:'Что такое модуль Юнга?',a:['Характеристика упругости','Прочность','Твёрдость','Плотность'],c:0},
+  {q:'Метод Бринелля — это…',a:['Вдавливание шарика','Царапание','Удар','Изгиб'],c:0},
+  {q:'Метод Роквелла — это…',a:['Вдавливание конуса или шарика','Царапание','Удар','Растяжение'],c:0},
+  {q:'Что такое усталость металла?',a:['Разрушение при циклических нагрузках','Ржавчина','Плавление','Усадка'],c:0},
+  {q:'Что такое раковина в отливке?',a:['Пустота','Трещина','Заусенец','Наплыв'],c:0},
+  {q:'Что такое заусенец?',a:['Острый выступ металла','Вмятина','Трещина','Пустота'],c:0},
+  {q:'Что такое наплыв на сварном шве?',a:['Излишек металла','Трещина','Пора','Шлак'],c:0},
+  {q:'Ультразвуковой контроль — это…',a:['Неразрушающий метод поиска дефектов','Разрушающий метод','Метод измерения твёрдости','Метод сварки'],c:0},
+  {q:'Рентгеновский контроль сварных швов — это…',a:['Просвечивание','Взвешивание','Нагрев','Измерение'],c:0},
+  {q:'Капиллярный контроль выявляет…',a:['Поверхностные дефекты','Внутренние дефекты','Твёрдость','Массу'],c:0},
+  {q:'Магнитный контроль основан на…',a:['Магнитном поле','Рентгене','Ультразвуке','Нагреве'],c:0},
+  {q:'Что такое ОТК?',a:['Отдел технического контроля','Отдел труда и кадров','Общий технический комитет','Отдел транспорта'],c:0},
+  {q:'Что нужно надеть перед входом в цех?',a:['Каску и спецодежду','Очки','Плащ','Костюм'],c:0},
+  {q:'Что такое СИЗ?',a:['Средства индивидуальной защиты','Система измерительных знаний','Стандарт изделий завода','Способ испытания заготовок'],c:0},
+  {q:'Можно ли тушить электрооборудование водой?',a:['Нет','Да','Иногда','Только зимой'],c:0},
+  {q:'Что такое заземление?',a:['Защита от поражения током','Нагреватель','Измеритель','Предохранитель'],c:0},
+  {q:'Какой огнетушитель для электрооборудования?',a:['Углекислотный','Водный','Пенный','Порошковый нельзя'],c:0},
+  {q:'Кто такой сталевар?',a:['Рабочий, выплавляющий сталь','Мастер-литейщик','Ремонтник','Контролёр'],c:0},
+  {q:'Кто такой вальцовщик?',a:['Рабочий прокатного стана','Сварщик','Литейщик','Фрезеровщик'],c:0},
+  {q:'Кто такой кузнец?',a:['Мастер обработки давлением','Сварщик','Резчик','Токарь'],c:0},
+  {q:'Кто такой литейщик?',a:['Рабочий литейного производства','Прокатчик','Сварщик','Слесарь'],c:0},
+  {q:'Кто такой наладчик?',a:['Специалист по настройке оборудования','Измеритель','Снабженец','Уборщик'],c:0}
+];
+
+const EVENTS = [
+  {id:'e1',title:'Концерт «Голоса Металлургов»',place:'ДК «Металлург», большой зал',date:'12 октября, 18:00',points:3500,tag:'Концерт',desc:'Праздничный концерт ко Дню работника металлургической промышленности.',q:{q:'Какой цвет преобладал на баннере у главного входа в зал?',a:['Синий','Оранжевый','Зелёный','Фиолетовый'],c:1}},
+  {id:'e2',title:'Выставка «Огни завода»',place:'ДК «Металлург», фойе 2 этажа',date:'15–20 октября',points:3000,tag:'Выставка',desc:'Фотовыставка об истории завода и людях, которые создавали его славу.',q:{q:'Сколько стендов с фотографиями расположено в фойе?',a:['Четыре','Шесть','Восемь','Двенадцать'],c:2}},
+  {id:'e3',title:'Квиз «Индустриальная история»',place:'ДК «Металлург», малый зал',date:'22 октября, 17:30',points:4000,tag:'Квиз',desc:'Командная интеллектуальная игра об истории металлургии.',q:{q:'Сколько раундов было в квизе?',a:['Три','Пять','Семь','Девять'],c:1}},
+  {id:'e4',title:'Спектакль «Сталь и люди»',place:'ДК «Металлург», большой зал',date:'29 октября, 19:00',points:3200,tag:'Театр',desc:'Театральная постановка народного театра ДК.',q:{q:'Как звали главного героя спектакля?',a:['Андрей','Николай','Виктор','Сергей'],c:0}},
+  {id:'e5',title:'Ярмарка «Город мастеров»',place:'Площадь перед ДК «Металлург»',date:'3 ноября, 11:00',points:3100,tag:'Ярмарка',desc:'Городская ярмарка мастеров, ремёсел и уличной музыки.',q:{q:'Какой мастер-класс проходил на центральной площадке?',a:['Гончарное дело','Кузнечное дело','Роспись по дереву','Плетение из лозы'],c:1}}
+];
+
+const NPCS = [
+  {n:'Иван Кузнецов',p:75000,r:'Генеральный директор'},
+  {n:'Алексей Ковалёв',p:58000,r:'Директор завода'},
+  {n:'Марина Стрелкова',p:47000,r:'Первый заместитель директора'},
+  {n:'Игорь Демидов',p:37000,r:'Заместитель директора'},
+  {n:'Ольга Пестова',p:29000,r:'Начальник производства'},
+  {n:'Дмитрий Волков',p:23000,r:'Главный инженер'},
+  {n:'Светлана Крылова',p:17500,r:'Начальник цеха'},
+  {n:'Павел Морозов',p:13000,r:'Начальник участка'},
+  {n:'Анна Захарова',p:9700,r:'Ведущий инженер'},
+  {n:'Никита Белов',p:7200,r:'Инженер-технолог'},
+  {n:'Екатерина Лапина',p:5000,r:'Старший мастер'},
+  {n:'Роман Тихонов',p:3400,r:'Мастер смены'},
+  {n:'Юлия Громова',p:2100,r:'Сталевар'},
+  {n:'Артём Соколов',p:1150,r:'Слесарь-ремонтник'},
+  {n:'Дарья Лебедева',p:480,r:'Подручный сталевара'},
+  {n:'Максим Орлов',p:150,r:'Слесарь-ученик'}
+];
+
+const DAILY_GAME_CAP = 120;
+const DAILY_PUZZLE_CAP = 60;
+
+/* =========================================================
+   СОСТОЯНИЕ
+   ========================================================= */
+function today(){return new Date().toISOString().slice(0,10);}
+
+function defaultState(){
+  return {
+    name:'',points:0,created:Date.now(),lastVisit:today(),streak:1,daily:null,
+    events:[],gamesPlayed:0,quizzesCorrect:0,totalTasks:0,
+    screws:{unlocked:1,completed:0},
+    isAdmin:false,banned:false,banReason:'',
+    adminSubTab:'photos'
+  };
+}
+
+let S=null;
+function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null;}catch(e){return null;}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+function fmt(n){return n.toLocaleString('ru-RU');}
+function rankIndex(p){let i=0;for(let k=0;k<RANKS.length;k++)if(p>=RANKS[k].min)i=k;return i;}
+function rankOf(p){return RANKS[rankIndex(p)];}
+function nextRank(p){const i=rankIndex(p);return i<RANKS.length-1?RANKS[i+1]:null;}
+
+function toast(msg,type=''){
+  const t=document.createElement('div');
+  t.className='toast '+type;
+  t.textContent=msg;
+  document.getElementById('toasts').appendChild(t);
+  setTimeout(()=>{t.style.transition='opacity .4s,transform .4s';t.style.opacity='0';t.style.transform='translateY(-14px)';setTimeout(()=>t.remove(),400);},2600);
+}
+
+function addPoints(n,reason){
+  const b=rankIndex(S.points);S.points+=n;const a=rankIndex(S.points);
+  save();syncPlayerToServer();renderHeader();
+  if(a>b){setTimeout(()=>{toast(`🎉 Новое звание: ${RANKS[a].name}!`,'gold');if(activeTab==='home')render();},500);}
+  if(reason)toast(`+${n} рейтинга • ${reason}`,'ok');
+}
+
+function makeDaily(){
+  const qi=Math.floor(Math.random()*QUIZ.length);
+  return{date:today(),quizIndex:qi,gamePointsToday:0,puzzlePointsToday:0,tasks:[
+    {id:'login',name:'Ежедневный вход',sub:'Заходи в игру каждый день',reward:15,done:false},
+    {id:'quiz',name:'Вопрос дня',sub:'Ответь на вопрос о металлургии',reward:25,done:false},
+    {id:'game',name:'Мини-игра',sub:'Сыграй в любую мини-игру',reward:20,done:false},
+    {id:'game3',name:'Три игры за день',sub:'Сыграй в мини-игры 3 раза',reward:35,done:false,prog:0,goal:3}
+  ]};
+}
+
+function ensureDaily(){
+  if(!S.daily||S.daily.date!==today()){
+    S.daily=makeDaily();
+    const last=S.lastVisit,d1=new Date(last),d2=new Date(today());
+    const diff=Math.round((d2-d1)/86400000);
+    if(diff===1)S.streak=(S.streak||1)+1;
+    else if(diff>1)S.streak=1;
+    S.lastVisit=today();save();
+  }
+  if(S.daily.gamePointsToday===undefined)S.daily.gamePointsToday=0;
+  if(S.daily.puzzlePointsToday===undefined)S.daily.puzzlePointsToday=0;
+}
+
+function completeTask(id){
+  if(!S.daily)return;
+  const t=S.daily.tasks.find(x=>x.id===id);
+  if(!t||t.done)return;
+  t.done=true;S.totalTasks=(S.totalTasks||0)+1;
+  save();addPoints(t.reward,t.name);
+  if(activeTab==='tasks')render();
+}
+function taskById(id){return S.daily?S.daily.tasks.find(x=>x.id===id):null;}
+
+(function sparks(){
+  const c=document.getElementById('sparks'),ctx=c.getContext('2d');
+  let W,H,parts=[];
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  function make(){return{x:Math.random()*W,y:H+Math.random()*60,r:Math.random()*1.9+.5,vy:-(Math.random()*.85+.3),vx:(Math.random()-.5)*.45,a:Math.random()*.65+.18,life:Math.random()*320+180};}
+  for(let i=0;i<55;i++){const p=make();p.y=Math.random()*H;parts.push(p);}
+  function loop(){
+    ctx.clearRect(0,0,W,H);
+    parts.forEach((p,i)=>{
+      p.x+=p.vx;p.y+=p.vy;p.life--;
+      if(p.life<=0||p.y<-20){parts[i]=make();return;}
+      const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*5);
+      g.addColorStop(0,`rgba(255,180,80,${p.a})`);
+      g.addColorStop(.4,`rgba(255,110,30,${p.a*.55})`);
+      g.addColorStop(1,'rgba(255,60,0,0)');
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(p.x,p.y,p.r*5,0,Math.PI*2);ctx.fill();
+    });
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+let activeTab='home';
+const view=document.getElementById('view');
+
+function renderHeader(){
+  if(S.isAdmin){
+    document.getElementById('hAvatar').textContent='🛡️';
+    document.getElementById('hAvatar').classList.add('admin');
+    document.getElementById('hName').innerHTML='Администратор<span class="admin-badge">ADMIN</span>';
+    document.getElementById('hRank').textContent='Служба поддержки ОМЗ';
+    document.getElementById('hPoints').innerHTML='—<small>РЕЖИМ</small>';
+    return;
+  }
+  const r=rankOf(S.points);
+  document.getElementById('hAvatar').textContent=r.icon;
+  document.getElementById('hAvatar').classList.remove('admin');
+  document.getElementById('hName').textContent=S.name;
+  document.getElementById('hRank').textContent=r.name;
+  document.getElementById('hPoints').innerHTML=fmt(S.points)+'<small>РЕЙТИНГ</small>';
+}
+
+function render(){
+  renderHeader();updateNavBadge();
+  if(activeTab==='home')view.innerHTML=viewHome();
+  else if(activeTab==='tasks')view.innerHTML=viewTasks();
+  else if(activeTab==='events')view.innerHTML=viewEvents();
+  else if(activeTab==='game'){view.innerHTML=viewGame();setupGame();}
+  else if(activeTab==='top')view.innerHTML=viewTop();
+  else if(activeTab==='support')view.innerHTML=viewSupport();
+  else if(activeTab==='admin')view.innerHTML=viewAdmin();
+}
+
+function updateNavBadge(){
+  const adminBtn=document.querySelector('[data-tab="admin"]');
+  adminBtn.style.display=S.isAdmin?'flex':'none';
+  let existing=adminBtn.querySelector('.nav-badge');
+  if(existing)existing.remove();
+  if(S.isAdmin){
+    const srv=serverLoad();
+    const pending=srv.pendingEvents.filter(p=>p.status==='pending').length;
+    const reports=srv.reports.filter(r=>!r.adminRead).length;
+    const total=pending+reports;
+    if(total>0){const b=document.createElement('span');b.className='nav-badge';b.textContent=total>99?'99+':total;adminBtn.appendChild(b);}
+  } else {
+    const srv=serverLoad();
+    const unreadReplies=srv.reports.filter(r=>r.from===S.name&&r.adminReply&&!r.playerRead).length;
+    const supportBtn=document.querySelector('[data-tab="support"]');
+    let b=supportBtn.querySelector('.nav-badge');
+    if(b)b.remove();
+    if(unreadReplies>0){const nb=document.createElement('span');nb.className='nav-badge';nb.textContent=unreadReplies;supportBtn.appendChild(nb);}
+  }
+}
+
+/* ---------- ГЛАВНАЯ ---------- */
+function viewHome(){
+  if(S.isAdmin) return viewAdminHome();
+  const r=rankOf(S.points),nr=nextRank(S.points);
+  const prevMin=r.min,nextMin=nr?nr.min:r.min;
+  const pct=nr?Math.min(100,((S.points-prevMin)/(nextMin-prevMin))*100):100;
+  const dailyDone=S.daily?S.daily.tasks.filter(t=>t.done).length:0;
+  const dailyTotal=S.daily?S.daily.tasks.length:4;
+  const gameToday=S.daily?.gamePointsToday||0,puzzleToday=S.daily?.puzzlePointsToday||0;
+  let ladder='';const curIdx=rankIndex(S.points);
+  RANKS.forEach((rk,i)=>{
+    const cls=i<curIdx?'done':(i===curIdx?'current':'');
+    ladder+=`<div class="step ${cls}"><div class="s-ic">${rk.icon}</div><div class="s-name">${rk.name}</div><div class="s-pts">${i<=curIdx?'✓':fmt(rk.min)+' очк.'}</div></div>`;
+  });
+  return `
+    <div class="rank-badge"><div class="rank-ic">${r.icon}</div>
+      <div style="flex:1;min-width:0"><div class="rank-name">${r.name}</div>
+        <div class="rank-next">${nr?`До звания «${nr.name}» — ${fmt(nextMin-S.points)} очк.`:'Максимальное звание!'}</div>
+        <div class="progress"><i style="width:${pct}%"></i></div>
+      </div>
+    </div>
+    <div class="card" style="background:linear-gradient(160deg,rgba(255,107,26,.2),rgba(255,61,0,.06));border-color:rgba(255,107,26,.45)">
+      <div class="card-title"><span class="dot"></span>🎭 Главный источник рейтинга</div>
+      <div style="font-size:14px;color:var(--text);line-height:1.7;font-weight:600">
+        Один поход в ДК = <b style="color:var(--accent2);font-size:17px">3000–4000 очков</b><br>
+        <span style="font-size:12.5px;color:var(--muted);font-weight:500">В 25 раз больше, чем можно заработать в играх за день.</span>
+      </div>
+      <button class="btn" data-action="go" data-tab="events" style="margin-top:14px">Смотреть мероприятия →</button>
+    </div>
+    <div class="card"><div class="card-title"><span class="dot"></span>Твоя статистика</div>
+      <div class="stat-grid">
+        <div class="stat"><div class="s-val">${fmt(S.points)}</div><div class="s-lbl">РЕЙТИНГ</div></div>
+        <div class="stat"><div class="s-val">${S.streak||1}🔥</div><div class="s-lbl">ДНЕЙ ПОДРЯД</div></div>
+        <div class="stat"><div class="s-val">${S.events.length}/${EVENTS.length}</div><div class="s-lbl">ИВЕНТОВ</div></div>
+      </div>
+    </div>
+    <div class="card" data-action="go" data-tab="tasks" style="cursor:pointer">
+      <div class="card-title"><span class="dot"></span>Задания на сегодня</div>
+      <div style="font-size:13.5px;color:var(--muted);line-height:1.5;margin-bottom:10px">Выполнено <b style="color:var(--accent2)">${dailyDone} из ${dailyTotal}</b>.</div>
+      <div class="progress"><i style="width:${(dailyDone/dailyTotal)*100}%"></i></div>
+    </div>
+    <div class="card"><div class="card-title"><span class="dot"></span>Дневные лимиты на игры</div>
+      <div style="font-size:12.5px;color:var(--muted);margin-bottom:8px">Мини-игры: <b style="color:var(--accent2)">${gameToday} / ${DAILY_GAME_CAP}</b></div>
+      <div class="cap-bar ${gameToday>=DAILY_GAME_CAP?'full':''}"><i style="width:${Math.min(100,(gameToday/DAILY_GAME_CAP)*100)}%"></i></div>
+      <div style="font-size:12.5px;color:var(--muted);margin-bottom:8px">Головоломки: <b style="color:var(--accent2)">${puzzleToday} / ${DAILY_PUZZLE_CAP}</b></div>
+      <div class="cap-bar ${puzzleToday>=DAILY_PUZZLE_CAP?'full':''}"><i style="width:${Math.min(100,(puzzleToday/DAILY_PUZZLE_CAP)*100)}%"></i></div>
+    </div>
+    <div class="section-h">Карьерная лестница</div>
+    <div class="card"><div class="ladder">${ladder}</div></div>
+  `;
+}
+
+function viewAdminHome(){
+  const srv=serverLoad();
+  const pending=srv.pendingEvents.filter(p=>p.status==='pending').length;
+  const unread=srv.reports.filter(r=>!r.adminRead).length;
+  const banned=Object.values(srv.players).filter(p=>p.banned).length;
+  const playersCount=Object.keys(srv.players).length;
+  const totalPoints=Object.values(srv.players).reduce((s,p)=>s+p.points,0);
+  return `<div class="card admin-card"><div class="card-title"><span class="dot"></span>Панель администратора</div>
+    <div style="font-size:13px;color:var(--muted);line-height:1.6">Проверяйте фотоотчёты, отвечайте на обращения, управляйте игроками.</div></div>
+    <div class="card"><div class="card-title"><span class="dot"></span>Сводка</div>
+      <div class="stat-grid">
+        <div class="stat"><div class="s-val">${playersCount}</div><div class="s-lbl">ИГРОКОВ</div></div>
+        <div class="stat"><div class="s-val">${pending}</div><div class="s-lbl">ФОТО</div></div>
+        <div class="stat"><div class="s-val">${unread}</div><div class="s-lbl">ОБРАЩЕНИЙ</div></div>
+      </div>
+      <div class="stat-grid" style="margin-top:9px">
+        <div class="stat"><div class="s-val">${banned}</div><div class="s-lbl">ЗАБАНЕНО</div></div>
+        <div class="stat"><div class="s-val">${fmt(totalPoints)}</div><div class="s-lbl">ОЧКОВ ВСЕГО</div></div>
+        <div class="stat"><div class="s-val">${srv.reports.length}</div><div class="s-lbl">ВСЕГО ОБРАЩ.</div></div>
+      </div>
+    </div>`;
+}
+
+/* ---------- ЗАДАНИЯ ---------- */
+function viewTasks(){
+  if(S.isAdmin)return viewAdminHome();
+  if(!S.daily)return '<div class="empty">Загрузка…</div>';
+  const done=S.daily.tasks.filter(t=>t.done).length,total=S.daily.tasks.length;
+  let rows=S.daily.tasks.map(t=>{
+    let sub=t.sub;
+    if(t.id==='game3'&&!t.done)sub=`Прогресс: ${t.prog||0} из ${t.goal}`;
+    return `<div class="task ${t.done?'done':''}"><div class="t-ic">${t.done?'✅':taskIcon(t.id)}</div><div class="t-body"><div class="t-name">${t.name}</div><div class="t-sub">${sub}</div></div><div class="t-reward">+${t.reward}</div></div>`;
+  }).join('');
+  const quizTask=taskById('quiz'),q=QUIZ[S.daily.quizIndex];
+  let quizBlock='';
+  if(quizTask&&!quizTask.done){
+    quizBlock=`<div class="card" style="border-color:rgba(255,107,26,.3);background:linear-gradient(160deg,rgba(255,107,26,.1),rgba(255,255,255,.02))">
+      <div class="card-title"><span class="dot"></span>Вопрос дня</div>
+      <div style="font-size:14.5px;font-weight:600;line-height:1.5;margin-bottom:14px">${q.q}</div>
+      ${q.a.map((a,i)=>`<button class="opt" data-action="quiz" data-i="${i}">${a}</button>`).join('')}
+    </div>`;
+  }
+  return `<div class="card"><div class="card-title"><span class="dot"></span>Ежедневные задания</div>
+    <div style="font-size:12.5px;color:var(--muted);margin-bottom:14px">Выполнено <b style="color:var(--accent2)">${done} из ${total}</b></div>
+    ${rows}</div>${quizBlock}`;
+}
+function taskIcon(id){return{login:'📅',quiz:'❓',game:'🎮',game3:'🏅'}[id]||'📌';}
+
+/* ---------- ИВЕНТЫ ---------- */
+function viewEvents(){
+  if(S.isAdmin)return viewAdminHome();
+  const srv=serverLoad();
+  let html=`<div class="card" style="background:linear-gradient(160deg,rgba(255,107,26,.15),rgba(255,255,255,.02));border-color:rgba(255,107,26,.35)">
+    <div class="card-title"><span class="dot"></span>🎭 Мероприятия ДК</div>
+    <div style="font-size:13.5px;color:var(--text);line-height:1.6;font-weight:600">Главный источник рейтинга. Каждое посещение — <b style="color:var(--accent2)">3000–4000 очков</b>.</div>
+  </div>`;
+  EVENTS.forEach(ev=>{
+    const done=S.events.includes(ev.id);
+    const pendingPhoto=srv.pendingEvents.find(p=>p.playerName===S.name&&p.eventId===ev.id&&p.status==='pending');
+    const rejectedPhoto=srv.pendingEvents.find(p=>p.playerName===S.name&&p.eventId===ev.id&&p.status==='rejected');
+    let btn='';
+    if(done){btn=`<button class="btn ghost" disabled>✓ Участие подтверждено</button>`;}
+    else if(pendingPhoto){btn=`<button class="btn ghost" disabled>⏳ Фото на проверке</button>`;}
+    else{btn=`<button class="btn" data-action="event" data-id="${ev.id}">Подтвердить участие</button>`;}
+    let rejectedNote='';
+    if(rejectedPhoto&&!done){rejectedNote=`<div style="font-size:12px;color:var(--danger);font-weight:700;margin-top:8px">❌ Фото отклонено${rejectedPhoto.adminNote?': '+rejectedPhoto.adminNote:''}</div>`;}
+    html+=`<div class="event"><div class="event-top"><h3>${ev.title}</h3></div>
+      <div class="event-body">
+        <div class="event-meta"><span class="chip mega">+${fmt(ev.points)} рейтинга</span><span class="chip">${ev.tag}</span><span class="chip">${ev.date}</span></div>
+        <div style="font-size:11.5px;color:var(--muted);margin-bottom:8px">📍 ${ev.place}</div>
+        <p>${ev.desc}</p>${btn}${rejectedNote}
+      </div></div>`;
+  });
+  return html;
+}
+
+/* ---------- РЕЙТИНГ ---------- */
+function viewTop(){
+  if(S.isAdmin)return viewAdminHome();
+  const srv=serverLoad(),myRank=rankOf(S.points),list=[];
+  Object.values(srv.players).forEach(p=>{if(p.name!==S.name&&!p.banned)list.push({name:p.name,points:p.points,rank:rankOf(p.points).name,me:false});});
+  NPCS.forEach(x=>list.push({name:x.n,points:x.p,rank:x.r,me:false}));
+  list.push({name:S.name,points:S.points,rank:myRank.name,me:true});
+  list.sort((a,b)=>b.points-a.points);
+  const myPos=list.findIndex(x=>x.me)+1;
+  let rows=list.slice(0,30).map((x,i)=>{
+    const initials=x.name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+    return `<div class="lb-row ${x.me?'me':''}"><div class="lb-pos">${i+1}</div><div class="lb-av">${x.me?rankOf(x.points).icon:initials}</div><div style="flex:1;min-width:0"><div class="lb-name">${x.me?x.name+' (ты)':x.name}</div><div class="lb-rank">${x.rank}</div></div><div class="lb-pts">${fmt(x.points)}</div></div>`;
+  }).join('');
+  return `<div class="card" style="background:linear-gradient(160deg,rgba(255,179,71,.12),rgba(255,255,255,.02));border-color:rgba(255,179,71,.25)">
+    <div class="card-title"><span class="dot"></span>Твоя позиция</div>
+    <div style="display:flex;align-items:center;gap:16px">
+      <div style="font-size:34px;font-weight:800;color:var(--accent2)">#${myPos}</div>
+      <div style="flex:1"><div style="font-size:13.5px;font-weight:600">${fmt(S.points)} очков</div><div style="font-size:12px;color:var(--muted);margin-top:3px">${myRank.name}</div></div>
+    </div></div><div class="section-h">Таблица лидеров</div>${rows}`;
+}
+
+/* ---------- ПОДДЕРЖКА ---------- */
+function viewSupport(){
+  if(S.isAdmin)return viewAdminHome();
+  const srv=serverLoad();
+  const myReports=srv.reports.filter(r=>r.from===S.name).sort((a,b)=>b.date-a.date);
+  let changed=false;
+  myReports.forEach(r=>{if(r.adminReply&&!r.playerRead){r.playerRead=true;changed=true;}});
+  if(changed)serverSave(srv);
+  setTimeout(updateNavBadge,10);
+  let reportsHtml='';
+  if(myReports.length===0){reportsHtml=`<div class="empty"><span class="e-ic">💬</span>У вас пока нет обращений</div>`;}
+  else{reportsHtml=myReports.map(r=>`<div class="report-card">
+      <div class="report-head"><div class="report-from">Вы</div><div class="report-date">${new Date(r.date).toLocaleString('ru-RU')}</div></div>
+      <div class="report-text">${escapeHtml(r.message)}</div>
+      ${r.image?`<img class="report-img" src="${r.image}">`:''}
+      ${r.adminReply?`<div style="background:rgba(156,39,176,.12);border:1px solid rgba(156,39,176,.3);border-radius:10px;padding:12px;margin-top:10px"><div style="font-size:11px;color:#c48ddb;font-weight:800;letter-spacing:1px;margin-bottom:6px">🛡️ ОТВЕТ АДМИНА</div><div style="font-size:13.5px;line-height:1.55;white-space:pre-wrap">${escapeHtml(r.adminReply)}</div></div>`:`<div style="font-size:11.5px;color:var(--muted);margin-top:8px;font-weight:600">⏳ Ожидает ответа</div>`}
+    </div>`).join('');}
+  return `<div class="card"><div class="card-title"><span class="dot"></span>Служба поддержки</div>
+    <textarea class="field" id="supportMsg" placeholder="Опишите вопрос…" maxlength="800"></textarea>
+    <label class="upload-zone" for="supportPhoto" style="margin-top:10px;padding:16px"><span class="u-ic" style="font-size:22px">📎</span><span id="photoLabelText">Прикрепить фото</span></label>
+    <input type="file" id="supportPhoto" accept="image/*" style="display:none">
+    <div id="supportPreview"></div>
+    <button class="btn" data-action="send-support">Отправить</button>
+  </div><div class="section-h">Мои обращения</div>${reportsHtml}`;
+}
+
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+/* ---------- АДМИНКА ---------- */
+function viewAdmin(){
+  if(!S.isAdmin)return viewAdminHome();
+  const sub=S.adminSubTab||'photos';let body='';
+  if(sub==='photos')body=viewAdminPhotos();
+  else if(sub==='reports')body=viewAdminReports();
+  else if(sub==='players')body=viewAdminPlayers();
+  else if(sub==='settings')body=viewAdminSettings();
+  return `<div class="admin-tab-bar">
+    <button data-action="admin-tab" data-sub="photos" class="${sub==='photos'?'active':''}">📸 Фото</button>
+    <button data-action="admin-tab" data-sub="reports" class="${sub==='reports'?'active':''}">💬 Обращения</button>
+    <button data-action="admin-tab" data-sub="players" class="${sub==='players'?'active':''}">👥 Игроки</button>
+    <button data-action="admin-tab" data-sub="settings" class="${sub==='settings'?'active':''}">⚙️ Настройки</button>
+  </div>${body}`;
+}
+function viewAdminPhotos(){
+  const srv=serverLoad();
+  const list=srv.pendingEvents.slice().sort((a,b)=>{if(a.status!==b.status)return a.status==='pending'?-1:1;return b.date-a.date;});
+  if(list.length===0)return `<div class="card admin-card"><div class="empty"><span class="e-ic">📸</span>Пока нет фотоотчётов</div></div>`;
+  let html=`<div class="card admin-card"><div class="card-title"><span class="dot"></span>Фотоотчёты игроков</div></div>`;
+  list.forEach(pe=>{
+    const stChip=pe.status==='pending'?`<span class="chip pending">⏳ НА ПРОВЕРКЕ</span>`:pe.status==='approved'?`<span class="chip approved">✓ ОДОБРЕНО</span>`:`<span class="chip rejected">✕ ОТКЛОНЕНО</span>`;
+    let actions='';
+    if(pe.status==='pending'){actions=`<button class="btn success sm" data-action="approve-photo" data-id="${pe.id}">✓ Одобрить</button><button class="btn danger sm" data-action="reject-photo" data-id="${pe.id}">✕ Отклонить</button>`;}
+    else if(pe.status==='approved'){actions=`<div style="font-size:12px;color:var(--ok);font-weight:700">✓ Начислено ${fmt(pe.eventPoints)}</div>`;}
+    else{actions=`<div style="font-size:12px;color:var(--danger);font-weight:700">Причина: ${escapeHtml(pe.adminNote||'—')}</div>`;}
+    html+=`<div class="report-card"><div class="report-head"><div><div class="report-from">👤 ${escapeHtml(pe.playerName)}</div><div style="font-size:12px;color:var(--muted);margin-top:3px">${escapeHtml(pe.eventTitle)} • +${fmt(pe.eventPoints)}</div></div><div style="text-align:right">${stChip}<div class="report-date" style="margin-top:4px">${new Date(pe.date).toLocaleString('ru-RU')}</div></div></div><img class="report-img" src="${pe.image}"><div class="report-actions">${actions}</div></div>`;
+  });
+  return html;
+}
+function viewAdminReports(){
+  const srv=serverLoad();
+  const list=srv.reports.slice().sort((a,b)=>{if((a.adminReply?1:0)!==(b.adminReply?1:0))return a.adminReply?1:-1;return b.date-a.date;});
+  if(list.length===0)return `<div class="card admin-card"><div class="empty"><span class="e-ic">💬</span>Обращений пока нет</div></div>`;
+  let html=`<div class="card admin-card"><div class="card-title"><span class="dot"></span>Обращения игроков</div></div>`;
+  list.forEach(r=>{
+    const unread=!r.adminRead;
+    html+=`<div class="report-card" style="${unread?'border-color:rgba(156,39,176,.5);background:rgba(156,39,176,.06)':''}">
+      <div class="report-head"><div><div class="report-from">👤 ${escapeHtml(r.from)}</div>${unread?'<div style="font-size:11px;color:#c48ddb;font-weight:800;letter-spacing:1px;margin-top:3px">● НОВОЕ</div>':''}</div><div class="report-date">${new Date(r.date).toLocaleString('ru-RU')}</div></div>
+      <div class="report-text">${escapeHtml(r.message)}</div>
+      ${r.image?`<img class="report-img" src="${r.image}">`:''}
+      ${r.adminReply?`<div style="background:rgba(56,211,159,.08);border:1px solid rgba(56,211,159,.3);border-radius:10px;padding:12px;margin-top:10px"><div style="font-size:11px;color:var(--ok);font-weight:800;letter-spacing:1px;margin-bottom:6px">✓ ОТВЕТ ОТПРАВЛЕН</div><div style="font-size:13.5px;line-height:1.55;white-space:pre-wrap">${escapeHtml(r.adminReply)}</div></div>`:`<textarea class="field" id="reply-${r.id}" placeholder="Ответ игроку…" style="margin-top:10px"></textarea><div class="report-actions" style="margin-top:10px"><button class="btn sm" data-action="reply-report" data-id="${r.id}">Ответить</button><button class="btn danger sm" data-action="ban-from-report" data-id="${r.id}">🚫 Забанить</button></div>`}
+    </div>`;
+  });
+  return html;
+}
+function viewAdminPlayers(){
+  const srv=serverLoad();
+  const players=Object.values(srv.players).sort((a,b)=>b.points-a.points);
+  if(players.length===0)return `<div class="card admin-card"><div class="empty"><span class="e-ic">👥</span>Пока нет игроков</div></div>`;
+  const banned=players.filter(p=>p.banned).length;
+  let html=`<div class="card admin-card"><div class="card-title"><span class="dot"></span>Игроки (${players.length})</div><div style="font-size:12.5px;color:var(--muted)">🚫 Забанено: <b style="color:var(--danger)">${banned}</b></div></div>`;
+  players.forEach(p=>{
+    const r=rankOf(p.points);
+    const initials=p.name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+    html+=`<div class="player-row ${p.banned?'banned':''}">
+      <div class="p-av">${p.banned?'🚫':initials}</div>
+      <div class="p-info"><div class="p-name">${escapeHtml(p.name)} ${p.banned?'<span class="chip banned" style="margin-left:4px">ЗАБАНЕН</span>':''}</div><div class="p-meta">${r.name} • ивентов: ${p.events||0}</div>${p.banned&&p.banReason?`<div class="p-meta" style="color:var(--danger);margin-top:2px">Причина: ${escapeHtml(p.banReason)}</div>`:''}</div>
+      <div class="p-pts">${fmt(p.points)}</div>
+      <div class="p-actions">${p.banned?`<button class="btn success sm" data-action="unban-player" data-name="${escapeHtml(p.name)}">✓ Разбанить</button>`:`<button class="btn danger sm" data-action="ban-player" data-name="${escapeHtml(p.name)}">🚫 Забанить</button>`}</div>
+    </div>`;
+  });
+  return html;
+}
+function viewAdminSettings(){
+  const srv=serverLoad();
+  return `<div class="card admin-card"><div class="card-title"><span class="dot"></span>Смена пароля</div>
+    <div style="font-size:12.5px;color:var(--muted);margin-bottom:12px">Текущий: <b style="color:var(--accent2)">${srv.adminPass}</b></div>
+    <input class="field" type="text" id="newAdminPass" placeholder="Новый пароль (мин. 4 символа)">
+    <button class="btn" data-action="change-pass">Сохранить</button></div>
+    <div class="card admin-card"><div class="card-title"><span class="dot"></span>Экспорт</div>
+    <button class="btn ghost" data-action="export-data">📥 Скачать JSON</button></div>
+    <div class="card admin-card"><div class="card-title"><span class="dot"></span>Опасная зона</div>
+    <button class="btn danger" data-action="reset-server">🗑️ Сбросить всё</button></div>
+    <div class="card admin-card"><div class="card-title"><span class="dot"></span>Выход</div>
+    <button class="btn ghost" data-action="logout-admin">🚪 Выйти из админки</button></div>`;
+}
+
+/* =========================================================
+   МИНИ-ИГРЫ
+   ========================================================= */
+let currentGameId=null;
+let gameCleanup=null;
+
+const GAMES=[
+  {id:'smelt',icon:'🔥',name:'Плавка стали',desc:'Останови стрелку в зелёной зоне'},
+  {id:'sort',icon:'📦',name:'Сортировка металла',desc:'Определи группу металла на время'},
+  {id:'memory',icon:'🧠',name:'Память сталевара',desc:'Повтори последовательность'},
+  {id:'forge',icon:'🔨',name:'Кузнец',desc:'Успей нанести максимум ударов'},
+  {id:'screws',icon:'🔧',name:'Винтики и дощечки',desc:'500 уровней: 2→9 досок, 2→9 цветов'}
+];
+
+function registerGamePlayed(score){
+  S.gamesPlayed=(S.gamesPlayed||0)+1;
+  const t1=taskById('game');if(t1&&!t1.done)completeTask('game');
+  const t3=taskById('game3');
+  if(t3){t3.prog=Math.min(t3.goal,(t3.prog||0)+1);if(t3.prog>=t3.goal&&!t3.done)completeTask('game3');else save();}
+  if(score>0){
+    if(!S.daily)S.daily=makeDaily();
+    const used=S.daily.gamePointsToday||0,left=DAILY_GAME_CAP-used;
+    if(left<=0){toast('Лимит очков от игр исчерпан — иди на мероприятие!','');return;}
+    const give=Math.min(left,score);S.daily.gamePointsToday=used+give;
+    addPoints(give,'Мини-игра');
+  }
+}
+function registerPuzzlePlayed(score){
+  S.gamesPlayed=(S.gamesPlayed||0)+1;
+  const t1=taskById('game');if(t1&&!t1.done)completeTask('game');
+  const t3=taskById('game3');
+  if(t3){t3.prog=Math.min(t3.goal,(t3.prog||0)+1);if(t3.prog>=t3.goal&&!t3.done)completeTask('game3');else save();}
+  if(score>0){
+    if(!S.daily)S.daily=makeDaily();
+    const used=S.daily.puzzlePointsToday||0,left=DAILY_PUZZLE_CAP-used;
+    if(left<=0){toast('Лимит очков от головоломок исчерпан','');return;}
+    const give=Math.min(left,score);S.daily.puzzlePointsToday=used+give;
+    addPoints(give,'Головоломка');
+  }
+}
+
+function stopCurrentGame(){if(gameCleanup){try{gameCleanup();}catch(e){}gameCleanup=null;}}
+
+function viewGame(){
+  if(S.isAdmin)return viewAdminHome();
+  stopCurrentGame();
+  if(currentGameId===null)return viewGameSelector();
+  if(currentGameId==='smelt')return viewSmelt();
+  if(currentGameId==='sort')return viewSort();
+  if(currentGameId==='memory')return viewMemory();
+  if(currentGameId==='forge')return viewForge();
+  if(currentGameId==='screws')return viewScrews();
+  return viewGameSelector();
+}
+
+function viewGameSelector(){
+  const played=(taskById('game3')?.prog)||0;
+  const gameToday=S.daily?.gamePointsToday||0,puzzleToday=S.daily?.puzzlePointsToday||0;
+  const gameLeft=gameToday<DAILY_GAME_CAP,puzzleLeft=puzzleToday<DAILY_PUZZLE_CAP;
+  return `<div class="card">
+    <div class="card-title"><span class="dot"></span>Мини-игры и головоломки</div>
+    <div style="font-size:12.5px;color:var(--muted);margin-bottom:10px">Сегодня сыграно: <b style="color:var(--accent2)">${played}</b> из 3</div>
+    <div style="background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:14px">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px">🔥 Игры: <b style="color:var(--accent2)">${gameToday}/${DAILY_GAME_CAP}</b></div>
+      <div class="cap-bar ${gameToday>=DAILY_GAME_CAP?'full':''}" style="margin:0 0 10px"><i style="width:${Math.min(100,(gameToday/DAILY_GAME_CAP)*100)}%"></i></div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px">🧩 Головоломки: <b style="color:var(--accent2)">${puzzleToday}/${DAILY_PUZZLE_CAP}</b></div>
+      <div class="cap-bar ${puzzleToday>=DAILY_PUZZLE_CAP?'full':''}" style="margin:0"><i style="width:${Math.min(100,(puzzleToday/DAILY_PUZZLE_CAP)*100)}%"></i></div>
+    </div>
+    ${GAMES.map(g=>{
+      const isPuzzle=(g.id==='screws');
+      const locked=isPuzzle?!puzzleLeft:!gameLeft;
+      return `<div class="game-card ${locked?'locked':''}" ${locked?'':'data-action="open-game"'} data-id="${g.id}">
+        <div style="font-size:30px;width:44px;text-align:center">${g.icon}</div>
+        <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14px">${g.name} ${locked?'<span style="color:var(--danger);font-size:11px">• ЛИМИТ</span>':''}</div><div style="font-size:12px;color:var(--muted);margin-top:3px">${g.desc}</div></div>
+        <div style="font-size:20px;color:var(--accent)">›</div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+/* Плавка */
+function viewSmelt(){return `<button class="back-btn" data-action="back-games">‹ Назад</button>
+  <div class="card game-wrap"><div class="card-title" style="justify-content:center"><span class="dot"></span>Плавка стали</div>
+  <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px">Останови стрелку в зелёной зоне.</p>
+  <div class="game-info"><span>Раунд: <b id="gRound" style="color:var(--accent2)">1/3</b></span><span>Попаданий: <b id="gHits" style="color:var(--ok)">0</b></span></div>
+  <div class="gauge"><div class="heat"></div><div class="zone" id="gZone" style="left:40%;width:18%"></div><div class="needle" id="gNeedle" style="left:0%"></div></div>
+  <div class="game-result" id="gResult">Нажми «Старт»</div><button class="btn" id="gBtn">Старт</button></div>`;
+}
+function setupSmelt(){
+  const btn=document.getElementById('gBtn'),needle=document.getElementById('gNeedle'),zoneEl=document.getElementById('gZone');
+  const resEl=document.getElementById('gResult'),roundEl=document.getElementById('gRound'),hitsEl=document.getElementById('gHits');
+  let state='idle',round=1,hits=0,pos=0,dir=1,speed=1.15,last=0,zoneStart=40,zoneW=18,raf=null,done=false;
+  function setZone(){zoneW=Math.max(9,20-(round-1)*4);zoneStart=12+Math.random()*(76-zoneW);zoneEl.style.left=zoneStart+'%';zoneEl.style.width=zoneW+'%';}
+  function tick(t){if(!last)last=t;const dt=Math.min(48,t-last);last=t;pos+=dir*speed*dt*.055;if(pos>=100){pos=100;dir=-1;}if(pos<=0){pos=0;dir=1;}needle.style.left=pos+'%';raf=requestAnimationFrame(tick);}
+  function start(){btn.onclick=stop;btn.textContent='СТОП!';resEl.textContent='Лови…';resEl.style.color='';last=0;state='run';raf=requestAnimationFrame(tick);}
+  function stop(){if(state!=='run')return;cancelAnimationFrame(raf);raf=null;state='idle';last=0;
+    const inZone=pos>=zoneStart&&pos<=zoneStart+zoneW;if(inZone)hits++;hitsEl.textContent=hits;
+    resEl.textContent=inZone?'✅ Норма!':'❌ Мимо';resEl.style.color=inZone?'var(--ok)':'var(--hot)';
+    if(round>=3){finish();return;}round++;roundEl.textContent=round+'/3';speed+=.42;setZone();btn.textContent='Дальше';btn.onclick=start;
+  }
+  function finish(){if(done)return;done=true;const reward=hits*5;
+    resEl.innerHTML=hits===3?`🏆 Идеально! +${reward}`:`Попаданий: ${hits}/3 • +${reward}`;
+    resEl.style.color='var(--accent2)';btn.textContent='Снова';btn.onclick=()=>render();registerGamePlayed(reward);
+  }
+  function reset(){cancelAnimationFrame(raf);raf=null;state='idle';round=1;hits=0;pos=0;dir=1;speed=1.15;last=0;done=false;
+    roundEl.textContent='1/3';hitsEl.textContent='0';needle.style.left='0%';setZone();
+    resEl.textContent='Нажми «Старт»';resEl.style.color='';btn.textContent='Старт';btn.onclick=start;
+  }
+  reset();gameCleanup=()=>{cancelAnimationFrame(raf);raf=null;};
+}
+
+/* Сортировка */
+function viewSort(){return `<button class="back-btn" data-action="back-games">‹ Назад</button>
+  <div class="card"><div class="card-title"><span class="dot"></span>Сортировка металла</div>
+  <div class="game-info" style="margin-bottom:6px"><span>Вопрос: <b id="sortProgress" style="color:var(--accent2)">0/8</b></span><span>Очки: <b id="sortScore" style="color:var(--ok)">0</b></span></div>
+  <div class="timer-bar"><i id="sortTimer" style="width:100%"></i></div>
+  <div id="sortQuestion" style="font-size:15px;font-weight:700;line-height:1.5;margin:18px 0;text-align:center;min-height:44px">Нажми «Начать»</div>
+  <div id="sortOptions" style="margin-bottom:12px"></div>
+  <div class="game-result" id="sortResult" style="text-align:center;min-height:22px"></div>
+  <button class="btn" id="sortBtn">Начать</button></div>`;
+}
+function setupSort(){
+  const qEl=document.getElementById('sortQuestion'),optsEl=document.getElementById('sortOptions'),timerEl=document.getElementById('sortTimer');
+  const progEl=document.getElementById('sortProgress'),scoreEl=document.getElementById('sortScore'),resultEl=document.getElementById('sortResult'),btn=document.getElementById('sortBtn');
+  const CATS=['Чёрный металл','Цветной металл','Драгоценный металл'];
+  const ITEMS=[{name:'Сталь',cat:0},{name:'Чугун',cat:0},{name:'Медь',cat:1},{name:'Алюминий',cat:1},{name:'Латунь',cat:1},{name:'Бронза',cat:1},{name:'Золото',cat:2},{name:'Серебро',cat:2},{name:'Платина',cat:2},{name:'Никель',cat:1},{name:'Титан',cat:1},{name:'Вольфрам',cat:1}];
+  const TOTAL=8;let qIndex=0,score=0,current=null,timerId=null,timeLeft=6,done=false;
+  function nextQuestion(){if(qIndex>=TOTAL){finish();return;}qIndex++;progEl.textContent=qIndex+'/'+TOTAL;
+    current=ITEMS[Math.floor(Math.random()*ITEMS.length)];qEl.textContent='К какой группе относится: '+current.name+'?';
+    optsEl.innerHTML=CATS.map((c,i)=>`<button class="opt" data-sort="${i}">${c}</button>`).join('');
+    optsEl.querySelectorAll('[data-sort]').forEach(b=>{b.onclick=()=>answer(Number(b.dataset.sort));});
+    timeLeft=6;timerEl.style.width='100%';resultEl.textContent='';clearInterval(timerId);
+    timerId=setInterval(()=>{timeLeft-=.1;timerEl.style.width=Math.max(0,(timeLeft/6)*100)+'%';if(timeLeft<=0){clearInterval(timerId);answer(-1);}},100);
+  }
+  function answer(i){clearInterval(timerId);optsEl.querySelectorAll('button').forEach(b=>b.disabled=true);
+    if(i===current.cat){score+=30;scoreEl.textContent=score;resultEl.textContent='✅';resultEl.style.color='var(--ok)';}
+    else{resultEl.textContent=i===-1?'⏰':'❌';resultEl.style.color='var(--hot)';}
+    setTimeout(nextQuestion,600);
+  }
+  function finish(){if(done)return;done=true;const reward=Math.floor(score/10);
+    qEl.textContent='Готово!';optsEl.innerHTML='';timerEl.style.width='0%';
+    resultEl.innerHTML=`Итог: <b style="color:var(--accent2)">${reward} очков</b>`;
+    btn.textContent='Снова';btn.disabled=false;btn.onclick=()=>render();registerGamePlayed(reward);
+  }
+  btn.onclick=()=>{qIndex=0;score=0;done=false;scoreEl.textContent='0';btn.disabled=true;nextQuestion();};
+  gameCleanup=()=>{clearInterval(timerId);timerId=null;};
+}
+
+/* Память */
+function viewMemory(){return `<button class="back-btn" data-action="back-games">‹ Назад</button>
+  <div class="card"><div class="card-title"><span class="dot"></span>Память сталевара</div>
+  <div class="game-info" style="margin-bottom:8px"><span>Раунд: <b id="memRound" style="color:var(--accent2)">1/8</b></span><span>Очки: <b id="memScore" style="color:var(--ok)">0</b></span></div>
+  <div class="mem-pad"><div class="mem-btn" data-pad="0">🔥</div><div class="mem-btn" data-pad="1">⚙️</div><div class="mem-btn" data-pad="2">🔨</div><div class="mem-btn" data-pad="3">🏭</div></div>
+  <div class="game-result" id="memStatus" style="text-align:center;min-height:22px">Нажми «Старт»</div><button class="btn" id="memBtn">Старт</button></div>`;
+}
+function setupMemory(){
+  const pads=document.querySelectorAll('.mem-btn'),status=document.getElementById('memStatus'),roundEl=document.getElementById('memRound'),scoreEl=document.getElementById('memScore'),btn=document.getElementById('memBtn');
+  const MAX_ROUNDS=8;let sequence=[],playerIdx=0,round=1,mistakes=0,score=0,playing=false,accepting=false,seqTimer=null,done=false;
+  function nextRound(){sequence.push(Math.floor(Math.random()*4));playerIdx=0;accepting=false;roundEl.textContent=round+'/'+MAX_ROUNDS;status.textContent='Смотри…';status.style.color='';playSequence();}
+  function playSequence(){let i=0;seqTimer=setInterval(()=>{if(i>=sequence.length){clearInterval(seqTimer);seqTimer=null;accepting=true;status.textContent='Твоя очередь!';status.style.color='var(--accent2)';return;}const idx=sequence[i],pad=pads[idx];pad.classList.add('flash');setTimeout(()=>pad.classList.remove('flash'),420);i++;},650);}
+  pads.forEach((pad,i)=>{pad.addEventListener('click',()=>{
+    if(!accepting||!playing)return;pad.classList.add('flash');setTimeout(()=>pad.classList.remove('flash'),200);
+    if(sequence[playerIdx]===i){playerIdx++;if(playerIdx===sequence.length){accepting=false;score+=30;scoreEl.textContent=score;if(round>=MAX_ROUNDS){finish('🏆 Победа!');return;}round++;setTimeout(nextRound,900);}}
+    else{mistakes++;status.textContent=`Ошибка! Осталось: ${2-mistakes}`;status.style.color='var(--hot)';accepting=false;if(mistakes>=2){finish('Игра окончена');return;}setTimeout(()=>{playerIdx=0;accepting=true;status.textContent='Попробуй снова';status.style.color='var(--accent2)';},900);}
+  });});
+  function finish(msg){if(done)return;done=true;playing=false;accepting=false;clearInterval(seqTimer);seqTimer=null;const reward=Math.floor(score/10);status.innerHTML=`${msg}<br>Итог: <b style="color:var(--accent2)">${reward} очков</b>`;status.style.color='';btn.textContent='Снова';btn.disabled=false;btn.onclick=()=>render();registerGamePlayed(reward);}
+  btn.onclick=()=>{sequence=[];round=1;mistakes=0;score=0;done=false;scoreEl.textContent='0';playing=true;btn.disabled=true;status.textContent='Приготовься…';setTimeout(nextRound,700);};
+  gameCleanup=()=>{clearInterval(seqTimer);seqTimer=null;};
+}
+
+/* Кузнец */
+function viewForge(){return `<button class="back-btn" data-action="back-games">‹ Назад</button>
+  <div class="card"><div class="card-title"><span class="dot"></span>Кузнец</div>
+  <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;text-align:center">Максимум ударов за 10 секунд!</p>
+  <div class="game-info" style="margin-bottom:6px"><span>Время: <b id="forgeTimer" style="color:var(--accent2)">10.0 с</b></span><span>Удары: <b id="forgeClicks" style="color:var(--ok)">0</b></span></div>
+  <div class="big-stat" id="forgeScore">0</div>
+  <div style="text-align:center;font-size:11px;color:var(--muted);margin-bottom:14px;letter-spacing:1px">ОЧКОВ</div>
+  <button class="forge-btn" id="forgeBtn" disabled>🔨 БЕЙ!</button>
+  <div class="game-result" id="forgeResult" style="text-align:center;min-height:22px;margin-top:14px"></div>
+  <button class="btn" id="forgeStart" style="margin-top:10px">Старт</button></div>`;
+}
+function setupForge(){
+  const btn=document.getElementById('forgeBtn'),startBtn=document.getElementById('forgeStart'),timerEl=document.getElementById('forgeTimer');
+  const clicksEl=document.getElementById('forgeClicks'),scoreEl=document.getElementById('forgeScore'),resultEl=document.getElementById('forgeResult');
+  let clicks=0,timeLeft=10,running=false,timerId=null,done=false;
+  btn.onclick=()=>{if(!running)return;clicks++;clicksEl.textContent=clicks;scoreEl.textContent=Math.floor(clicks*5/10);};
+  startBtn.onclick=()=>{
+    if(running)return;clicks=0;timeLeft=10;running=true;done=false;
+    clicksEl.textContent='0';scoreEl.textContent='0';timerEl.textContent='10.0 с';resultEl.textContent='';
+    startBtn.disabled=true;btn.disabled=false;
+    timerId=setInterval(()=>{timeLeft-=.1;timerEl.textContent=Math.max(0,timeLeft).toFixed(1)+' с';if(timeLeft<=0)finish();},100);
+  };
+  function finish(){if(done)return;done=true;clearInterval(timerId);timerId=null;running=false;btn.disabled=true;startBtn.disabled=false;startBtn.textContent='Снова';
+    const base=clicks*5;let bonus=0;if(clicks>=20)bonus+=30;if(clicks>=40)bonus+=60;if(clicks>=60)bonus+=100;if(clicks>=80)bonus+=150;
+    const total=Math.floor((base+bonus)/10);
+    scoreEl.textContent=total;resultEl.innerHTML=`Удары: <b>${clicks}</b> • Очки: <b style="color:var(--accent2)">${total}</b>`;
+    registerGamePlayed(total);
+  }
+  gameCleanup=()=>{clearInterval(timerId);timerId=null;};
+}
+
+/* ============================================================
+   ВИНТИКИ И ДОЩЕЧКИ v4
+   ============================================================ */
+const SCREW_COLORS=['#ef5350','#42a5f5','#66bb6a','#fdd835','#ab47bc','#ff9800','#26c6da','#ec407a','#8d6e63'];
+
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};}
+
+function screwsConfig(level){
+  const n=Math.max(1,Math.min(500,level));
+  let boards, colors, slotsPerBoard=4;
+  if(n<=2){boards=2; colors=2;}
+  else if(n<=5){boards=3; colors=2;}
+  else if(n<=10){boards=3; colors=3;}
+  else if(n<=18){boards=4; colors=3;}
+  else if(n<=30){boards=4; colors=4;}
+  else if(n<=45){boards=5; colors=4;}
+  else if(n<=65){boards=5; colors=5;}
+  else if(n<=90){boards=6; colors=5;}
+  else if(n<=120){boards=6; colors=6;}
+  else if(n<=160){boards=7; colors=6;}
+  else if(n<=210){boards=7; colors=7;}
+  else if(n<=270){boards=8; colors=7;}
+  else if(n<=340){boards=8; colors=8;}
+  else if(n<=420){boards=9; colors=8;}
+  else {boards=9; colors=9;}
+  return {boards, colors, slotsPerBoard};
+}
+
+function screwsDifficulty(level){
+  const n=Math.max(1,Math.min(500,level));
+  if(n<=10) return {label:'ЛЕГКО', cls:'easy'};
+  if(n<=60) return {label:'СРЕДНЕ', cls:'medium'};
+  if(n<=200) return {label:'СЛОЖНО', cls:'hard'};
+  return {label:'ХАРДКОР', cls:'insane'};
+}
+
+function generateScrewsLevel(level){
+  const cfg=screwsConfig(level);
+  const rng=mulberry32(level*104729+7);
+  const totalScrews=cfg.colors*3;
+
+  // Bag: 3 каждого цвета
+  const bag=[];
+  for(let c=0;c<cfg.colors;c++) bag.push(c,c,c);
+  // Shuffle
+  for(let i=bag.length-1;i>0;i--){
+    const j=Math.floor(rng()*(i+1));
+    [bag[i],bag[j]]=[bag[j],bag[i]];
+  }
+
+  // Boards
+  const boards=[];
+  for(let b=0;b<cfg.boards;b++){
+    boards.push({id:b,slots:new Array(cfg.slotsPerBoard).fill(null),fallen:false,falling:false});
+  }
+
+  // Распределяем screws по boards равномерно
+  const screwsPerBoard=[];
+  let remaining=totalScrews;
+  for(let b=0;b<cfg.boards;b++){
+    const target=Math.min(cfg.slotsPerBoard-1, Math.ceil(remaining/(cfg.boards-b)));
+    screwsPerBoard.push(target);
+    remaining-=target;
+  }
+  // Если остаток — добавим к первой
+  if(remaining>0){
+    for(let b=0;b<cfg.boards && remaining>0;b++){
+      if(screwsPerBoard[b]<cfg.slotsPerBoard){screwsPerBoard[b]++;remaining--;}
+    }
+  }
+
+  // Теперь распределяем цвета по board, избегая 3-х одинаковых
+  for(let b=0;b<cfg.boards;b++){
+    const count=screwsPerBoard[b];
+    const picked=[];
+    const colorCount={};
+    for(let k=0;k<count;k++){
+      // Ищем цвет с наименьшим счётчиком на этой доске
+      let bestIdx=0,bestCount=Infinity;
+      for(let i=0;i<bag.length;i++){
+        const c=colorCount[bag[i]]||0;
+        if(c<bestCount){bestCount=c;bestIdx=i;if(c===0)break;}
+      }
+      const color=bag[bestIdx];
+      bag.splice(bestIdx,1);
+      picked.push(color);
+      colorCount[color]=(colorCount[color]||0)+1;
+    }
+    // Кладём в первые count слотов
+    for(let k=0;k<picked.length;k++) boards[b].slots[k]={color:picked[k]};
+    // Перемешать позиции внутри доски
+    for(let i=cfg.slotsPerBoard-1;i>0;i--){
+      const j=Math.floor(rng()*(i+1));
+      [boards[b].slots[i],boards[b].slots[j]]=[boards[b].slots[j],boards[b].slots[i]];
+    }
+  }
+
+  return {boards, slotsPerBoard:cfg.slotsPerBoard};
+}
+
+let screwsState=null;
+
+function viewScrews(){
+  const lvl=S.screws.unlocked;
+  if(!screwsState||screwsState.level!==lvl) initScrewsLevel(lvl);
+  return renderScrewsBoard();
+}
+
+function initScrewsLevel(level){
+  const d=generateScrewsLevel(level);
+  screwsState={
+    level, boards:d.boards, slotsPerBoard:d.slotsPerBoard,
+    selected:null, busy:false, won:false, lost:false, moves:0
+  };
+}
+
+function isBoardAccessible(idx){
+  for(let j=0;j<idx;j++){
+    const b=screwsState.boards[j];
+    if(!b.fallen && !b.falling && b.slots.some(x=>x)) return false;
+  }
+  return true;
+}
+
+function renderScrewsBoard(){
+  const s=screwsState;
+  if(!s) return '';
+
+  const activeBoards=s.boards.filter(b=>!b.fallen);
+  const totalScrewsLeft=activeBoards.reduce((sum,b)=>sum+b.slots.filter(x=>x).length,0);
+  const accessible=new Set();
+  for(let i=0;i<s.boards.length;i++){
+    if(isBoardAccessible(i) && !s.boards[i].fallen && !s.boards[i].falling) accessible.add(i);
+  }
+
+  // Классы для компактности
+  const boardCount=s.boards.length;
+  const sizeCls = boardCount>=8 ? 'tiny' : (boardCount>=6 ? 'compact' : '');
+
+  let stackHtml='';
+  s.boards.forEach((b,bi)=>{
+    if(b.fallen) return;
+    const isEmpty=b.slots.every(x=>!x);
+    const isAccessible=accessible.has(bi);
+    const cls='sw-board '+(isEmpty?'empty ':'')+(b.falling?'falling ':'')+(!isAccessible?'locked ':'')+(isAccessible&&!isEmpty?'active ':'')+sizeCls;
+
+    let holesHtml=b.slots.map((sc,si)=>{
+      if(!sc){
+        const canDrop=s.selected&&s.selected.boardIdx!==bi;
+        return `<div class="sw-hole empty ${canDrop?'can-drop':''}" data-board="${bi}" data-slot="${si}" data-empty="1"></div>`;
+      }
+      const color=SCREW_COLORS[sc.color];
+      const isSel=s.selected&&s.selected.boardIdx===bi&&s.selected.slotIdx===si;
+      const canClick=isAccessible;
+      const merging=sc.merging?'merging':'';
+      return `<div class="sw-hole filled ${isSel?'selected':''} ${canClick?'clickable':''} ${merging}" data-board="${bi}" data-slot="${si}" data-filled="1"><div class="screw" style="background:${color}"></div></div>`;
+    }).join('');
+
+    stackHtml+=`<div class="${cls}" data-board-outer="${bi}">${holesHtml}</div>`;
+  });
+
+  if(!stackHtml) stackHtml='<div style="text-align:center;padding:40px;color:var(--muted);font-size:13px">Все доски упали</div>';
+
+  const diff=screwsDifficulty(s.level);
+
+  let overlay='';
+  if(s.won){
+    overlay=`<div class="sw-overlay win"><div class="sw-card">
+      <div class="sw-ic">🏆</div>
+      <h3>Уровень ${s.level} пройден!</h3>
+      <p>Ходов: <b style="color:var(--accent2)">${s.moves}</b></p>
+      ${s.level<500?`<button class="btn" data-action="screw-next">Следующий ›</button>`:`<div style="color:var(--accent2);font-weight:800;margin-bottom:12px">🎉 Все 500!</div>`}
+      <button class="btn ghost" data-action="screw-retry" style="margin-top:8px">Заново</button>
+    </div></div>`;
+  } else if(s.lost){
+    overlay=`<div class="sw-overlay lose"><div class="sw-card">
+      <div class="sw-ic">💥</div>
+      <h3>Тупик!</h3>
+      <p>Нет свободных гнёзд и нечего собирать.</p>
+      <button class="btn danger" data-action="screw-retry">↻ Переиграть</button>
+      <button class="btn ghost" data-action="screw-reshuffle" style="margin-top:8px">🔀 Перемешать</button>
+    </div></div>`;
+  }
+
+  const navBar=`<div class="sw-nav">
+    ${s.level>1?`<button class="btn ghost" data-action="screw-prev">‹ Ур. ${s.level-1}</button>`:''}
+    ${s.level<500 && s.level<S.screws.unlocked?`<button class="btn ghost" data-action="screw-next">Ур. ${s.level+1} ›</button>`:''}
+  </div>`;
+
+  let hint='';
+  if(s.selected){
+    hint=`<div class="sw-hint" style="color:var(--accent2);font-weight:700;border-color:rgba(255,179,71,.4);background:rgba(255,179,71,.08)">🔩 Винтик выбран — тапни пустое гнездо</div>`;
+  } else {
+    hint=`<div class="sw-hint">👉 Тапни винтик на активной доске — затем пустое гнездо</div>`;
+  }
+
+  return `<button class="back-btn" data-action="back-games">‹ Назад</button>
+  <div class="card" style="position:relative">
+    ${overlay}
+    <div class="sw-header">
+      <div class="sw-stat">Уровень<b>${s.level} / 500</b></div>
+      <div class="sw-stat">Досок<b>${s.boards.filter(b=>!b.fallen).length} / ${s.boards.length}</b></div>
+      <div class="sw-stat">Винтиков<b>${totalScrewsLeft}</b></div>
+    </div>
+    <div style="display:flex;justify-content:center;margin-bottom:10px">
+      <span class="sw-badge ${diff.cls}">${diff.label} • ${s.boards.length} досок • ${s.boards.length*3} винтиков</span>
+    </div>
+    ${navBar}
+    <div class="sw-rules">
+      <b>🎯</b> Собери <b>3 одного цвета</b> на одной доске — они затянутся.<br>
+      <b>🔒</b> <span class="lock">Нижние доски под замком, пока сверху есть винтики.</span><br>
+      <b>📌</b> Пустая доска падает, только когда все нижние упали.<br>
+      <b>⚠️</b> Нет пустых гнёзд — тупик.
+    </div>
+    <div class="sw-stage">
+      <div class="sw-stack">${stackHtml}</div>
+      <div class="sw-ground"></div>
+    </div>
+    ${hint}
+    <div class="sw-actions">
+      <button class="btn ghost" data-action="screw-retry">↻ Заново</button>
+      <button class="btn ghost" data-action="screw-reshuffle">🔀 Перемешать</button>
+    </div>
+    <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:12px;line-height:1.5">
+      Пройдено: <b style="color:var(--accent2)">${S.screws.completed}</b> из 500
+    </div>
+  </div>`;
+}
+
+function setupScrews(){
+  const container=document.getElementById('view');
+  if(!container)return;
+  container.querySelectorAll('.sw-hole').forEach(hole=>{
+    hole.addEventListener('click',()=>tapHole(hole));
+  });
+  gameCleanup=()=>{};
+}
+
+function tapHole(hole){
+  const s=screwsState;
+  if(!s||s.busy||s.won||s.lost)return;
+  const bi=Number(hole.dataset.board),si=Number(hole.dataset.slot);
+  const board=s.boards[bi];
+  if(!board||board.fallen||board.falling)return;
+  const isFilled=hole.dataset.filled==='1';
+
+  if(isFilled){
+    if(!isBoardAccessible(bi))return;
+    if(s.selected){
+      if(s.selected.boardIdx===bi&&s.selected.slotIdx===si){s.selected=null;refreshScrewsBoard();return;}
+      s.selected={boardIdx:bi,slotIdx:si};refreshScrewsBoard();return;
+    }
+    s.selected={boardIdx:bi,slotIdx:si};refreshScrewsBoard();
+    return;
+  }
+  if(!s.selected)return;
+  if(s.selected.boardIdx===bi)return;
+  moveScrew(s.selected.boardIdx,s.selected.slotIdx,bi,si);
+}
+
+function moveScrew(fromBi,fromSi,toBi,toSi){
+  const s=screwsState;
+  if(s.busy)return;
+  const fromBoard=s.boards[fromBi],toBoard=s.boards[toBi];
+  if(!fromBoard||fromBoard.fallen||fromBoard.falling)return;
+  if(!toBoard||toBoard.fallen||toBoard.falling)return;
+  const fromScrew=fromBoard.slots[fromSi],toScrew=toBoard.slots[toSi];
+  if(!fromScrew)return;
+
+  s.busy=true;s.moves++;s.selected=null;
+
+  if(toScrew){
+    fromBoard.slots[fromSi]=toScrew;toBoard.slots[toSi]=fromScrew;
+  } else {
+    fromBoard.slots[fromSi]=null;toBoard.slots[toSi]=fromScrew;
+  }
+  refreshScrewsBoard();
+
+  setTimeout(()=>{
+    const anyMerge=checkAndMarkMerges();
+    if(anyMerge){
+      refreshScrewsBoard();
+      setTimeout(()=>applyMerges(),600);
+    } else {
+      s.busy=false;
+      setTimeout(()=>checkFalls(),100);
+    }
+  },250);
+}
+
+function checkAndMarkMerges(){
+  const s=screwsState;let any=false;
+  for(const b of s.boards){
+    if(b.fallen||b.falling)continue;
+    const byColor={};
+    b.slots.forEach((sc,i)=>{if(sc&&!sc.merging){if(!byColor[sc.color])byColor[sc.color]=[];byColor[sc.color].push(i);}});
+    for(const c in byColor){
+      if(byColor[c].length>=3){byColor[c].slice(0,3).forEach(i=>{b.slots[i].merging=true;});any=true;}
+    }
+  }
+  return any;
+}
+
+function applyMerges(){
+  const s=screwsState;
+  for(const b of s.boards){
+    if(b.fallen||b.falling)continue;
+    b.slots.forEach((sc,i)=>{if(sc&&sc.merging)b.slots[i]=null;});
+  }
+  refreshScrewsBoard();
+  setTimeout(()=>{s.busy=false;checkFalls();},200);
+}
+
+function checkFalls(){
+  const s=screwsState;
+  if(!s)return;
+  for(let i=s.boards.length-1;i>=0;i--){
+    const b=s.boards[i];
+    if(b.fallen||b.falling)continue;
+    const isEmpty=b.slots.every(x=>!x);
+    if(!isEmpty)continue;
+    let allBelowFallen=true;
+    for(let j=i+1;j<s.boards.length;j++){
+      if(!s.boards[j].fallen){allBelowFallen=false;break;}
+    }
+    if(!allBelowFallen)continue;
+    b.falling=true;
+    refreshScrewsBoard();
+    setTimeout(()=>{
+      b.falling=false;b.fallen=true;
+      refreshScrewsBoard();
+      setTimeout(()=>{checkFalls();checkWin();},100);
+    },650);
+    return;
+  }
+  setTimeout(()=>checkStuck(),150);
+}
+
+function checkStuck(){
+  const s=screwsState;
+  if(s.won||s.lost||s.busy)return;
+  const active=s.boards.filter(b=>!b.fallen&&!b.falling);
+  if(active.length===0)return;
+  let hasEmpty=false;
+  for(const b of active){if(b.slots.some(x=>!x)){hasEmpty=true;break;}}
+  if(hasEmpty)return;
+  s.lost=true;refreshScrewsBoard();
+}
+
+function checkWin(){
+  const s=screwsState;
+  if(s.won||s.lost)return;
+  const active=s.boards.filter(b=>!b.fallen);
+  if(active.length===0){
+    s.won=true;
+    const reward=5+Math.floor(s.level/25);
+    S.screws.completed=Math.max(S.screws.completed,s.level);
+    if(s.level>=S.screws.unlocked&&S.screws.unlocked<500)S.screws.unlocked=s.level+1;
+    save();registerPuzzlePlayed(reward);refreshScrewsBoard();
+  }
+}
+
+function refreshScrewsBoard(){
+  if(!screwsState)return;
+  const c=document.getElementById('view');
+  if(!c)return;
+  c.innerHTML=renderScrewsBoard();
+  setupScrews();
+}
+
+function reshuffleScrews(){
+  const s=screwsState;
+  if(!s)return;
+  const newData=generateScrewsLevel(s.level);
+  s.boards=newData.boards;s.slotsPerBoard=newData.slotsPerBoard;
+  s.selected=null;s.busy=false;s.won=false;s.lost=false;s.moves=0;
+  refreshScrewsBoard();
+}
+
+/* ---------- ДИСПЕТЧЕР ---------- */
+function setupGame(){
+  if(currentGameId==='smelt')setupSmelt();
+  else if(currentGameId==='sort')setupSort();
+  else if(currentGameId==='memory')setupMemory();
+  else if(currentGameId==='forge')setupForge();
+  else if(currentGameId==='screws')setupScrews();
+}
+
+/* =========================================================
+   МОДАЛКА: ИВЕНТЫ
+   ========================================================= */
+const modal=document.getElementById('modal');
+function closeModal(){modal.classList.remove('on');modal.innerHTML='';}
+modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
+
+function openEvent(id){
+  const ev=EVENTS.find(x=>x.id===id);
+  if(!ev||S.events.includes(id))return;
+  modal.innerHTML=`<div class="modal-box">
+    <h2>${ev.title}</h2>
+    <p>${ev.place} • ${ev.date}<br><br>Награда: <b style="color:var(--accent2)">+${fmt(ev.points)} очков</b><br><br>
+    <b>Вариант 1:</b> фотоотчёт — проверит администратор.<br>
+    <b>Вариант 2:</b> ответ на вопрос по локации — засчитается сразу.</p>
+    <button class="opt" data-action="ev-photo" data-id="${id}">📸 Загрузить фотоотчёт</button>
+    <button class="opt" data-action="ev-quiz" data-id="${id}">❓ Ответить на вопрос</button>
+    <button class="btn ghost" data-action="close">Отмена</button>
+  </div>`;
+  modal.classList.add('on');
+}
+function openEventPhoto(id){
+  const ev=EVENTS.find(x=>x.id===id);
+  modal.innerHTML=`<div class="modal-box">
+    <h2>Фотоотчёт</h2>
+    <p>Сделай фото на мероприятии «${ev.title}». Администратор проверит и начислит ${fmt(ev.points)} очков.</p>
+    <label class="upload-zone" for="photoInput"><span class="u-ic">📷</span>Выбрать фото</label>
+    <input type="file" id="photoInput" accept="image/*" style="display:none">
+    <div id="photoArea"></div>
+    <button class="btn" id="confirmPhoto" disabled>Отправить</button>
+    <button class="btn ghost" data-action="close">Отмена</button>
+  </div>`;
+  modal.classList.add('on');
+  const input=document.getElementById('photoInput'),area=document.getElementById('photoArea'),confirm=document.getElementById('confirmPhoto');
+  input.addEventListener('change',()=>{
+    const f=input.files[0];if(!f)return;
+    const r=new FileReader();
+    r.onload=e=>{area.innerHTML=`<img class="photo-prev" src="${e.target.result}">`;confirm.disabled=false;confirm.onclick=()=>submitPhoto(id,e.target.result);};
+    r.readAsDataURL(f);
+  });
+}
+function submitPhoto(eventId,imageData){
+  const ev=EVENTS.find(x=>x.id===eventId);
+  const srv=serverLoad();const id=serverNextId(srv);
+  srv.pendingEvents.push({id,playerName:S.name,eventId,eventTitle:ev.title,eventPoints:ev.points,image:imageData,date:Date.now(),status:'pending',adminNote:''});
+  serverSave(srv);closeModal();toast('📸 Фото отправлено на проверку','gold');
+  if(activeTab==='events')render();
+}
+function openEventQuiz(id){
+  const ev=EVENTS.find(x=>x.id===id);
+  modal.innerHTML=`<div class="modal-box">
+    <h2>Вопрос по локации</h2>
+    <p>Ответь правильно — участие подтвердится сразу (+${fmt(ev.points)}).</p>
+    <div style="font-size:14.5px;font-weight:600;line-height:1.5;margin-bottom:16px">${ev.q.q}</div>
+    ${ev.q.a.map((a,i)=>`<button class="opt" data-action="ev-answer" data-id="${id}" data-i="${i}">${a}</button>`).join('')}
+    <button class="btn ghost" data-action="close">Отмена</button>
+  </div>`;
+  modal.classList.add('on');
+}
+function answerEvent(id,i){
+  const ev=EVENTS.find(x=>x.id===id);
+  const btns=modal.querySelectorAll('[data-action="ev-answer"]');
+  btns.forEach((b,idx)=>{b.disabled=true;if(idx===ev.q.c)b.classList.add('correct');else if(idx===i)b.classList.add('wrong');});
+  if(i===ev.q.c){setTimeout(()=>completeEvent(id,'quiz'),700);}
+  else{setTimeout(()=>{modal.querySelector('.modal-box').insertAdjacentHTML('beforeend',`<div style="text-align:center;font-size:13px;color:var(--hot);font-weight:700;margin-top:12px">Неверно.</div>`);},400);}
+}
+function completeEvent(id,method){
+  if(S.events.includes(id))return;
+  const ev=EVENTS.find(x=>x.id===id);
+  S.events.push(id);save();closeModal();
+  addPoints(ev.points,ev.title);
+  toast(`🎭 Участие подтверждено! +${fmt(ev.points)}`,'gold');
+  if(activeTab==='events'||activeTab==='home')render();
+}
+
+/* =========================================================
+   ADMIN ACTIONS
+   ========================================================= */
+function approvePhoto(id){
+  const srv=serverLoad();const pe=srv.pendingEvents.find(p=>p.id===id);
+  if(!pe||pe.status!=='pending')return;
+  pe.status='approved';pe.adminRead=true;
+  if(srv.players[pe.playerName])srv.players[pe.playerName].points+=pe.eventPoints;
+  serverSave(srv);
+  toast(`✓ Фото одобрено. Начислено ${fmt(pe.eventPoints)}`,'ok');
+  if(pe.playerName===S.name){S.points+=pe.eventPoints;if(!S.events.includes(pe.eventId))S.events.push(pe.eventId);save();}
+  render();
+}
+function rejectPhoto(id){
+  modal.innerHTML=`<div class="modal-box"><h2>Отклонить фото</h2>
+    <p>Укажите причину.</p>
+    <textarea class="field" id="rejectNote" placeholder="Причина…" maxlength="200"></textarea>
+    <button class="btn danger" data-action="confirm-reject" data-id="${id}">Отклонить</button>
+    <button class="btn ghost" data-action="close">Отмена</button></div>`;
+  modal.classList.add('on');
+}
+function confirmReject(id){
+  const note=document.getElementById('rejectNote').value.trim()||'Фото не подтверждает участие';
+  const srv=serverLoad();const pe=srv.pendingEvents.find(p=>p.id===id);
+  if(!pe)return;
+  pe.status='rejected';pe.adminNote=note;pe.adminRead=true;
+  serverSave(srv);closeModal();toast('Фото отклонено','');render();
+}
+function replyToReport(id){
+  const ta=document.getElementById(`reply-${id}`);const text=ta?ta.value.trim():'';
+  if(!text){toast('Введите текст','');return;}
+  const srv=serverLoad();const r=srv.reports.find(x=>x.id===id);
+  if(!r)return;
+  r.adminReply=text;r.adminRead=true;r.replyDate=Date.now();r.playerRead=false;
+  serverSave(srv);toast('✓ Ответ отправлен','ok');render();
+}
+function banPlayer(name,reason){
+  const srv=serverLoad();if(!srv.players[name])return;
+  srv.players[name].banned=true;srv.players[name].banReason=reason||'Нарушение правил';
+  serverSave(srv);toast(`🚫 ${name} забанен`,'danger');render();
+}
+function unbanPlayer(name){
+  const srv=serverLoad();if(!srv.players[name])return;
+  srv.players[name].banned=false;srv.players[name].banReason='';
+  serverSave(srv);toast(`✓ ${name} разбанен`,'ok');render();
+}
+function banPrompt(name){
+  modal.innerHTML=`<div class="modal-box"><h2>Забанить игрока</h2>
+    <p>Игрок: <b style="color:var(--accent2)">${escapeHtml(name)}</b></p>
+    <textarea class="field" id="banReason" placeholder="Причина…" maxlength="200"></textarea>
+    <button class="btn danger" data-action="confirm-ban" data-name="${escapeHtml(name)}">🚫 Забанить</button>
+    <button class="btn ghost" data-action="close">Отмена</button></div>`;
+  modal.classList.add('on');
+}
+function changeAdminPass(){
+  const val=document.getElementById('newAdminPass').value.trim();
+  if(val.length<4){toast('Минимум 4 символа','');return;}
+  const srv=serverLoad();srv.adminPass=val;serverSave(srv);
+  toast('✓ Пароль изменён','ok');render();
+}
+function exportData(){
+  const srv=serverLoad();
+  const blob=new Blob([JSON.stringify(srv,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`omz-backup-${Date.now()}.json`;a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  toast('📥 Скачано','ok');
+}
+function resetServer(){
+  modal.innerHTML=`<div class="modal-box"><h2 style="color:var(--danger)">Сбросить всё?</h2>
+    <p>Удалит всех игроков, фото и обращения.</p>
+    <button class="btn danger" data-action="confirm-reset">Да, удалить</button>
+    <button class="btn ghost" data-action="close">Отмена</button></div>`;
+  modal.classList.add('on');
+}
+
+/* =========================================================
+   ОБРАБОТЧИКИ
+   ========================================================= */
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-action]');
+  if(!el)return;
+  const action=el.dataset.action;
+
+  if(action==='close'){closeModal();return;}
+  if(action==='go'){switchTab(el.dataset.tab);return;}
+
+  if(action==='quiz'){
+    const task=taskById('quiz');if(!task||task.done)return;
+    const q=QUIZ[S.daily.quizIndex];const i=Number(el.dataset.i);
+    const btns=view.querySelectorAll('[data-action="quiz"]');
+    btns.forEach((b,idx)=>{b.disabled=true;if(idx===q.c)b.classList.add('correct');else if(idx===i)b.classList.add('wrong');});
+    if(i===q.c){S.quizzesCorrect=(S.quizzesCorrect||0)+1;completeTask('quiz');setTimeout(render,700);}
+    else{toast('Неверно','');const t=taskById('quiz');if(t){t.done=true;t.reward=0;save();}setTimeout(render,900);}
+    return;
+  }
+
+  if(action==='event'){openEvent(el.dataset.id);return;}
+  if(action==='ev-photo'){openEventPhoto(el.dataset.id);return;}
+  if(action==='ev-quiz'){openEventQuiz(el.dataset.id);return;}
+  if(action==='ev-answer'){answerEvent(el.dataset.id,Number(el.dataset.i));return;}
+
+  if(action==='send-support'){
+    const msg=document.getElementById('supportMsg').value.trim();
+    if(!msg){toast('Введите сообщение','');return;}
+    const preview=document.getElementById('supportPreview');
+    const img=preview.querySelector('img');const image=img?img.src:'';
+    const srv=serverLoad();const id=serverNextId(srv);
+    srv.reports.push({id,from:S.name,message:msg,image,date:Date.now(),adminReply:'',adminRead:false,playerRead:true});
+    serverSave(srv);toast('✓ Отправлено','ok');render();
+    return;
+  }
+
+  if(action==='open-game'){currentGameId=el.dataset.id;screwsState=null;render();return;}
+  if(action==='back-games'){stopCurrentGame();currentGameId=null;screwsState=null;render();return;}
+
+  if(action==='screw-retry'){initScrewsLevel(screwsState.level);refreshScrewsBoard();toast('Перезапуск','');return;}
+  if(action==='screw-reshuffle'){reshuffleScrews();toast('Поле перемешано','');return;}
+  if(action==='screw-next'){const n=Math.min(screwsState.level+1,500);initScrewsLevel(n);refreshScrewsBoard();return;}
+  if(action==='screw-prev'){const p=Math.max(screwsState.level-1,1);initScrewsLevel(p);refreshScrewsBoard();return;}
+
+  if(action==='admin-tab'){S.adminSubTab=el.dataset.sub;save();render();return;}
+  if(action==='approve-photo'){approvePhoto(Number(el.dataset.id));return;}
+  if(action==='reject-photo'){rejectPhoto(Number(el.dataset.id));return;}
+  if(action==='confirm-reject'){confirmReject(Number(el.dataset.id));return;}
+  if(action==='reply-report'){replyToReport(Number(el.dataset.id));return;}
+  if(action==='ban-from-report'){const srv=serverLoad();const r=srv.reports.find(x=>x.id===Number(el.dataset.id));if(r)banPrompt(r.from);return;}
+  if(action==='ban-player'){banPrompt(el.dataset.name);return;}
+  if(action==='confirm-ban'){const reason=document.getElementById('banReason').value.trim();banPlayer(el.dataset.name,reason);closeModal();return;}
+  if(action==='unban-player'){unbanPlayer(el.dataset.name);return;}
+  if(action==='change-pass'){changeAdminPass();return;}
+  if(action==='export-data'){exportData();return;}
+  if(action==='reset-server'){resetServer();return;}
+  if(action==='confirm-reset'){localStorage.removeItem(SERVER_KEY);closeModal();toast('Сервер сброшен','danger');render();return;}
+  if(action==='logout-admin'){S.isAdmin=false;S.name='';save();location.reload();return;}
+});
+
+document.addEventListener('change',e=>{
+  if(e.target&&e.target.id==='supportPhoto'){
+    const f=e.target.files[0];if(!f)return;
+    const r=new FileReader();
+    r.onload=ev=>{
+      const preview=document.getElementById('supportPreview');
+      if(preview)preview.innerHTML=`<img class="photo-prev" src="${ev.target.result}">`;
+      const lbl=document.getElementById('photoLabelText');
+      if(lbl)lbl.textContent='Фото прикреплено';
+    };
+    r.readAsDataURL(f);
+  }
+});
+
+function switchTab(tab){
+  if(tab!=='game'){stopCurrentGame();currentGameId=null;screwsState=null;}
+  activeTab=tab;
+  document.querySelectorAll('nav button').forEach(b=>{b.classList.toggle('active',b.dataset.tab===tab);});
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.querySelectorAll('nav button').forEach(b=>{b.addEventListener('click',()=>switchTab(b.dataset.tab));});
+
+/* =========================================================
+   СТАРТ
+   ========================================================= */
+function boot(){
+  setTimeout(()=>{
+    document.getElementById('splash').classList.add('hide');
+    setTimeout(()=>{
+      const saved=load();
+      if(saved&&saved.name){
+        S=saved;
+        if(!S.isAdmin&&checkBanOnBoot())return;
+        if(!S.screws)S.screws={unlocked:1,completed:0};
+        if(!S.adminSubTab)S.adminSubTab='photos';
+        ensureDaily();
+        if(!S.isAdmin){const lt=taskById('login');if(lt&&!lt.done)completeTask('login');syncPlayerToServer();}
+        document.getElementById('login').style.display='none';
+        document.getElementById('app').classList.add('on');
+        render();
+      } else {
+        document.getElementById('login').style.display='flex';
+      }
+    },750);
+  },2100);
+}
+
+document.getElementById('startBtn').addEventListener('click',()=>{
+  const name=document.getElementById('nameInput').value.trim();
+  const pass=document.getElementById('passInput').value.trim();
+  if(name.length<2){toast('Введи имя (минимум 2 символа)');return;}
+
+  if(name.toLowerCase()==='admin'){
+    const srv=serverLoad();
+    if(pass!==srv.adminPass){toast('Неверный пароль','danger');return;}
+    S=defaultState();S.name='Администратор';S.isAdmin=true;save();
+    document.getElementById('login').style.display='none';
+    document.getElementById('app').classList.add('on');
+    render();
+    setTimeout(()=>toast('🛡️ Вход в админ-панель','admin'),350);
+    return;
+  }
+
+  const srv=serverLoad();
+  if(srv.players[name]&&srv.players[name].banned){
+    S=defaultState();S.name=name;S.banned=true;
+    S.banReason=srv.players[name].banReason||'Нарушение правил';
+    save();
+    document.getElementById('login').style.display='none';
+    showBanScreen();
+    return;
+  }
+
+  S=defaultState();S.name=name;S.daily=makeDaily();save();
+  syncPlayerToServer();
+  const lt=taskById('login');if(lt&&!lt.done)completeTask('login');
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').classList.add('on');
+  render();
+  setTimeout(()=>toast(`Добро пожаловать, ${name}!`,'gold'),350);
+});
+
+document.getElementById('nameInput').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('startBtn').click();});
+document.getElementById('passInput').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('startBtn').click();});
+
+boot();
+</script>
+</body>
+</html>
