@@ -172,7 +172,7 @@ nav button:not(.active):hover{color:var(--text);background:rgba(255,255,255,.05)
 .sw-badge.hard{background:rgba(255,61,0,.16);color:#ff8a80;border:1px solid rgba(255,61,0,.4)}
 .sw-badge.insane{background:linear-gradient(135deg,#e53935,#b71c1c);color:#fff;border:1px solid transparent;animation:insanePulse 2s infinite}
 @keyframes insanePulse{0%,100%{box-shadow:0 0 12px rgba(229,57,53,.4)}50%{box-shadow:0 0 20px rgba(229,57,53,.8)}}
-.sw-rules{background:linear-gradient(160deg,rgba(255,107,26,.1),rgba(255,255,255,.02));border:1px solid rgba(255,107,26,.25);border-radius:12px;padding:10px 13px;font-size:11.5px;color:var(--muted);line-height:1.5;margin-bottom:10px}
+.sw-rules{background:linear-gradient(160deg,rgba(255,107,26,.1),rgba(255,255,255,.02));border:1px solid rgba(255,107,26,.25);border-radius:12px;padding:10px 13px;font-size:11.5px;color:var(--muted);line-height:1.55;margin-bottom:10px}
 .sw-rules b{color:var(--text);font-weight:700}
 .sw-stage{position:relative;padding:12px 5px 5px;background:linear-gradient(180deg,#1a1410,#0c0906);border-radius:16px;border:1px solid rgba(255,255,255,.06);min-height:240px;max-height:64vh;overflow-y:auto;overflow-x:hidden}
 .sw-stage::-webkit-scrollbar{width:5px}
@@ -180,10 +180,17 @@ nav button:not(.active):hover{color:var(--text);background:rgba(255,255,255,.05)
 .sw-stage::before{content:'';position:absolute;left:0;right:0;bottom:0;height:26px;background:linear-gradient(180deg,transparent,#050403 70%);pointer-events:none;z-index:2}
 .sw-ground{position:absolute;left:8%;right:8%;bottom:10px;height:10px;background:linear-gradient(180deg,#3a2418,#1a0f08);border-radius:5px;box-shadow:0 4px 12px rgba(0,0,0,.7);z-index:1}
 .sw-stack{position:relative;z-index:3;padding-bottom:26px;min-height:180px;display:flex;flex-direction:column;justify-content:flex-end;gap:5px}
-.sw-board{position:relative;margin:0 auto;padding:10px 12px;border-radius:9px;background:linear-gradient(180deg,rgba(255,255,255,.1) 0%,transparent 22%,transparent 78%,rgba(0,0,0,.3) 100%),repeating-linear-gradient(92deg,rgba(0,0,0,.07) 0 3px,transparent 3px 12px),linear-gradient(180deg,#a37a52 0%,#7c5a3a 45%,#5a3d26 100%);box-shadow:0 7px 14px rgba(0,0,0,.55),inset 0 2px 0 rgba(255,255,255,.25),inset 0 -3px 6px rgba(0,0,0,.45);border:1px solid #4a2f1e;display:flex;align-items:center;justify-content:center;gap:9px;transition:transform .5s cubic-bezier(.4,.05,.9,.5),opacity .4s ease,box-shadow .2s;transform-origin:center;will-change:transform}
+.sw-board{position:relative;margin:0 auto;padding:10px 12px;border-radius:9px;background:linear-gradient(180deg,rgba(255,255,255,.1) 0%,transparent 22%,transparent 78%,rgba(0,0,0,.3) 100%),repeating-linear-gradient(92deg,rgba(0,0,0,.07) 0 3px,transparent 3px 12px),linear-gradient(180deg,#a37a52 0%,#7c5a3a 45%,#5a3d26 100%);box-shadow:0 7px 14px rgba(0,0,0,.55),inset 0 2px 0 rgba(255,255,255,.25),inset 0 -3px 6px rgba(0,0,0,.45);border:1px solid #4a2f1e;display:flex;align-items:center;justify-content:center;gap:9px;transition:transform .5s cubic-bezier(.4,.05,.9,.5),opacity .4s ease,box-shadow .2s,filter .25s;transform-origin:center;will-change:transform}
 .sw-board.compact{padding:8px 8px;gap:6px}
 .sw-board.tiny{padding:6px 6px;gap:5px}
 .sw-board.active{box-shadow:0 7px 14px rgba(0,0,0,.55),0 0 0 2px rgba(255,179,71,.35),inset 0 2px 0 rgba(255,255,255,.25),inset 0 -3px 6px rgba(0,0,0,.45)}
+/* locked: доступна только на запись */
+.sw-board.locked{filter:brightness(.72) saturate(.6);box-shadow:0 4px 10px rgba(0,0,0,.7),inset 0 2px 0 rgba(255,255,255,.08),inset 0 -3px 6px rgba(0,0,0,.5)}
+.sw-board.locked::after{content:'🔒';position:absolute;top:-9px;right:-9px;font-size:15px;background:#2a1a10;border:2px solid #6a4a2e;border-radius:50%;width:26px;height:26px;display:grid;place-items:center;z-index:5;box-shadow:0 3px 6px rgba(0,0,0,.6)}
+/* full: полностью заполнена и разблокирована для чтения */
+.sw-board.full-unlocked{box-shadow:0 7px 14px rgba(0,0,0,.55),0 0 0 3px rgba(56,211,159,.75),0 0 26px rgba(56,211,159,.5),inset 0 2px 0 rgba(255,255,255,.3),inset 0 -3px 6px rgba(0,0,0,.4);animation:fullPulse 1.8s infinite}
+@keyframes fullPulse{0%,100%{box-shadow:0 7px 14px rgba(0,0,0,.55),0 0 0 3px rgba(56,211,159,.75),0 0 26px rgba(56,211,159,.5),inset 0 2px 0 rgba(255,255,255,.3),inset 0 -3px 6px rgba(0,0,0,.4)}50%{box-shadow:0 7px 14px rgba(0,0,0,.55),0 0 0 3px rgba(56,211,159,.9),0 0 34px rgba(56,211,159,.7),inset 0 2px 0 rgba(255,255,255,.3),inset 0 -3px 6px rgba(0,0,0,.4)}}
+.sw-board.full-unlocked::after{content:'🔓';position:absolute;top:-9px;right:-9px;font-size:15px;background:#0a2a1e;border:2px solid #38d39f;border-radius:50%;width:26px;height:26px;display:grid;place-items:center;z-index:5;box-shadow:0 0 12px rgba(56,211,159,.6)}
 .sw-board.falling{transform:translateY(420px) rotate(-8deg) scale(.9);opacity:0;pointer-events:none}
 .sw-hole{width:42px;height:42px;border-radius:50%;position:relative;background:radial-gradient(circle at 50% 40%,#3a2418,#1a0d06 78%);box-shadow:inset 0 5px 9px rgba(0,0,0,.9),inset 0 -2px 3px rgba(255,255,255,.06);display:grid;place-items:center;flex-shrink:0;transition:transform .15s,box-shadow .2s}
 .sw-board.compact .sw-hole{width:36px;height:36px}
@@ -193,6 +200,7 @@ nav button:not(.active):hover{color:var(--text);background:rgba(255,255,255,.05)
 .sw-hole.can-drop:hover{background:radial-gradient(circle at 50% 45%,#1e4a3a,#0a1a14 80%)}
 .sw-hole.selected{box-shadow:inset 0 5px 9px rgba(0,0,0,.9),0 0 0 3px var(--accent2),0 0 22px 4px rgba(255,179,71,.7);transform:scale(1.08)}
 .sw-hole.clickable{cursor:pointer}
+.sw-hole.not-clickable{cursor:not-allowed}
 .screw{width:30px;height:30px;border-radius:50%;position:relative;box-shadow:inset 0 -4px 8px rgba(0,0,0,.5),inset 0 3px 6px rgba(255,255,255,.55),0 3px 5px rgba(0,0,0,.65);transition:transform .2s}
 .sw-board.compact .screw{width:26px;height:26px}
 .sw-board.tiny .screw{width:22px;height:22px}
@@ -375,7 +383,7 @@ function showBanScreen(){
   document.body.appendChild(el);
 }
 
-const KEY='omz_steel_path_v7';
+const KEY='omz_steel_path_v8';
 
 const RANKS=[
   {name:'Слесарь-ученик',icon:'🔧',min:0},
@@ -925,7 +933,7 @@ const GAMES=[
   {id:'sort',icon:'📦',name:'Сортировка металла',desc:'Определи группу металла на время'},
   {id:'memory',icon:'🧠',name:'Память сталевара',desc:'Повтори последовательность'},
   {id:'forge',icon:'🔨',name:'Кузнец',desc:'Успей нанести максимум ударов'},
-  {id:'screws',icon:'🔧',name:'Винтики и дощечки',desc:'500 уровней: 2→9 досок, 2→9 цветов'}
+  {id:'screws',icon:'🔧',name:'Винтики и дощечки',desc:'500 уровней с логикой и замками'}
 ];
 
 function registerGamePlayed(score){
@@ -1105,7 +1113,15 @@ function setupForge(){
 }
 
 /* ============================================================
-   ВИНТИКИ И ДОЩЕЧКИ — все доски доступны всегда
+   ВИНТИКИ И ДОЩЕЧКИ v8 — с системой замков
+   Правила:
+   - Доска заблокирована, пока в досках выше есть винтики
+   - НО: если в заблокированную доску вкрутить ВСЕ винтики
+     (заполнить все гнёзда) — она разблокируется
+   - Из разблокированной можно забрать ЛЮБОЙ винтик
+   - Как только забираешь один — доска снова блокируется
+   - В заблокированную доску можно ТОЛЬКО вкручивать винтики,
+     но нельзя из неё забирать
    ============================================================ */
 const SCREW_COLORS=['#ef5350','#42a5f5','#66bb6a','#fdd835','#ab47bc','#ff9800','#26c6da','#ec407a','#8d6e63'];
 
@@ -1149,7 +1165,6 @@ function generateScrewsLevel(level){
   for(let i=bag.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[bag[i],bag[j]]=[bag[j],bag[i]];}
   const boards=[];
   for(let b=0;b<cfg.boards;b++)boards.push({id:b,slots:new Array(cfg.slotsPerBoard).fill(null),fallen:false,falling:false});
-  
   const screwsPerBoard=[];
   let remaining=totalScrews;
   for(let b=0;b<cfg.boards;b++){
@@ -1157,7 +1172,6 @@ function generateScrewsLevel(level){
     screwsPerBoard.push(target);remaining-=target;
   }
   if(remaining>0){for(let b=0;b<cfg.boards&&remaining>0;b++){if(screwsPerBoard[b]<cfg.slotsPerBoard){screwsPerBoard[b]++;remaining--;}}}
-  
   for(let b=0;b<cfg.boards;b++){
     const count=screwsPerBoard[b];const picked=[];const colorCount={};
     for(let k=0;k<count;k++){
@@ -1168,13 +1182,6 @@ function generateScrewsLevel(level){
     for(let k=0;k<picked.length;k++)boards[b].slots[k]={color:picked[k]};
     for(let i=cfg.slotsPerBoard-1;i>0;i--){const j=Math.floor(rng()*(i+1));[boards[b].slots[i],boards[b].slots[j]]=[boards[b].slots[j],boards[b].slots[i]];}
   }
-  
-  // Проверка: хотя бы одно пустое гнездо в стартовой раскладке
-  const totalEmpty=boards.reduce((sum,b)=>sum+b.slots.filter(x=>!x).length,0);
-  if(totalEmpty===0){
-    boards[0].slots[boards[0].slots.length-1]=null;
-  }
-  
   return {boards,slotsPerBoard:cfg.slotsPerBoard};
 }
 
@@ -1191,6 +1198,33 @@ function initScrewsLevel(level){
   screwsState={level,boards:d.boards,slotsPerBoard:d.slotsPerBoard,selected:null,busy:false,won:false,lost:false,moves:0};
 }
 
+/* --- Логика замков --- */
+
+function hasUpperWithScrews(idx){
+  for(let j=0;j<idx;j++){
+    const up=screwsState.boards[j];
+    if(!up.fallen&&!up.falling&&up.slots.some(x=>x))return true;
+  }
+  return false;
+}
+function isBoardFull(b){
+  return !b.fallen&&!b.falling&&b.slots.every(x=>x);
+}
+/**
+ * Возвращает состояние доски:
+ *  'free'          — обычная, доступна для чтения и записи
+ *  'locked'        — под замком: только запись, нельзя забирать винтики
+ *  'full-unlocked' — была под замком, но полностью заполнена → можно читать
+ */
+function getBoardState(idx){
+  const b=screwsState.boards[idx];
+  if(!b||b.fallen||b.falling)return 'free';
+  if(!hasUpperWithScrews(idx))return 'free';
+  if(isBoardFull(b))return 'full-unlocked';
+  return 'locked';
+}
+function canReadBoard(idx){const st=getBoardState(idx);return st==='free'||st==='full-unlocked';}
+
 function renderScrewsBoard(){
   const s=screwsState;if(!s)return '';
   const activeBoards=s.boards.filter(b=>!b.fallen);
@@ -1201,7 +1235,16 @@ function renderScrewsBoard(){
   s.boards.forEach((b,bi)=>{
     if(b.fallen)return;
     const isEmpty=b.slots.every(x=>!x);
-    const cls='sw-board '+(isEmpty?'empty ':'')+(b.falling?'falling ':'')+(!isEmpty?'active ':'')+sizeCls;
+    const state=getBoardState(bi);
+    let cls='sw-board ';
+    if(isEmpty)cls+='empty ';
+    if(b.falling)cls+='falling ';
+    if(state==='locked')cls+='locked ';
+    else if(state==='full-unlocked')cls+='full-unlocked ';
+    else if(!isEmpty)cls+='active ';
+    cls+=sizeCls;
+    
+    const readable=(state!=='locked');
     let holesHtml=b.slots.map((sc,si)=>{
       if(!sc){
         const canDrop=s.selected&&s.selected.boardIdx!==bi;
@@ -1210,7 +1253,8 @@ function renderScrewsBoard(){
       const color=SCREW_COLORS[sc.color];
       const isSel=s.selected&&s.selected.boardIdx===bi&&s.selected.slotIdx===si;
       const merging=sc.merging?'merging':'';
-      return `<div class="sw-hole filled ${isSel?'selected':''} clickable ${merging}" data-board="${bi}" data-slot="${si}" data-filled="1"><div class="screw" style="background:${color}"></div></div>`;
+      const clickCls=readable?'clickable':'not-clickable';
+      return `<div class="sw-hole filled ${isSel?'selected':''} ${clickCls} ${merging}" data-board="${bi}" data-slot="${si}" data-filled="1"><div class="screw" style="background:${color}"></div></div>`;
     }).join('');
     stackHtml+=`<div class="${cls}" data-board-outer="${bi}">${holesHtml}</div>`;
   });
@@ -1236,9 +1280,9 @@ function renderScrewsBoard(){
   </div>`;
   let hint='';
   if(s.selected){
-    hint=`<div class="sw-hint" style="color:var(--accent2);font-weight:700;border-color:rgba(255,179,71,.4);background:rgba(255,179,71,.08)">🔩 Винтик выбран — тапни пустое гнездо на любой доске</div>`;
+    hint=`<div class="sw-hint" style="color:var(--accent2);font-weight:700;border-color:rgba(255,179,71,.4);background:rgba(255,179,71,.08)">🔩 Винтик выбран — тапни пустое гнездо</div>`;
   } else {
-    hint=`<div class="sw-hint">👉 Тапни винтик — затем пустое гнездо на любой доске</div>`;
+    hint=`<div class="sw-hint">👉 Тапни винтик, затем пустое гнездо. 🔒 = под замком, 🔓 = открыта (полная)</div>`;
   }
   return `<button class="back-btn" data-action="back-games">‹ Назад</button>
   <div class="card" style="position:relative">
@@ -1249,14 +1293,15 @@ function renderScrewsBoard(){
       <div class="sw-stat">Винтиков<b>${totalScrewsLeft}</b></div>
     </div>
     <div style="display:flex;justify-content:center;margin-bottom:10px">
-      <span class="sw-badge ${diff.cls}">${diff.label} • ${s.boards.length} досок • ${s.boards.length*3} винтиков</span>
+      <span class="sw-badge ${diff.cls}">${diff.label}</span>
     </div>
     ${navBar}
     <div class="sw-rules">
-      <b>🎯</b> Собери <b>3 одного цвета</b> на одной доске — они затянутся и исчезнут.<br>
-      <b>👆</b> Винтики можно переставлять между <b>любыми</b> досками.<br>
-      <b>📌</b> Пустая доска падает, когда все доски под ней уже упали.<br>
-      <b>⚠️</b> Нет пустых гнёзд и нет троек — тупик (жми «Перемешать»).
+      <b>🎯</b> Собери <b>3 одного цвета</b> на одной доске — они затянутся.<br>
+      <b>🔒</b> Нижние доски под замком. <b>Забирать винтики нельзя</b>, но <b>вкручивать — можно</b>.<br>
+      <b>🔓</b> Если доска под замком <b>полностью заполнена</b> — она открывается, и с неё можно взять любой винтик.<br>
+      <b>⚡</b> Как только снимешь винтик — доска снова под замком.<br>
+      <b>📌</b> Пустая доска падает, когда все доски под ней упали.
     </div>
     <div class="sw-stage"><div class="sw-stack">${stackHtml}</div><div class="sw-ground"></div></div>
     ${hint}
@@ -1282,12 +1327,14 @@ function tapHole(hole){
   const board=s.boards[bi];if(!board||board.fallen||board.falling)return;
   const isFilled=hole.dataset.filled==='1';
   if(isFilled){
+    if(!canReadBoard(bi))return; // под замком — нельзя брать
     if(s.selected){
       if(s.selected.boardIdx===bi&&s.selected.slotIdx===si){s.selected=null;refreshScrewsBoard();return;}
       s.selected={boardIdx:bi,slotIdx:si};refreshScrewsBoard();return;
     }
     s.selected={boardIdx:bi,slotIdx:si};refreshScrewsBoard();return;
   }
+  // пустое гнездо — можно вкрутить куда угодно (даже в locked)
   if(!s.selected)return;
   if(s.selected.boardIdx===bi)return;
   moveScrew(s.selected.boardIdx,s.selected.slotIdx,bi,si);
