@@ -6,9 +6,9 @@
 <title>ОМЗ • Стальной Путь</title>
 <style>
 :root{
-  --bg:#0b0d12;--bg2:#12151c;--card:rgba(255,255,255,.045);--card2:rgba(255,255,255,.07);
+  --bg:#0b0d12;--bg2:#12151c;--card:rgba(255,255,255,.045);
   --line:rgba(255,255,255,.09);--accent:#ff6b1a;--accent2:#ffb347;--hot:#ff3d00;
-  --steel:#8b96ab;--text:#e8ecf3;--muted:#8b96ab;--ok:#38d39f;--danger:#e53935;--radius:18px;
+  --text:#e8ecf3;--muted:#8b96ab;--ok:#38d39f;--danger:#e53935;--radius:18px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
@@ -231,22 +231,197 @@ nav button:not(.active):hover{color:var(--text);background:rgba(255,255,255,.05)
 .sw-overlay .btn{max-width:260px;margin:8px auto 0}
 .sw-hint{text-align:center;font-size:11.5px;color:var(--muted);padding:8px 12px;border-radius:9px;background:rgba(0,0,0,.3);border:1px solid var(--line);margin-top:10px;line-height:1.5}
 
-/* МАДЖОНГ */
-.mj-head{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px}
-.mj-stat{font-size:11.5px;color:var(--muted);font-weight:600;background:rgba(0,0,0,.35);border:1px solid var(--line);padding:7px 8px;border-radius:9px;text-align:center}
-.mj-stat b{color:var(--accent2);display:block;font-size:14px;margin-top:2px}
-.mj-timer{height:8px;background:rgba(0,0,0,.4);border-radius:8px;overflow:hidden;margin:10px 0;border:1px solid var(--line)}
-.mj-timer i{display:block;height:100%;background:linear-gradient(90deg,var(--ok),var(--accent2));border-radius:8px;transition:width .5s linear}
-.mj-timer.warn i{background:linear-gradient(90deg,var(--hot),var(--danger));animation:mjPulse .6s infinite}
-@keyframes mjPulse{0%,100%{opacity:1}50%{opacity:.6}}
-.mj-board{display:grid;gap:5px;padding:12px;background:linear-gradient(160deg,#1a3a2a,#0e1f18);border-radius:14px;border:1px solid rgba(255,255,255,.08);justify-content:center}
-.mj-tile{aspect-ratio:1;border-radius:8px;background:linear-gradient(145deg,#f5e6c8,#d4b988 60%,#b89868);box-shadow:0 3px 6px rgba(0,0,0,.5),inset 0 2px 0 rgba(255,255,255,.7),inset 0 -2px 4px rgba(0,0,0,.25);display:grid;place-items:center;font-size:26px;cursor:pointer;transition:transform .12s,box-shadow .12s,opacity .3s;user-select:none;border:1px solid #8a6f45}
-.mj-tile:hover{transform:translateY(-2px) scale(1.05);box-shadow:0 5px 12px rgba(0,0,0,.6),inset 0 2px 0 rgba(255,255,255,.8)}
-.mj-tile.selected{box-shadow:0 0 0 3px var(--accent),0 0 22px rgba(255,107,26,.9),inset 0 2px 0 rgba(255,255,255,.8);transform:scale(1.08);background:linear-gradient(145deg,#ffe9b0,#f5cf7a 60%,#d4a94c)}
-.mj-tile.gone{opacity:0;pointer-events:none;transform:scale(.3) rotate(45deg)}
-.mj-tile.wrong{animation:mjShake .3s}
-@keyframes mjShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
-@media(max-width:520px){.mj-tile{font-size:20px}.mj-board{padding:8px;gap:4px}}
+/* ============================================================
+   МАДЖОНГ — крупный, слоистый, с переворотом
+   ============================================================ */
+.mj-panel{
+  position:relative;
+  padding:16px 8px;
+  background:
+    radial-gradient(ellipse at center top, rgba(255,255,255,.05), transparent 70%),
+    repeating-linear-gradient(45deg, rgba(0,0,0,.08) 0 2px, transparent 2px 6px),
+    linear-gradient(160deg,#12352a,#081a14 70%);
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:inset 0 0 60px rgba(0,0,0,.5), 0 8px 24px rgba(0,0,0,.4);
+  overflow:hidden;
+}
+.mj-panel::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 0%, rgba(255,180,80,.06), transparent 60%);
+  pointer-events:none;
+}
+.mj-frame{
+  position:relative;
+  margin:0 auto;
+  /* width/height задаются из JS */
+}
+
+.mj-tile{
+  position:absolute;
+  cursor:pointer;
+  transition:transform .18s ease, opacity .3s ease;
+  transform-style:preserve-3d;
+  user-select:none;
+  z-index:1;
+}
+.mj-tile.locked{cursor:not-allowed;}
+.mj-tile.locked .mj-tile-inner{
+  filter:brightness(.55) saturate(.5);
+  box-shadow:0 2px 4px rgba(0,0,0,.7);
+}
+.mj-tile.locked::after{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.55));
+  border-radius:inherit;
+  pointer-events:none;
+  z-index:5;
+}
+.mj-tile:not(.locked):hover .mj-tile-inner{
+  transform:translateY(-3px);
+  box-shadow:0 8px 16px rgba(0,0,0,.7), inset 0 2px 0 rgba(255,255,255,.35);
+}
+.mj-tile.matched{
+  pointer-events:none;
+  animation:mjTilePop .5s cubic-bezier(.4,0,.9,.2) forwards;
+}
+@keyframes mjTilePop{
+  0%{transform:scale(1) rotate(0);opacity:1}
+  50%{transform:scale(1.15) rotate(6deg);opacity:.9;filter:brightness(1.6)}
+  100%{transform:scale(0) rotate(45deg);opacity:0}
+}
+.mj-tile.shaking{
+  animation:mjShake .35s;
+}
+@keyframes mjShake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-5px)}
+  40%{transform:translateX(5px)}
+  60%{transform:translateX(-3px)}
+  80%{transform:translateX(3px)}
+}
+
+.mj-tile-inner{
+  position:relative;
+  width:100%;height:100%;
+  transform-style:preserve-3d;
+  transition:transform .55s cubic-bezier(.4,0,.6,1), box-shadow .2s;
+  border-radius:10px;
+  box-shadow:0 4px 8px rgba(0,0,0,.6), inset 0 -2px 4px rgba(0,0,0,.3), inset 0 2px 0 rgba(255,255,255,.15);
+  will-change:transform;
+}
+.mj-tile.flipped .mj-tile-inner{
+  transform:rotateY(180deg);
+}
+.mj-tile-face{
+  position:absolute;
+  inset:0;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  overflow:hidden;
+}
+.mj-tile-back{
+  background:
+    linear-gradient(160deg,#4a2810 0%,#2a1508 50%,#1a0d05 100%);
+  border:1px solid #5a3518;
+  box-shadow:inset 0 2px 0 rgba(255,180,80,.15), inset 0 -3px 8px rgba(0,0,0,.7);
+}
+.mj-tile-back::before{
+  content:'';
+  position:absolute;inset:6px;
+  border-radius:7px;
+  border:1px solid rgba(255,180,80,.18);
+  background:radial-gradient(circle at 50% 40%, rgba(255,140,60,.15), transparent 65%);
+}
+.mj-tile-back::after{
+  content:'🏭';
+  font-size:calc(var(--tile-font) * 0.7);
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.7));
+  opacity:.85;
+  position:relative;z-index:1;
+}
+.mj-tile-front{
+  transform:rotateY(180deg);
+  background:
+    radial-gradient(circle at 50% 30%, #ffffff 0%, #f7ecd0 30%, #e8d5a8 70%, #d4ba82 100%);
+  border:1px solid #8a6f45;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,.9),
+    inset 0 -3px 6px rgba(140,100,50,.35),
+    inset 0 0 20px rgba(180,140,80,.15);
+  color:#2a1a10;
+  font-size:var(--tile-font);
+  line-height:1;
+  font-weight:700;
+}
+.mj-tile-front::before{
+  content:'';
+  position:absolute;inset:4px;
+  border-radius:7px;
+  border:1px dashed rgba(140,100,50,.35);
+  pointer-events:none;
+}
+.mj-tile.selected .mj-tile-inner{
+  box-shadow:
+    0 0 0 3px var(--accent),
+    0 0 24px 6px rgba(255,107,26,.75),
+    inset 0 -2px 4px rgba(0,0,0,.3),
+    inset 0 2px 0 rgba(255,255,255,.4);
+}
+.mj-tile.selected:not(.locked):hover .mj-tile-inner{
+  transform:translateY(-4px) scale(1.03);
+}
+
+.mj-bar{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;
+  margin-bottom:10px;
+}
+.mj-stat{
+  background:linear-gradient(160deg,rgba(0,0,0,.4),rgba(0,0,0,.2));
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;
+  padding:8px 6px;
+  text-align:center;
+  font-size:10.5px;
+  color:var(--muted);
+  font-weight:600;
+  letter-spacing:.5px;
+  text-transform:uppercase;
+}
+.mj-stat b{
+  display:block;
+  color:var(--accent2);
+  font-size:16px;
+  margin-top:3px;
+  letter-spacing:0;
+  text-transform:none;
+  text-shadow:0 0 12px rgba(255,179,71,.4);
+}
+.mj-timer{
+  height:8px;border-radius:8px;overflow:hidden;background:rgba(0,0,0,.5);
+  border:1px solid rgba(255,255,255,.08);margin:8px 0 14px;
+}
+.mj-timer i{
+  display:block;height:100%;
+  background:linear-gradient(90deg,#38d39f,#ffb347);
+  border-radius:8px;
+  transition:width .5s linear;
+}
+.mj-timer.warn i{
+  background:linear-gradient(90deg,#ff3d00,#e53935);
+  animation:mjTimerPulse .5s infinite;
+}
+@keyframes mjTimerPulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+@media(max-width:520px){
+  .mj-panel{padding:12px 4px;border-radius:16px}
+  .mj-stat{font-size:9.5px;padding:6px 4px}
+  .mj-stat b{font-size:14px}
+}
 
 .admin-tab-bar{display:flex;gap:6px;background:rgba(156,39,176,.1);border:1px solid rgba(156,39,176,.3);border-radius:14px;padding:5px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none}
 .admin-tab-bar::-webkit-scrollbar{display:none}
@@ -315,8 +490,6 @@ nav button:not(.active):hover{color:var(--text);background:rgba(255,255,255,.05)
   .screw::before{width:13px;height:2.5px}
   .screw::after{width:2.5px;height:13px}
   .sw-board{padding:8px 8px;gap:6px}
-  .mj-tile{font-size:20px}
-  .mj-board{padding:8px;gap:4px}
 }
 </style>
 </head>
@@ -376,9 +549,6 @@ nav button:not(.active):hover{color:var(--text);background:rgba(255,255,255,.05)
 <div id="toasts"></div>
 
 <script>
-/* =========================================================
-   СЕРВЕР (localStorage)
-   ========================================================= */
 const SERVER_KEY='omz_steel_path_server_v1';
 const DEFAULT_ADMIN_PASS='omz2024';
 
@@ -409,9 +579,6 @@ function showBanScreen(){
   document.body.appendChild(el);
 }
 
-/* =========================================================
-   ФИКСИРОВАННЫЙ КЛЮЧ + МИГРАЦИЯ СТАРЫХ ВЕРСИЙ
-   ========================================================= */
 const KEY='omz_steel_path';
 const OLD_KEYS=['omz_steel_path_v9','omz_steel_path_v8','omz_steel_path_v7','omz_steel_path_v6','omz_steel_path_v5','omz_steel_path_v4','omz_steel_path_v3','omz_steel_path_v2','omz_steel_path_v1'];
 
@@ -980,7 +1147,7 @@ const GAMES=[
   {id:'memory',icon:'🧠',name:'Память сталевара',desc:'Повтори последовательность'},
   {id:'forge',icon:'🔨',name:'Кузнец',desc:'Успей нанести максимум ударов'},
   {id:'screws',icon:'🔧',name:'Винтики и дощечки',desc:'500 уровней с логикой и замками'},
-  {id:'mahjong',icon:'🀄',name:'Плитки',desc:'500 уровней: найди пары до истечения времени'}
+  {id:'mahjong',icon:'🀄',name:'Маджонг',desc:'500 уровней: слои, закрытые плитки, таймер'}
 ];
 
 function registerGamePlayed(score){
@@ -1050,6 +1217,7 @@ function viewGameSelector(){
   </div>`;
 }
 
+/* ============ ПЛАВКА ============ */
 function viewSmelt(){return `<button class="back-btn" data-action="back-games">‹ Назад</button>
   <div class="card game-wrap"><div class="card-title" style="justify-content:center"><span class="dot"></span>Плавка стали</div>
   <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px">Останови стрелку в зелёной зоне.</p>
@@ -1077,6 +1245,7 @@ function setupSmelt(){
   reset();gameCleanup=()=>{cancelAnimationFrame(raf);raf=null;};
 }
 
+/* ============ СОРТИРОВКА ============ */
 function viewSort(){return `<button class="back-btn" data-action="back-games">‹ Назад</button>
   <div class="card"><div class="card-title"><span class="dot"></span>Сортировка металла</div>
   <div class="game-info" style="margin-bottom:6px"><span>Вопрос: <b id="sortProgress" style="color:var(--accent2)">0/8</b></span><span>Очки: <b id="sortScore" style="color:var(--ok)">0</b></span></div>
@@ -1110,6 +1279,7 @@ function setupSort(){
   gameCleanup=()=>{clearInterval(timerId);timerId=null;};
 }
 
+/* ============ ПАМЯТЬ ============ */
 function viewMemory(){return `<button class="back-btn" data-action="back-games">‹ Назад</button>
   <div class="card"><div class="card-title"><span class="dot"></span>Память сталевара</div>
   <div class="game-info" style="margin-bottom:8px"><span>Раунд: <b id="memRound" style="color:var(--accent2)">1/8</b></span><span>Очки: <b id="memScore" style="color:var(--ok)">0</b></span></div>
@@ -1131,6 +1301,7 @@ function setupMemory(){
   gameCleanup=()=>{clearInterval(seqTimer);seqTimer=null;};
 }
 
+/* ============ КУЗНЕЦ ============ */
 function viewForge(){return `<button class="back-btn" data-action="back-games">‹ Назад</button>
   <div class="card"><div class="card-title"><span class="dot"></span>Кузнец</div>
   <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;text-align:center">Максимум ударов за 10 секунд!</p>
@@ -1164,9 +1335,7 @@ function setupForge(){
    ВИНТИКИ И ДОЩЕЧКИ
    ============================================================ */
 const SCREW_COLORS=['#ef5350','#42a5f5','#66bb6a','#fdd835','#ab47bc','#ff9800','#26c6da','#ec407a','#8d6e63'];
-
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};}
-
 function screwsConfig(level){
   const n=Math.max(1,Math.min(500,level));
   let boards,colors,slotsPerBoard=4;
@@ -1187,7 +1356,6 @@ function screwsConfig(level){
   else{boards=9;colors=9;}
   return {boards,colors,slotsPerBoard};
 }
-
 function screwsDifficulty(level){
   const n=Math.max(1,Math.min(500,level));
   if(n<=10)return {label:'ЛЕГКО',cls:'easy'};
@@ -1195,7 +1363,6 @@ function screwsDifficulty(level){
   if(n<=200)return {label:'СЛОЖНО',cls:'hard'};
   return {label:'ХАРДКОР',cls:'insane'};
 }
-
 function generateScrewsLevel(level){
   const cfg=screwsConfig(level);
   const rng=mulberry32(level*104729+7);
@@ -1224,27 +1391,17 @@ function generateScrewsLevel(level){
   }
   return {boards,slotsPerBoard:cfg.slotsPerBoard};
 }
-
 let screwsState=null;
-
 function viewScrews(){
   const lvl=S.screws.unlocked;
   if(!screwsState||screwsState.level!==lvl)initScrewsLevel(lvl);
   return renderScrewsBoard();
 }
-
 function initScrewsLevel(level){
   const d=generateScrewsLevel(level);
   screwsState={level,boards:d.boards,slotsPerBoard:d.slotsPerBoard,selected:null,busy:false,won:false,lost:false,moves:0};
 }
-
-function hasUpperWithScrews(idx){
-  for(let j=0;j<idx;j++){
-    const up=screwsState.boards[j];
-    if(!up.fallen&&!up.falling&&up.slots.some(x=>x))return true;
-  }
-  return false;
-}
+function hasUpperWithScrews(idx){for(let j=0;j<idx;j++){const up=screwsState.boards[j];if(!up.fallen&&!up.falling&&up.slots.some(x=>x))return true;}return false;}
 function isBoardFull(b){return !b.fallen&&!b.falling&&b.slots.every(x=>x);}
 function getBoardState(idx){
   const b=screwsState.boards[idx];
@@ -1308,11 +1465,8 @@ function renderScrewsBoard(){
     ${s.level<500&&s.level<S.screws.unlocked?`<button class="btn ghost" data-action="screw-next">Ур. ${s.level+1} ›</button>`:''}
   </div>`;
   let hint='';
-  if(s.selected){
-    hint=`<div class="sw-hint" style="color:var(--accent2);font-weight:700;border-color:rgba(255,179,71,.4);background:rgba(255,179,71,.08)">🔩 Винтик выбран — тапни пустое гнездо</div>`;
-  } else {
-    hint=`<div class="sw-hint">👉 Тапни винтик, затем пустое гнездо. 🔒 = под замком, 🔓 = открыта (полная)</div>`;
-  }
+  if(s.selected){hint=`<div class="sw-hint" style="color:var(--accent2);font-weight:700;border-color:rgba(255,179,71,.4);background:rgba(255,179,71,.08)">🔩 Винтик выбран — тапни пустое гнездо</div>`;}
+  else{hint=`<div class="sw-hint">👉 Тапни винтик, затем пустое гнездо. 🔒 = под замком, 🔓 = открыта (полная)</div>`;}
   return `<button class="back-btn" data-action="back-games">‹ Назад</button>
   <div class="card" style="position:relative">
     ${overlay}
@@ -1321,9 +1475,7 @@ function renderScrewsBoard(){
       <div class="sw-stat">Досок<b>${s.boards.filter(b=>!b.fallen).length} / ${s.boards.length}</b></div>
       <div class="sw-stat">Винтиков<b>${totalScrewsLeft}</b></div>
     </div>
-    <div style="display:flex;justify-content:center;margin-bottom:10px">
-      <span class="sw-badge ${diff.cls}">${diff.label}</span>
-    </div>
+    <div style="display:flex;justify-content:center;margin-bottom:10px"><span class="sw-badge ${diff.cls}">${diff.label}</span></div>
     ${navBar}
     <div class="sw-rules">
       <b>🎯</b> Собери <b>3 одного цвета</b> на одной доске — они затянутся.<br>
@@ -1343,13 +1495,11 @@ function renderScrewsBoard(){
     </div>
   </div>`;
 }
-
 function setupScrews(){
   const container=document.getElementById('view');if(!container)return;
   container.querySelectorAll('.sw-hole').forEach(hole=>{hole.addEventListener('click',()=>tapHole(hole));});
   gameCleanup=()=>{};
 }
-
 function tapHole(hole){
   const s=screwsState;if(!s||s.busy||s.won||s.lost)return;
   const bi=Number(hole.dataset.board),si=Number(hole.dataset.slot);
@@ -1367,7 +1517,6 @@ function tapHole(hole){
   if(s.selected.boardIdx===bi)return;
   moveScrew(s.selected.boardIdx,s.selected.slotIdx,bi,si);
 }
-
 function moveScrew(fromBi,fromSi,toBi,toSi){
   const s=screwsState;if(s.busy)return;
   const fromBoard=s.boards[fromBi],toBoard=s.boards[toBi];
@@ -1385,7 +1534,6 @@ function moveScrew(fromBi,fromSi,toBi,toSi){
     else{s.busy=false;setTimeout(()=>checkFalls(),100);}
   },250);
 }
-
 function checkAndMarkMerges(){
   const s=screwsState;let any=false;
   for(const b of s.boards){
@@ -1447,24 +1595,24 @@ function reshuffleScrews(){
 }
 
 /* ============================================================
-   МАДЖОНГ «ПЛИТКИ»
+   МАДЖОНГ — большие плитки, слои, переворот
    ============================================================ */
 const MJ_SYMBOLS=['🔥','⚙️','🔨','🏭','🔩','🛠️','⚗️','📐','📊','🔬','🏗️','💼','🎖️','🎩'];
 
 function mjConfig(level){
   const n=Math.max(1,Math.min(500,level));
+  // Возвращает: количество строк/столбцов на слое 0, количество слоёв, число символов, время
   let rows,cols,types,seconds;
-  if(n<=20){rows=4;cols=4;types=4;seconds=45+Math.floor(n/2);}
-  else if(n<=50){rows=4;cols=6;types=6;seconds=50+Math.floor(n/4);}
-  else if(n<=100){rows=5;cols=6;types=6;seconds=55+Math.floor(n/6);}
-  else if(n<=150){rows=6;cols=6;types=8;seconds=60+Math.floor(n/8);}
-  else if(n<=220){rows=6;cols=8;types=8;seconds=70+Math.floor(n/10);}
-  else if(n<=300){rows=7;cols=8;types=10;seconds=80+Math.floor(n/12);}
-  else if(n<=400){rows=8;cols=8;types=10;seconds=90+Math.floor(n/15);}
-  else{rows=8;cols=10;types=12;seconds=110+Math.floor(n/20);}
-  const total=rows*cols;
-  const cells=total%2===0?total:total-1;
-  return {rows,cols,types,seconds,cells};
+  if(n<=10){rows=4;cols=4;types=4;seconds=120;}
+  else if(n<=25){rows=5;cols=4;types=5;seconds=130;}
+  else if(n<=50){rows=5;cols=5;types=6;seconds=150;}
+  else if(n<=80){rows=6;cols=5;types=7;seconds=170;}
+  else if(n<=130){rows=6;cols=6;types=8;seconds=200;}
+  else if(n<=200){rows=7;cols=6;types=9;seconds=230;}
+  else if(n<=300){rows=7;cols=7;types=10;seconds=270;}
+  else if(n<=400){rows=8;cols=7;types=12;seconds=310;}
+  else{rows=8;cols=8;types=14;seconds=360;}
+  return {rows,cols,types,seconds};
 }
 function mjDifficulty(level){
   const n=Math.max(1,Math.min(500,level));
@@ -1473,27 +1621,73 @@ function mjDifficulty(level){
   if(n<=300)return {label:'СЛОЖНО',cls:'hard'};
   return {label:'ХАРДКОР',cls:'insane'};
 }
-function generateMjLevel(level){
+
+// Генерация позиций с несколькими слоями.
+// Слой 0: rows × cols. Слой 1: (rows-2) × (cols-2) со сдвигом 1. Слой 2: (rows-4) × (cols-4) со сдвигом 2.
+function mjGeneratePositions(cfg){
+  const positions=[];
+  // Слой 0 (низ)
+  for(let r=0;r<cfg.rows;r++)
+    for(let c=0;c<cfg.cols;c++)
+      positions.push({layer:0,r,c});
+  // Слой 1 (середина) — только если хватает места
+  if(cfg.rows-2>=2 && cfg.cols-2>=2){
+    for(let r=0;r<cfg.rows-2;r++)
+      for(let c=0;c<cfg.cols-2;c++)
+        positions.push({layer:1,r:r+1,c:c+1});
+  }
+  // Слой 2 (верх) — если очень большая сетка
+  if(cfg.rows-4>=2 && cfg.cols-4>=2){
+    for(let r=0;r<cfg.rows-4;r++)
+      for(let c=0;c<cfg.cols-4;c++)
+        positions.push({layer:2,r:r+2,c:c+2});
+  }
+  return positions;
+}
+
+function mjGenerateLevel(level){
   const cfg=mjConfig(level);
   const rng=mulberry32(level*5381+31);
-  const pairs=Math.floor(cfg.cells/2);
-  const bag=[];
+  let positions=mjGeneratePositions(cfg);
+  // Если нечётно — убираем одну позицию с самого верхнего слоя
+  if(positions.length%2!==0){
+    // Ищем самую верхнюю позицию
+    let maxLayer=0;
+    positions.forEach(p=>{if(p.layer>maxLayer)maxLayer=p.layer;});
+    const topIdx=positions.map((p,i)=>({i,layer:p.layer})).filter(x=>x.layer===maxLayer).map(x=>x.i);
+    if(topIdx.length>0){
+      positions.splice(topIdx[topIdx.length-1],1);
+    } else {
+      positions.pop();
+    }
+  }
+  // Перемешиваем позиции
+  for(let i=positions.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[positions[i],positions[j]]=[positions[j],positions[i]];}
+  // Собираем пары символов
+  const pairs=positions.length/2;
+  const symbols=[];
   for(let i=0;i<pairs;i++){
     const sym=MJ_SYMBOLS[Math.floor(rng()*cfg.types)];
-    bag.push(sym,sym);
+    symbols.push(sym);
+    symbols.push(sym);
   }
-  for(let i=bag.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[bag[i],bag[j]]=[bag[j],bag[i]];}
-  const grid=[];
-  let idx=0;
-  for(let r=0;r<cfg.rows;r++){
-    const row=[];
-    for(let c=0;c<cfg.cols;c++){
-      if(r*cfg.cols+c<cfg.cells){row.push({sym:bag[idx++],gone:false});}
-      else row.push(null);
-    }
-    grid.push(row);
+  // Перемешиваем символы
+  for(let i=symbols.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[symbols[i],symbols[j]]=[symbols[j],symbols[i]];}
+  // Собираем плитки
+  const tiles=[];
+  for(let i=0;i<positions.length;i++){
+    tiles.push({
+      id:i,
+      layer:positions[i].layer,
+      r:positions[i].r,
+      c:positions[i].c,
+      sym:symbols[i],
+      flipped:false,
+      matched:false,
+      locked:false
+    });
   }
-  return {grid,rows:cfg.rows,cols:cfg.cols,seconds:cfg.seconds,types:cfg.types,cells:cfg.cells};
+  return {tiles,cfg,rows:cfg.rows,cols:cfg.cols,seconds:cfg.seconds,types:cfg.types};
 }
 
 let mjState=null;
@@ -1505,21 +1699,201 @@ function viewMahjong(){
 }
 
 function initMjLevel(level){
-  const d=generateMjLevel(level);
+  const d=mjGenerateLevel(level);
   mjState={
-    level,grid:d.grid,rows:d.rows,cols:d.cols,
-    seconds:d.seconds,timeLeft:d.seconds,
-    selected:null,busy:false,won:false,lost:false,moves:0,
-    timerId:null,started:false
+    level,
+    tiles:d.tiles,
+    cfg:d.cfg,
+    rows:d.rows,
+    cols:d.cols,
+    seconds:d.seconds,
+    timeLeft:d.seconds,
+    selectedId:null,
+    busy:false,
+    won:false,
+    lost:false,
+    moves:0,
+    timerId:null,
+    started:false,
+    tileSize:0,
+    tileW:0,
+    tileH:0,
+    offsetX:0,
+    offsetY:0
   };
+  // Устанавливаем блокировки
+  mjUpdateLocks();
+}
+
+// Проверка: перекрывает ли плитка A (слой выше) плитку B
+function mjOverlaps(a,b){
+  if(a.layer<=b.layer)return false;
+  // Только смежные слои + все выше
+  if(a.layer!==b.layer+1 && a.layer!==b.layer+2)return false;
+  const dL=a.layer-b.layer;
+  // Координаты в пикселях (в единицах ширины плитки)
+  const ax=a.c*dL, ay=a.r*dL;
+  const bx=b.c, by=b.r;
+  // Плитка A занимает [ax, ax+1+dL] × [ay, ay+1+dL]? Нет. Слой выше — плитка лежит со сдвигом dL клеток?
+  // На самом деле мы сдвигаем на dL ПОЛОВИН плитки? Хм.
+  // Упростим: плитка на слое L занимает область [c, c+1+?]... 
+  // Возьму так: слой 1 сдвинут на 1 клетку, значит плитка слоя 1 (r1,c1) лежит в пикселях от (c1*T, r1*T*1.3).
+  // Плитка слоя 0 (r0,c0) лежит от (c0*T, r0*T*1.3).
+  // Пересечение: если |c1-c0|<=0 и |r1-r0|<=0 — совпадает. Нет, слишком строго.
+  // Правильно: плитка занимает T×T*1.3. Слой 1 сдвинут на T/2 вправо и T*1.3/2 вниз.
+  // Тогда плитка слоя 1 (r1,c1) в пикселях: x1 = c1*T + T/2, y1 = r1*T*1.3 + T*1.3/2.
+  // Плитка слоя 0 (r0,c0): x0 = c0*T, y0 = r0*T*1.3.
+  // Пересечение если x1 < x0+T && x1+T > x0 && y1 < y0+T*1.3 && y1+T*1.3 > y0
+  // Подставим: 
+  //   c1*T + T/2 < c0*T + T  →  c1 + 0.5 < c0 + 1  →  c1 < c0 + 0.5  →  c1 <= c0 (целые)
+  //   c1*T + T/2 + T > c0*T  →  c1 + 1.5 > c0  →  c1 >= c0 - 1
+  //   аналогично для r.
+  // Итого: c0-1 <= c1 <= c0, r0-1 <= r1 <= r0. То есть плитка слоя 1 перекрывает 4 плитки слоя 0.
+  // В общем случае для слоя L со сдвигом L половин (или L клеток?):
+  // Сдвиг слоя L = L/2 клетки? Нет — давайте определим: слой 1 сдвинут на пол-клетки, слой 2 — на целую клетку.
+  // Значит сдвиг в клетках = L/2. 
+  // 
+  // Позиция плитки слоя L: (c*T + L/2*T, r*H + L/2*H), где H = T*1.3.
+  // Плитка B на слое 0: (c0*T, r0*H).
+  // Пересечение если:
+  //   c*T + L/2*T < c0*T + T   →   c + L/2 < c0 + 1
+  //   c*T + L/2*T + T > c0*T   →   c + L/2 + 1 > c0
+  // То есть c0 - 1 < c + L/2 < c0 + 1, то есть c0 - 1 <= c + L/2 <= c0.
+  // Для L=1: c + 0.5 — не целое. Пересечение если c0 = c + 0 или c0 = c + 1? Проверим:
+  //   c + 0.5 < c0 + 1  →  c < c0 + 0.5  →  c <= c0
+  //   c + 0.5 + 1 > c0  →  c + 1.5 > c0  →  c >= c0 - 1
+  //   Итого: c0-1 <= c <= c0. То есть для плитки слоя 1 (r,c) перекрываемые на слое 0: r0=r или r0=r+1? 
+  //   Проверим: r0-1 <= r <= r0 → r0 = r или r0 = r+1. Хм, но должно быть наоборот.
+  //   Смотрим на B (слой 0, r0,c0) — её верхний левый угол (c0*T, r0*H). 
+  //   A (слой 1, r,c): верхний левый (c*T + T/2, r*H + H/2). A занимает [c*T+T/2, c*T+1.5*T] × [r*H+H/2, r*H+1.5*H].
+  //   B: [c0*T, c0*T+T] × [r0*H, r0*H+H].
+  //   Пересечение по X: c*T+T/2 < c0*T+T → c+0.5 < c0+1 → c < c0+0.5 → c <= c0.
+  //                     c*T+1.5*T > c0*T → c+1.5 > c0 → c > c0-1.5 → c >= c0-1.
+  //   Значит c0-1 <= c <= c0 → c0 ∈ {c, c+1}.
+  //   Ага, значит плитка слоя 1 (r,c) перекрывает плитки слоя 0 с координатами (r0,c0) где r0∈{r, r+1}, c0∈{c, c+1}.
+  //   То есть 4 плитки: (r,c),(r,c+1),(r+1,c),(r+1,c+1). Логично.
+  //
+  // Обобщая: сдвиг слоя L — на L/2 клетки вправо-вниз (в единицах клеток слоя 0).
+  // В наших координатах мы просто пользуемся целочисленными (r,c) на каждом слое. 
+  // Физически слой L+1 занимает положение со сдвигом L+1 половин клетки.
+  // Тогда плитка слоя 1 (r,c) перекрывает 4 плитки слоя 0: (r,c),(r,c+1),(r+1,c),(r+1,c+1).
+  // Плитка слоя 2 (r,c) перекрывает плитки слоя 0 (r..r+2, c..c+2)? Проверим по той же формуле:
+  //   Сдвиг слоя 2 — на 1 клетку (L/2 = 1). Плитка A (r,c): [c*T+T, c*T+2T] × [r*H+H, r*H+2H].
+  //   Плитка B (r0,c0): [c0*T, c0*T+T] × [r0*H, r0*H+H].
+  //   X: c+1 < c0+1 → c < c0 → c <= c0-1. c+2 > c0 → c > c0-2 → c >= c0-1.
+  //   Значит c = c0-1, то есть c0 = c+1. Только одно значение? Хм, странно.
+  //   
+  //   Проверим напрямую: A занимает пиксели [c*T+T, c*T+2T]. 
+  //   B занимает [c0*T, c0*T+T]. Пересекаются если c0*T < c*T+2T и c0*T+T > c*T+T
+  //   → c0 < c+2 и c0+1 > c+1 → c0 < c+2 и c0 > c → c0 ∈ {c+1}. Одна плитка.
+  //   
+  //   Это значит что слой 2 перекрывает 1 плитку слоя 0. Логично, ведь он сдвинут ровно на 1 клетку.
+  //   Но тогда на слое 2 будет мало плиток и они будут перекрывать по 1 нижней.
+
+  // Реализую через проверку пересечения bounding boxов — это универсально.
+  const HALF_W = 1; // в единицах ширины плитки слоя 0
+  const HALF_H = 1;
+  // Позиция плитки на слое L (в единицах ширины плитки слоя 0):
+  // x = c + L*0.5, y = r*(H_TILE/W_TILE) + L*0.5*(H_TILE/W_TILE)... сложно.
+  // 
+  // Проще: работаем в абстрактных "полу-клетках". Каждая плитка имеет ширину 2 и высоту 2 (в полу-клетках).
+  // Позиция плитки на слое L: (c*2 + L, r*2 + L) — сдвиг на L полу-клеток.
+  // 
+  // Плитка A(la,ra,ca): xA = ca*2 + la, yA = ra*2 + la, wA=2, hA=2.
+  // Плитка B(lb,rb,cb): xB = cb*2 + lb, yB = rb*2 + lb.
+  // Пересечение: xA < xB+2 && xA+2 > xB && yA < yB+2 && yA+2 > yB.
+  // Подставим: 
+  //   ca*2+la < cb*2+lb+2 → 2(ca-cb) + la-lb < 2
+  //   ca*2+la+2 > cb*2+lb → 2(ca-cb) + la-lb > -2
+  //   Аналогично для y.
+  // 
+  // Например, la=1, lb=0: 2(ca-cb) + 1 < 2 → 2(ca-cb) < 1 → ca-cb <= 0 → ca <= cb
+  //                       2(ca-cb) + 1 > -2 → 2(ca-cb) > -3 → ca-cb >= -1 → ca >= cb-1
+  //   Значит ca ∈ {cb-1, cb}. То есть плитка A перекрывает 2 плитки по X. Аналогично по Y.
+  //   Итого 4 плитки — верно.
+  // 
+  // Для la=2, lb=0: 2(ca-cb) + 2 < 2 → ca-cb < 0 → ca < cb
+  //                  2(ca-cb) + 2 > -2 → ca-cb > -2 → ca >= cb-2
+  //   ca ∈ {cb-2, cb-1}. Итого 2 варианта по X, 2 по Y = 4 плитки слоя 0.
+  // 
+  // Хм, для слоя 2 при таких расчётах пересекает 2×2 = 4 плитки слоя 0.
+  const ax = a.c*2 + a.layer;
+  const ay = a.r*2 + a.layer;
+  const bx = b.c*2 + b.layer;
+  const by = b.r*2 + b.layer;
+  return ax < bx+2 && ax+2 > bx && ay < by+2 && ay+2 > by;
+}
+
+function mjUpdateLocks(){
+  const s=mjState;if(!s)return;
+  const alive=s.tiles.filter(t=>!t.matched);
+  alive.forEach(b=>{
+    b.locked=false;
+    for(const a of alive){
+      if(a.id===b.id)continue;
+      if(a.layer<=b.layer)continue;
+      if(mjOverlaps(a,b)){b.locked=true;break;}
+    }
+  });
+}
+
+function mjComputeLayout(){
+  const s=mjState;if(!s)return;
+  // Считаем доступное место
+  const panel=document.querySelector('.mj-panel');
+  const availableW = panel ? panel.clientWidth - 20 : Math.min(800, window.innerWidth - 60);
+  const availableH = Math.min(window.innerHeight * 0.55, 520);
+  const maxCols=s.cols + 2; // с учётом слоёв (сдвиг)
+  const maxRows=s.rows + 2;
+  const tileW = Math.floor(Math.min(availableW / (maxCols + 0.5), availableH / (maxRows * 1.32 + 0.5)));
+  const finalW = Math.max(28, Math.min(64, tileW));
+  const finalH = Math.floor(finalW * 1.32);
+  s.tileW=finalW;
+  s.tileH=finalH;
+  s.tileSize=finalW;
+  s.offsetX=0;
+  s.offsetY=0;
+  // Ширина/высота всей сцены
+  s.frameW = s.cols*finalW + 2*finalW; // запас
+  s.frameH = s.rows*finalH + 2*finalH;
 }
 
 function renderMjBoard(){
   const s=mjState;if(!s)return '';
-  const left=s.grid.flat().filter(x=>x&&!x.gone).length;
+  mjUpdateLocks();
+  mjComputeLayout();
+  const left=s.tiles.filter(t=>!t.matched).length;
   const diff=mjDifficulty(s.level);
   const timePct=s.seconds>0?Math.max(0,(s.timeLeft/s.seconds)*100):0;
-  const warn=s.timeLeft<=10&&s.started&&!s.won&&!s.lost;
+  const warn=s.timeLeft<=15&&s.started&&!s.won&&!s.lost;
+
+  // Сортируем плитки по слою для правильной отрисовки (нижние первыми)
+  const sorted=s.tiles.slice().sort((a,b)=>{
+    if(a.layer!==b.layer)return a.layer-b.layer;
+    return a.id-b.id;
+  });
+
+  let tilesHtml='';
+  sorted.forEach(t=>{
+    if(t.matched)return;
+    // Позиция в пикселях
+    const offset = t.layer * (s.tileW/2);
+    const x = t.c * s.tileW + offset;
+    const y = t.r * s.tileH + offset;
+    const z = 10 + t.layer*10 + t.id%3;
+    const cls='mj-tile'+(t.locked?' locked':'')+(t.flipped?' flipped':'')+(s.selectedId===t.id?' selected':'');
+    tilesHtml+=`<div class="${cls}" data-tile-id="${t.id}" style="left:${x}px;top:${y}px;width:${s.tileW}px;height:${s.tileH}px;z-index:${z};--tile-font:${Math.floor(s.tileW*0.62)}px">
+      <div class="mj-tile-inner">
+        <div class="mj-tile-face mj-tile-back"></div>
+        <div class="mj-tile-face mj-tile-front">${t.sym}</div>
+      </div>
+    </div>`;
+  });
+
+  // Размеры сцены
+  const frameW = s.cols*s.tileW + 2*(s.tileW/2) + s.tileW/2;
+  const frameH = s.rows*s.tileH + 2*(s.tileH/2) + s.tileH/2;
+
   let overlay='';
   if(s.won){
     overlay=`<div class="sw-overlay win"><div class="sw-card"><div class="sw-ic">🀄</div>
@@ -1535,23 +1909,13 @@ function renderMjBoard(){
       <button class="btn danger" data-action="mj-retry">↻ Попробовать снова</button>
     </div></div>`;
   }
-  let boardHtml='';
-  for(let r=0;r<s.rows;r++){
-    for(let c=0;c<s.cols;c++){
-      const cell=s.grid[r][c];
-      if(!cell)continue;
-      const isSel=s.selected&&s.selected.r===r&&s.selected.c===c;
-      const cls='mj-tile'+(cell.gone?' gone':'')+(isSel?' selected':'');
-      boardHtml+=`<div class="${cls}" data-mj-r="${r}" data-mj-c="${c}">${cell.sym}</div>`;
-    }
-  }
-  const gridStyle=`grid-template-columns:repeat(${s.cols},minmax(0,1fr));max-width:${Math.min(100,s.cols*54)}px;margin:0 auto;`;
+
   return `<button class="back-btn" data-action="back-games">‹ Назад</button>
-  <div class="card" style="position:relative">
+  <div class="card" style="position:relative;padding:14px">
     ${overlay}
-    <div class="mj-head">
-      <div class="mj-stat">Уровень<b>${s.level} / 500</b></div>
-      <div class="mj-stat">Осталось<b>${left}</b></div>
+    <div class="mj-bar">
+      <div class="mj-stat">Уровень<b>${s.level}/500</b></div>
+      <div class="mj-stat">Плиток<b>${left}</b></div>
       <div class="mj-stat">Ходов<b>${s.moves}</b></div>
     </div>
     <div style="display:flex;justify-content:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
@@ -1559,9 +1923,15 @@ function renderMjBoard(){
       <span class="sw-badge ${warn?'insane':'easy'}">⏱ ${Math.floor(s.timeLeft)}с</span>
     </div>
     <div class="mj-timer ${warn?'warn':''}"><i style="width:${timePct}%"></i></div>
-    <div class="mj-board" style="${gridStyle}">${boardHtml}</div>
-    <div style="font-size:11.5px;color:var(--muted);text-align:center;margin-top:12px;line-height:1.5">
-      Нажми на две одинаковые плитки — они исчезнут. Убери все до конца таймера!<br>
+    <div class="mj-panel">
+      <div class="mj-frame" style="width:${frameW}px;height:${frameH}px;margin:0 auto;">
+        ${tilesHtml}
+      </div>
+    </div>
+    <div style="font-size:11.5px;color:var(--muted);text-align:center;margin-top:12px;line-height:1.55">
+      🎴 Плитки закрыты — тапни, чтобы перевернуть.<br>
+      🔒 Затемнённые накрыты сверху — их открыть нельзя.<br>
+      🎯 Совпавшие пары исчезают. Убери всё до истечения таймера!<br>
       Пройдено: <b style="color:var(--accent2)">${S.mahjong?S.mahjong.completed:0}</b> из 500
     </div>
     <div class="sw-actions">
@@ -1576,9 +1946,12 @@ function renderMjBoard(){
 }
 
 function setupMahjong(){
-  const container=document.getElementById('view');if(!container)return;
-  container.querySelectorAll('.mj-tile:not(.gone)').forEach(t=>{t.addEventListener('click',()=>tapMjTile(t));});
-  if(mjState&&!mjState.started&&!mjState.won&&!mjState.lost){
+  const container=document.getElementById('view');
+  if(!container||!mjState)return;
+  container.querySelectorAll('.mj-tile').forEach(el=>{
+    el.addEventListener('click',()=>tapMjTile(el));
+  });
+  if(!mjState.started && !mjState.won && !mjState.lost){
     mjState.started=true;
     startMjTimer();
   }
@@ -1590,79 +1963,112 @@ function startMjTimer(){
   s.timerId=setInterval(()=>{
     if(!mjState||mjState.won||mjState.lost){if(s.timerId){clearInterval(s.timerId);s.timerId=null;}return;}
     s.timeLeft-=0.5;
-    if(s.timeLeft<=0){s.timeLeft=0;s.lost=true;if(s.timerId){clearInterval(s.timerId);s.timerId=null;}refreshMjBoard();return;}
-    refreshMjTimerUI();
+    if(s.timeLeft<=0){
+      s.timeLeft=0;s.lost=true;
+      if(s.timerId){clearInterval(s.timerId);s.timerId=null;}
+      refreshMjBoard();
+      return;
+    }
+    // Только обновляем прогресс-бар без полной перерисовки
+    const t=document.querySelector('.mj-timer');
+    const s2=mjState;
+    if(t){
+      t.querySelector('i').style.width=Math.max(0,(s2.timeLeft/s2.seconds)*100)+'%';
+      t.classList.toggle('warn',s2.timeLeft<=15);
+    }
+    document.querySelectorAll('.sw-badge').forEach(b=>{
+      if(b.textContent.includes('⏱'))b.textContent='⏱ '+Math.floor(s2.timeLeft)+'с';
+    });
   },500);
-}
-
-function refreshMjTimerUI(){
-  const s=mjState;if(!s)return;
-  const timerEl=document.querySelector('.mj-timer');
-  if(timerEl){
-    const pct=Math.max(0,(s.timeLeft/s.seconds)*100);
-    timerEl.querySelector('i').style.width=pct+'%';
-    timerEl.classList.toggle('warn',s.timeLeft<=10);
-  }
-  const badges=document.querySelectorAll('.sw-badge');
-  badges.forEach(b=>{
-    if(b.textContent.includes('⏱'))b.textContent='⏱ '+Math.floor(s.timeLeft)+'с';
-  });
 }
 
 function tapMjTile(el){
   const s=mjState;if(!s||s.busy||s.won||s.lost)return;
-  const r=Number(el.dataset.mjR);
-  const c=Number(el.dataset.mjC);
-  const cell=s.grid[r][c];if(!cell||cell.gone)return;
-  if(!s.selected){s.selected={r,c};refreshMjBoard();return;}
-  if(s.selected.r===r&&s.selected.c===c){s.selected=null;refreshMjBoard();return;}
-  const first=s.grid[s.selected.r][s.selected.c];
-  if(first.sym===cell.sym){
-    s.busy=true;s.moves++;
-    const el1=document.querySelector(`.mj-tile[data-mj-r="${s.selected.r}"][data-mj-c="${s.selected.c}"]`);
-    const el2=el;
-    if(el1)el1.classList.add('gone');
-    if(el2)el2.classList.add('gone');
-    first.gone=true;cell.gone=true;
-    s.selected=null;
+  const id=Number(el.dataset.tileId);
+  const t=s.tiles.find(x=>x.id===id);
+  if(!t||t.matched)return;
+  if(t.locked){
+    el.classList.add('shaking');
+    setTimeout(()=>el.classList.remove('shaking'),400);
+    toast('🔒 Сверху лежат другие плитки','');
+    return;
+  }
+  // Если уже открыта — закрываем
+  if(t.flipped){
+    // Уже flipped — перевернуть обратно (если не выбрана как первая для сравнения)
+    // Если это та же, что s.selectedId — снимаем выделение
+    if(s.selectedId===id){
+      // Ничего не делаем, пусть остаётся открытой — она выбрана
+      return;
+    }
+    // Иначе переворачиваем обратно
+    t.flipped=false;
+    refreshMjBoard();
+    return;
+  }
+  // Если плитка уже выбрана как первая
+  if(s.selectedId!==null){
+    const first=s.tiles.find(x=>x.id===s.selectedId);
+    if(!first){s.selectedId=null;return;}
+    // Переворачиваем эту
+    t.flipped=true;
+    s.moves++;
+    s.busy=true;
+    refreshMjBoard();
     setTimeout(()=>{
-      s.busy=false;
-      const left=s.grid.flat().filter(x=>x&&!x.gone).length;
-      if(left===0){
-        s.won=true;
-        if(s.timerId){clearInterval(s.timerId);s.timerId=null;}
-        const reward=8+Math.floor(s.level/20);
-        if(!S.mahjong)S.mahjong={unlocked:1,completed:0};
-        S.mahjong.completed=Math.max(S.mahjong.completed,s.level);
-        if(s.level>=S.mahjong.unlocked&&S.mahjong.unlocked<500)S.mahjong.unlocked=s.level+1;
-        save();registerGamePlayed(reward);
+      if(first.sym===t.sym){
+        // Совпали — удаляем обе
+        first.matched=true;
+        t.matched=true;
+        s.selectedId=null;
+        s.busy=false;
+        // Проверяем победу
+        const left=s.tiles.filter(x=>!x.matched).length;
+        if(left===0){
+          s.won=true;
+          if(s.timerId){clearInterval(s.timerId);s.timerId=null;}
+          const reward=10+Math.floor(s.level/15);
+          if(!S.mahjong)S.mahjong={unlocked:1,completed:0};
+          S.mahjong.completed=Math.max(S.mahjong.completed,s.level);
+          if(s.level>=S.mahjong.unlocked&&S.mahjong.unlocked<500)S.mahjong.unlocked=s.level+1;
+          save();registerGamePlayed(reward);
+        }
+        refreshMjBoard();
+      } else {
+        // Не совпали — переворачиваем обе обратно через паузу
+        setTimeout(()=>{
+          first.flipped=false;
+          t.flipped=false;
+          s.selectedId=null;
+          s.busy=false;
+          refreshMjBoard();
+        },700);
       }
-      refreshMjBoard();
     },300);
   } else {
-    s.busy=true;
-    const el1=document.querySelector(`.mj-tile[data-mj-r="${s.selected.r}"][data-mj-c="${s.selected.c}"]`);
-    if(el1)el1.classList.add('wrong');
-    if(el)el.classList.add('wrong');
-    s.selected=null;
-    setTimeout(()=>{s.busy=false;refreshMjBoard();},320);
+    // Первая плитка — переворачиваем и выделяем
+    t.flipped=true;
+    s.selectedId=id;
+    refreshMjBoard();
   }
 }
 
 function refreshMjBoard(){
   if(!mjState)return;
   const c=document.getElementById('view');if(!c)return;
-  c.innerHTML=renderMjBoard();setupMahjong();
+  // Сохраняем таймер, если он уже запущен
+  c.innerHTML=renderMjBoard();
+  setupMahjong();
 }
 
 function shuffleMj(){
   const s=mjState;if(!s||s.won)return;
-  const syms=[];
-  s.grid.forEach(row=>row.forEach(cell=>{if(cell&&!cell.gone)syms.push(cell.sym);}));
+  // Собираем символы у непарных плиток (не matched)
+  const alive=s.tiles.filter(t=>!t.matched);
+  const syms=alive.map(t=>t.sym);
   for(let i=syms.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[syms[i],syms[j]]=[syms[j],syms[i]];}
-  let idx=0;
-  s.grid.forEach(row=>row.forEach(cell=>{if(cell&&!cell.gone)cell.sym=syms[idx++];}));
-  s.selected=null;
+  alive.forEach((t,i)=>{t.sym=syms[i];t.flipped=false;});
+  s.selectedId=null;
   refreshMjBoard();
 }
 
@@ -1738,7 +2144,6 @@ function completeEvent(id,method){
   toast(`🎭 Участие подтверждено! +${fmt(ev.points)}`,'gold');
   if(activeTab==='events'||activeTab==='home')render();
 }
-
 function approvePhoto(id){
   const srv=serverLoad();const pe=srv.pendingEvents.find(p=>p.id===id);
   if(!pe||pe.status!=='pending')return;
@@ -1817,7 +2222,6 @@ document.addEventListener('click',e=>{
   const action=el.dataset.action;
   if(action==='close'){closeModal();return;}
   if(action==='go'){switchTab(el.dataset.tab);return;}
-
   if(action==='switch-account'){
     if(!confirm('Выйти из аккаунта? Прогресс сохранится, вы сможете зайти заново.'))return;
     syncPlayerToServer();
@@ -1842,7 +2246,6 @@ document.addEventListener('click',e=>{
     toast('🛡️ Вход в админ-панель','admin');
     return;
   }
-
   if(action==='quiz'){
     const task=taskById('quiz');if(!task||task.done)return;
     const q=QUIZ[S.daily.quizIndex];const i=Number(el.dataset.i);
@@ -1875,12 +2278,10 @@ document.addEventListener('click',e=>{
   if(action==='screw-reshuffle'){reshuffleScrews();toast('Поле перемешано','');return;}
   if(action==='screw-next'){const n=Math.min(screwsState.level+1,500);initScrewsLevel(n);refreshScrewsBoard();return;}
   if(action==='screw-prev'){const p=Math.max(screwsState.level-1,1);initScrewsLevel(p);refreshScrewsBoard();return;}
-
-  if(action==='mj-retry'){initMjLevel(mjState.level);refreshMjBoard();toast('Перезапуск','');return;}
+  if(action==='mj-retry'){const lvl=mjState.level;initMjLevel(lvl);refreshMjBoard();toast('Перезапуск','');return;}
   if(action==='mj-shuffle'){shuffleMj();toast('Перемешано','');return;}
   if(action==='mj-next'){const n=Math.min(mjState.level+1,500);initMjLevel(n);refreshMjBoard();return;}
   if(action==='mj-prev'){const p=Math.max(mjState.level-1,1);initMjLevel(p);refreshMjBoard();return;}
-
   if(action==='admin-tab'){S.adminSubTab=el.dataset.sub;save();render();return;}
   if(action==='approve-photo'){approvePhoto(Number(el.dataset.id));return;}
   if(action==='reject-photo'){rejectPhoto(Number(el.dataset.id));return;}
@@ -1928,6 +2329,12 @@ function switchTab(tab){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 document.querySelectorAll('nav button').forEach(b=>{b.addEventListener('click',()=>switchTab(b.dataset.tab));});
+
+window.addEventListener('resize',()=>{
+  if(activeTab==='game'&&currentGameId==='mahjong'&&mjState&&!mjState.busy){
+    refreshMjBoard();
+  }
+});
 
 function boot(){
   setTimeout(()=>{
