@@ -57,6 +57,8 @@ header{position:sticky;top:0;z-index:20;margin:0 -14px 18px;padding:16px 18px 14
 .admin-badge{display:inline-block;padding:2px 8px;background:linear-gradient(135deg,#9c27b0,#4a148c);color:#fff;font-size:10px;font-weight:800;border-radius:6px;margin-left:6px;letter-spacing:1px;vertical-align:middle}
 .hpoints{text-align:right;font-weight:800;font-size:19px;color:var(--accent2);text-shadow:0 0 18px rgba(255,179,71,.45);white-space:nowrap}
 .hpoints small{display:block;font-size:10px;color:var(--muted);font-weight:600;letter-spacing:1px}
+.h-actions{display:flex;gap:8px;margin-top:10px}
+.h-actions .btn{padding:8px;font-size:11.5px;margin:0;flex:1;font-weight:600}
 
 nav{display:flex;gap:6px;background:rgba(255,255,255,.045);border:1px solid var(--line);border-radius:16px;padding:5px;margin-bottom:20px;overflow-x:auto;scrollbar-width:none}
 nav::-webkit-scrollbar{display:none}
@@ -184,10 +186,8 @@ nav button:not(.active):hover{color:var(--text);background:rgba(255,255,255,.05)
 .sw-board.compact{padding:8px 8px;gap:6px}
 .sw-board.tiny{padding:6px 6px;gap:5px}
 .sw-board.active{box-shadow:0 7px 14px rgba(0,0,0,.55),0 0 0 2px rgba(255,179,71,.35),inset 0 2px 0 rgba(255,255,255,.25),inset 0 -3px 6px rgba(0,0,0,.45)}
-/* locked: доступна только на запись */
 .sw-board.locked{filter:brightness(.72) saturate(.6);box-shadow:0 4px 10px rgba(0,0,0,.7),inset 0 2px 0 rgba(255,255,255,.08),inset 0 -3px 6px rgba(0,0,0,.5)}
 .sw-board.locked::after{content:'🔒';position:absolute;top:-9px;right:-9px;font-size:15px;background:#2a1a10;border:2px solid #6a4a2e;border-radius:50%;width:26px;height:26px;display:grid;place-items:center;z-index:5;box-shadow:0 3px 6px rgba(0,0,0,.6)}
-/* full: полностью заполнена и разблокирована для чтения */
 .sw-board.full-unlocked{box-shadow:0 7px 14px rgba(0,0,0,.55),0 0 0 3px rgba(56,211,159,.75),0 0 26px rgba(56,211,159,.5),inset 0 2px 0 rgba(255,255,255,.3),inset 0 -3px 6px rgba(0,0,0,.4);animation:fullPulse 1.8s infinite}
 @keyframes fullPulse{0%,100%{box-shadow:0 7px 14px rgba(0,0,0,.55),0 0 0 3px rgba(56,211,159,.75),0 0 26px rgba(56,211,159,.5),inset 0 2px 0 rgba(255,255,255,.3),inset 0 -3px 6px rgba(0,0,0,.4)}50%{box-shadow:0 7px 14px rgba(0,0,0,.55),0 0 0 3px rgba(56,211,159,.9),0 0 34px rgba(56,211,159,.7),inset 0 2px 0 rgba(255,255,255,.3),inset 0 -3px 6px rgba(0,0,0,.4)}}
 .sw-board.full-unlocked::after{content:'🔓';position:absolute;top:-9px;right:-9px;font-size:15px;background:#0a2a1e;border:2px solid #38d39f;border-radius:50%;width:26px;height:26px;display:grid;place-items:center;z-index:5;box-shadow:0 0 12px rgba(56,211,159,.6)}
@@ -230,6 +230,23 @@ nav button:not(.active):hover{color:var(--text);background:rgba(255,255,255,.05)
 .sw-overlay p{color:var(--muted);font-size:13px;margin-bottom:16px;line-height:1.5}
 .sw-overlay .btn{max-width:260px;margin:8px auto 0}
 .sw-hint{text-align:center;font-size:11.5px;color:var(--muted);padding:8px 12px;border-radius:9px;background:rgba(0,0,0,.3);border:1px solid var(--line);margin-top:10px;line-height:1.5}
+
+/* МАДЖОНГ */
+.mj-head{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px}
+.mj-stat{font-size:11.5px;color:var(--muted);font-weight:600;background:rgba(0,0,0,.35);border:1px solid var(--line);padding:7px 8px;border-radius:9px;text-align:center}
+.mj-stat b{color:var(--accent2);display:block;font-size:14px;margin-top:2px}
+.mj-timer{height:8px;background:rgba(0,0,0,.4);border-radius:8px;overflow:hidden;margin:10px 0;border:1px solid var(--line)}
+.mj-timer i{display:block;height:100%;background:linear-gradient(90deg,var(--ok),var(--accent2));border-radius:8px;transition:width .5s linear}
+.mj-timer.warn i{background:linear-gradient(90deg,var(--hot),var(--danger));animation:mjPulse .6s infinite}
+@keyframes mjPulse{0%,100%{opacity:1}50%{opacity:.6}}
+.mj-board{display:grid;gap:5px;padding:12px;background:linear-gradient(160deg,#1a3a2a,#0e1f18);border-radius:14px;border:1px solid rgba(255,255,255,.08);justify-content:center}
+.mj-tile{aspect-ratio:1;border-radius:8px;background:linear-gradient(145deg,#f5e6c8,#d4b988 60%,#b89868);box-shadow:0 3px 6px rgba(0,0,0,.5),inset 0 2px 0 rgba(255,255,255,.7),inset 0 -2px 4px rgba(0,0,0,.25);display:grid;place-items:center;font-size:26px;cursor:pointer;transition:transform .12s,box-shadow .12s,opacity .3s;user-select:none;border:1px solid #8a6f45}
+.mj-tile:hover{transform:translateY(-2px) scale(1.05);box-shadow:0 5px 12px rgba(0,0,0,.6),inset 0 2px 0 rgba(255,255,255,.8)}
+.mj-tile.selected{box-shadow:0 0 0 3px var(--accent),0 0 22px rgba(255,107,26,.9),inset 0 2px 0 rgba(255,255,255,.8);transform:scale(1.08);background:linear-gradient(145deg,#ffe9b0,#f5cf7a 60%,#d4a94c)}
+.mj-tile.gone{opacity:0;pointer-events:none;transform:scale(.3) rotate(45deg)}
+.mj-tile.wrong{animation:mjShake .3s}
+@keyframes mjShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+@media(max-width:520px){.mj-tile{font-size:20px}.mj-board{padding:8px;gap:4px}}
 
 .admin-tab-bar{display:flex;gap:6px;background:rgba(156,39,176,.1);border:1px solid rgba(156,39,176,.3);border-radius:14px;padding:5px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none}
 .admin-tab-bar::-webkit-scrollbar{display:none}
@@ -298,6 +315,8 @@ nav button:not(.active):hover{color:var(--text);background:rgba(255,255,255,.05)
   .screw::before{width:13px;height:2.5px}
   .screw::after{width:2.5px;height:13px}
   .sw-board{padding:8px 8px;gap:6px}
+  .mj-tile{font-size:20px}
+  .mj-board{padding:8px;gap:4px}
 }
 </style>
 </head>
@@ -336,6 +355,10 @@ nav button:not(.active):hover{color:var(--text);background:rgba(255,255,255,.05)
       </div>
       <div class="hpoints" id="hPoints">0<small>РЕЙТИНГ</small></div>
     </div>
+    <div class="h-actions">
+      <button class="btn ghost" data-action="switch-account">🔄 Сменить игрока</button>
+      <button class="btn ghost" data-action="admin-login">🛡️ Войти как админ</button>
+    </div>
   </header>
   <nav id="mainNav">
     <button data-tab="home" class="active"><span class="ic">🏠</span>Главная</button>
@@ -353,6 +376,9 @@ nav button:not(.active):hover{color:var(--text);background:rgba(255,255,255,.05)
 <div id="toasts"></div>
 
 <script>
+/* =========================================================
+   СЕРВЕР (localStorage)
+   ========================================================= */
 const SERVER_KEY='omz_steel_path_server_v1';
 const DEFAULT_ADMIN_PASS='omz2024';
 
@@ -383,7 +409,11 @@ function showBanScreen(){
   document.body.appendChild(el);
 }
 
-const KEY='omz_steel_path_v8';
+/* =========================================================
+   ФИКСИРОВАННЫЙ КЛЮЧ + МИГРАЦИЯ СТАРЫХ ВЕРСИЙ
+   ========================================================= */
+const KEY='omz_steel_path';
+const OLD_KEYS=['omz_steel_path_v9','omz_steel_path_v8','omz_steel_path_v7','omz_steel_path_v6','omz_steel_path_v5','omz_steel_path_v4','omz_steel_path_v3','omz_steel_path_v2','omz_steel_path_v1'];
 
 const RANKS=[
   {name:'Слесарь-ученик',icon:'🔧',min:0},
@@ -551,10 +581,26 @@ function defaultState(){
   return {name:'',points:0,created:Date.now(),lastVisit:today(),streak:1,daily:null,
     events:[],gamesPlayed:0,quizzesCorrect:0,totalTasks:0,
     screws:{unlocked:1,completed:0},
+    mahjong:{unlocked:1,completed:0},
     isAdmin:false,banned:false,banReason:'',adminSubTab:'photos'};
 }
 let S=null;
-function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null;}catch(e){return null;}}
+
+function load(){
+  try{
+    const cur=localStorage.getItem(KEY);
+    if(cur)return JSON.parse(cur);
+    for(const k of OLD_KEYS){
+      const old=localStorage.getItem(k);
+      if(old){
+        const data=JSON.parse(old);
+        localStorage.setItem(KEY,JSON.stringify(data));
+        return data;
+      }
+    }
+    return null;
+  }catch(e){return null;}
+}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 
 function fmt(n){return n.toLocaleString('ru-RU');}
@@ -933,7 +979,8 @@ const GAMES=[
   {id:'sort',icon:'📦',name:'Сортировка металла',desc:'Определи группу металла на время'},
   {id:'memory',icon:'🧠',name:'Память сталевара',desc:'Повтори последовательность'},
   {id:'forge',icon:'🔨',name:'Кузнец',desc:'Успей нанести максимум ударов'},
-  {id:'screws',icon:'🔧',name:'Винтики и дощечки',desc:'500 уровней с логикой и замками'}
+  {id:'screws',icon:'🔧',name:'Винтики и дощечки',desc:'500 уровней с логикой и замками'},
+  {id:'mahjong',icon:'🀄',name:'Плитки',desc:'500 уровней: найди пары до истечения времени'}
 ];
 
 function registerGamePlayed(score){
@@ -974,6 +1021,7 @@ function viewGame(){
   if(currentGameId==='memory')return viewMemory();
   if(currentGameId==='forge')return viewForge();
   if(currentGameId==='screws')return viewScrews();
+  if(currentGameId==='mahjong')return viewMahjong();
   return viewGameSelector();
 }
 
@@ -1113,15 +1161,7 @@ function setupForge(){
 }
 
 /* ============================================================
-   ВИНТИКИ И ДОЩЕЧКИ v8 — с системой замков
-   Правила:
-   - Доска заблокирована, пока в досках выше есть винтики
-   - НО: если в заблокированную доску вкрутить ВСЕ винтики
-     (заполнить все гнёзда) — она разблокируется
-   - Из разблокированной можно забрать ЛЮБОЙ винтик
-   - Как только забираешь один — доска снова блокируется
-   - В заблокированную доску можно ТОЛЬКО вкручивать винтики,
-     но нельзя из неё забирать
+   ВИНТИКИ И ДОЩЕЧКИ
    ============================================================ */
 const SCREW_COLORS=['#ef5350','#42a5f5','#66bb6a','#fdd835','#ab47bc','#ff9800','#26c6da','#ec407a','#8d6e63'];
 
@@ -1198,8 +1238,6 @@ function initScrewsLevel(level){
   screwsState={level,boards:d.boards,slotsPerBoard:d.slotsPerBoard,selected:null,busy:false,won:false,lost:false,moves:0};
 }
 
-/* --- Логика замков --- */
-
 function hasUpperWithScrews(idx){
   for(let j=0;j<idx;j++){
     const up=screwsState.boards[j];
@@ -1207,15 +1245,7 @@ function hasUpperWithScrews(idx){
   }
   return false;
 }
-function isBoardFull(b){
-  return !b.fallen&&!b.falling&&b.slots.every(x=>x);
-}
-/**
- * Возвращает состояние доски:
- *  'free'          — обычная, доступна для чтения и записи
- *  'locked'        — под замком: только запись, нельзя забирать винтики
- *  'full-unlocked' — была под замком, но полностью заполнена → можно читать
- */
+function isBoardFull(b){return !b.fallen&&!b.falling&&b.slots.every(x=>x);}
 function getBoardState(idx){
   const b=screwsState.boards[idx];
   if(!b||b.fallen||b.falling)return 'free';
@@ -1243,7 +1273,6 @@ function renderScrewsBoard(){
     else if(state==='full-unlocked')cls+='full-unlocked ';
     else if(!isEmpty)cls+='active ';
     cls+=sizeCls;
-    
     const readable=(state!=='locked');
     let holesHtml=b.slots.map((sc,si)=>{
       if(!sc){
@@ -1298,9 +1327,9 @@ function renderScrewsBoard(){
     ${navBar}
     <div class="sw-rules">
       <b>🎯</b> Собери <b>3 одного цвета</b> на одной доске — они затянутся.<br>
-      <b>🔒</b> Нижние доски под замком. <b>Забирать винтики нельзя</b>, но <b>вкручивать — можно</b>.<br>
-      <b>🔓</b> Если доска под замком <b>полностью заполнена</b> — она открывается, и с неё можно взять любой винтик.<br>
-      <b>⚡</b> Как только снимешь винтик — доска снова под замком.<br>
+      <b>🔒</b> Нижние доски под замком. <b>Забирать нельзя, вкручивать — можно</b>.<br>
+      <b>🔓</b> Полностью заполненная доска <b>открывается</b> — можно взять любой винтик.<br>
+      <b>⚡</b> Снимешь винтик — доска снова под замком.<br>
       <b>📌</b> Пустая доска падает, когда все доски под ней упали.
     </div>
     <div class="sw-stage"><div class="sw-stack">${stackHtml}</div><div class="sw-ground"></div></div>
@@ -1327,14 +1356,13 @@ function tapHole(hole){
   const board=s.boards[bi];if(!board||board.fallen||board.falling)return;
   const isFilled=hole.dataset.filled==='1';
   if(isFilled){
-    if(!canReadBoard(bi))return; // под замком — нельзя брать
+    if(!canReadBoard(bi))return;
     if(s.selected){
       if(s.selected.boardIdx===bi&&s.selected.slotIdx===si){s.selected=null;refreshScrewsBoard();return;}
       s.selected={boardIdx:bi,slotIdx:si};refreshScrewsBoard();return;
     }
     s.selected={boardIdx:bi,slotIdx:si};refreshScrewsBoard();return;
   }
-  // пустое гнездо — можно вкрутить куда угодно (даже в locked)
   if(!s.selected)return;
   if(s.selected.boardIdx===bi)return;
   moveScrew(s.selected.boardIdx,s.selected.slotIdx,bi,si);
@@ -1418,12 +1446,233 @@ function reshuffleScrews(){
   refreshScrewsBoard();
 }
 
+/* ============================================================
+   МАДЖОНГ «ПЛИТКИ»
+   ============================================================ */
+const MJ_SYMBOLS=['🔥','⚙️','🔨','🏭','🔩','🛠️','⚗️','📐','📊','🔬','🏗️','💼','🎖️','🎩'];
+
+function mjConfig(level){
+  const n=Math.max(1,Math.min(500,level));
+  let rows,cols,types,seconds;
+  if(n<=20){rows=4;cols=4;types=4;seconds=45+Math.floor(n/2);}
+  else if(n<=50){rows=4;cols=6;types=6;seconds=50+Math.floor(n/4);}
+  else if(n<=100){rows=5;cols=6;types=6;seconds=55+Math.floor(n/6);}
+  else if(n<=150){rows=6;cols=6;types=8;seconds=60+Math.floor(n/8);}
+  else if(n<=220){rows=6;cols=8;types=8;seconds=70+Math.floor(n/10);}
+  else if(n<=300){rows=7;cols=8;types=10;seconds=80+Math.floor(n/12);}
+  else if(n<=400){rows=8;cols=8;types=10;seconds=90+Math.floor(n/15);}
+  else{rows=8;cols=10;types=12;seconds=110+Math.floor(n/20);}
+  const total=rows*cols;
+  const cells=total%2===0?total:total-1;
+  return {rows,cols,types,seconds,cells};
+}
+function mjDifficulty(level){
+  const n=Math.max(1,Math.min(500,level));
+  if(n<=50)return {label:'ЛЕГКО',cls:'easy'};
+  if(n<=150)return {label:'СРЕДНЕ',cls:'medium'};
+  if(n<=300)return {label:'СЛОЖНО',cls:'hard'};
+  return {label:'ХАРДКОР',cls:'insane'};
+}
+function generateMjLevel(level){
+  const cfg=mjConfig(level);
+  const rng=mulberry32(level*5381+31);
+  const pairs=Math.floor(cfg.cells/2);
+  const bag=[];
+  for(let i=0;i<pairs;i++){
+    const sym=MJ_SYMBOLS[Math.floor(rng()*cfg.types)];
+    bag.push(sym,sym);
+  }
+  for(let i=bag.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[bag[i],bag[j]]=[bag[j],bag[i]];}
+  const grid=[];
+  let idx=0;
+  for(let r=0;r<cfg.rows;r++){
+    const row=[];
+    for(let c=0;c<cfg.cols;c++){
+      if(r*cfg.cols+c<cfg.cells){row.push({sym:bag[idx++],gone:false});}
+      else row.push(null);
+    }
+    grid.push(row);
+  }
+  return {grid,rows:cfg.rows,cols:cfg.cols,seconds:cfg.seconds,types:cfg.types,cells:cfg.cells};
+}
+
+let mjState=null;
+
+function viewMahjong(){
+  const unlocked=S.mahjong?S.mahjong.unlocked:1;
+  if(!mjState||mjState.level!==unlocked)initMjLevel(unlocked);
+  return renderMjBoard();
+}
+
+function initMjLevel(level){
+  const d=generateMjLevel(level);
+  mjState={
+    level,grid:d.grid,rows:d.rows,cols:d.cols,
+    seconds:d.seconds,timeLeft:d.seconds,
+    selected:null,busy:false,won:false,lost:false,moves:0,
+    timerId:null,started:false
+  };
+}
+
+function renderMjBoard(){
+  const s=mjState;if(!s)return '';
+  const left=s.grid.flat().filter(x=>x&&!x.gone).length;
+  const diff=mjDifficulty(s.level);
+  const timePct=s.seconds>0?Math.max(0,(s.timeLeft/s.seconds)*100):0;
+  const warn=s.timeLeft<=10&&s.started&&!s.won&&!s.lost;
+  let overlay='';
+  if(s.won){
+    overlay=`<div class="sw-overlay win"><div class="sw-card"><div class="sw-ic">🀄</div>
+      <h3>Уровень ${s.level} пройден!</h3>
+      <p>Ходов: <b style="color:var(--accent2)">${s.moves}</b> • Осталось: <b style="color:var(--accent2)">${Math.floor(s.timeLeft)}с</b></p>
+      ${s.level<500?`<button class="btn" data-action="mj-next">Следующий ›</button>`:`<div style="color:var(--accent2);font-weight:800;margin-bottom:12px">🎉 Все 500!</div>`}
+      <button class="btn ghost" data-action="mj-retry" style="margin-top:8px">Заново</button>
+    </div></div>`;
+  } else if(s.lost){
+    overlay=`<div class="sw-overlay lose"><div class="sw-card"><div class="sw-ic">⏰</div>
+      <h3>Время вышло!</h3>
+      <p>Осталось плиток: <b>${left}</b></p>
+      <button class="btn danger" data-action="mj-retry">↻ Попробовать снова</button>
+    </div></div>`;
+  }
+  let boardHtml='';
+  for(let r=0;r<s.rows;r++){
+    for(let c=0;c<s.cols;c++){
+      const cell=s.grid[r][c];
+      if(!cell)continue;
+      const isSel=s.selected&&s.selected.r===r&&s.selected.c===c;
+      const cls='mj-tile'+(cell.gone?' gone':'')+(isSel?' selected':'');
+      boardHtml+=`<div class="${cls}" data-mj-r="${r}" data-mj-c="${c}">${cell.sym}</div>`;
+    }
+  }
+  const gridStyle=`grid-template-columns:repeat(${s.cols},minmax(0,1fr));max-width:${Math.min(100,s.cols*54)}px;margin:0 auto;`;
+  return `<button class="back-btn" data-action="back-games">‹ Назад</button>
+  <div class="card" style="position:relative">
+    ${overlay}
+    <div class="mj-head">
+      <div class="mj-stat">Уровень<b>${s.level} / 500</b></div>
+      <div class="mj-stat">Осталось<b>${left}</b></div>
+      <div class="mj-stat">Ходов<b>${s.moves}</b></div>
+    </div>
+    <div style="display:flex;justify-content:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+      <span class="sw-badge ${diff.cls}">${diff.label}</span>
+      <span class="sw-badge ${warn?'insane':'easy'}">⏱ ${Math.floor(s.timeLeft)}с</span>
+    </div>
+    <div class="mj-timer ${warn?'warn':''}"><i style="width:${timePct}%"></i></div>
+    <div class="mj-board" style="${gridStyle}">${boardHtml}</div>
+    <div style="font-size:11.5px;color:var(--muted);text-align:center;margin-top:12px;line-height:1.5">
+      Нажми на две одинаковые плитки — они исчезнут. Убери все до конца таймера!<br>
+      Пройдено: <b style="color:var(--accent2)">${S.mahjong?S.mahjong.completed:0}</b> из 500
+    </div>
+    <div class="sw-actions">
+      <button class="btn ghost" data-action="mj-retry">↻ Заново</button>
+      <button class="btn ghost" data-action="mj-shuffle">🔀 Перемешать</button>
+    </div>
+    <div class="sw-nav" style="margin-top:10px">
+      ${s.level>1?`<button class="btn ghost" data-action="mj-prev">‹ Ур. ${s.level-1}</button>`:''}
+      ${s.level<500&&s.level<(S.mahjong?S.mahjong.unlocked:1)?`<button class="btn ghost" data-action="mj-next">Ур. ${s.level+1} ›</button>`:''}
+    </div>
+  </div>`;
+}
+
+function setupMahjong(){
+  const container=document.getElementById('view');if(!container)return;
+  container.querySelectorAll('.mj-tile:not(.gone)').forEach(t=>{t.addEventListener('click',()=>tapMjTile(t));});
+  if(mjState&&!mjState.started&&!mjState.won&&!mjState.lost){
+    mjState.started=true;
+    startMjTimer();
+  }
+  gameCleanup=()=>{if(mjState&&mjState.timerId){clearInterval(mjState.timerId);mjState.timerId=null;}};
+}
+
+function startMjTimer(){
+  const s=mjState;if(!s||s.timerId)return;
+  s.timerId=setInterval(()=>{
+    if(!mjState||mjState.won||mjState.lost){if(s.timerId){clearInterval(s.timerId);s.timerId=null;}return;}
+    s.timeLeft-=0.5;
+    if(s.timeLeft<=0){s.timeLeft=0;s.lost=true;if(s.timerId){clearInterval(s.timerId);s.timerId=null;}refreshMjBoard();return;}
+    refreshMjTimerUI();
+  },500);
+}
+
+function refreshMjTimerUI(){
+  const s=mjState;if(!s)return;
+  const timerEl=document.querySelector('.mj-timer');
+  if(timerEl){
+    const pct=Math.max(0,(s.timeLeft/s.seconds)*100);
+    timerEl.querySelector('i').style.width=pct+'%';
+    timerEl.classList.toggle('warn',s.timeLeft<=10);
+  }
+  const badges=document.querySelectorAll('.sw-badge');
+  badges.forEach(b=>{
+    if(b.textContent.includes('⏱'))b.textContent='⏱ '+Math.floor(s.timeLeft)+'с';
+  });
+}
+
+function tapMjTile(el){
+  const s=mjState;if(!s||s.busy||s.won||s.lost)return;
+  const r=Number(el.dataset.mjR);
+  const c=Number(el.dataset.mjC);
+  const cell=s.grid[r][c];if(!cell||cell.gone)return;
+  if(!s.selected){s.selected={r,c};refreshMjBoard();return;}
+  if(s.selected.r===r&&s.selected.c===c){s.selected=null;refreshMjBoard();return;}
+  const first=s.grid[s.selected.r][s.selected.c];
+  if(first.sym===cell.sym){
+    s.busy=true;s.moves++;
+    const el1=document.querySelector(`.mj-tile[data-mj-r="${s.selected.r}"][data-mj-c="${s.selected.c}"]`);
+    const el2=el;
+    if(el1)el1.classList.add('gone');
+    if(el2)el2.classList.add('gone');
+    first.gone=true;cell.gone=true;
+    s.selected=null;
+    setTimeout(()=>{
+      s.busy=false;
+      const left=s.grid.flat().filter(x=>x&&!x.gone).length;
+      if(left===0){
+        s.won=true;
+        if(s.timerId){clearInterval(s.timerId);s.timerId=null;}
+        const reward=8+Math.floor(s.level/20);
+        if(!S.mahjong)S.mahjong={unlocked:1,completed:0};
+        S.mahjong.completed=Math.max(S.mahjong.completed,s.level);
+        if(s.level>=S.mahjong.unlocked&&S.mahjong.unlocked<500)S.mahjong.unlocked=s.level+1;
+        save();registerGamePlayed(reward);
+      }
+      refreshMjBoard();
+    },300);
+  } else {
+    s.busy=true;
+    const el1=document.querySelector(`.mj-tile[data-mj-r="${s.selected.r}"][data-mj-c="${s.selected.c}"]`);
+    if(el1)el1.classList.add('wrong');
+    if(el)el.classList.add('wrong');
+    s.selected=null;
+    setTimeout(()=>{s.busy=false;refreshMjBoard();},320);
+  }
+}
+
+function refreshMjBoard(){
+  if(!mjState)return;
+  const c=document.getElementById('view');if(!c)return;
+  c.innerHTML=renderMjBoard();setupMahjong();
+}
+
+function shuffleMj(){
+  const s=mjState;if(!s||s.won)return;
+  const syms=[];
+  s.grid.forEach(row=>row.forEach(cell=>{if(cell&&!cell.gone)syms.push(cell.sym);}));
+  for(let i=syms.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[syms[i],syms[j]]=[syms[j],syms[i]];}
+  let idx=0;
+  s.grid.forEach(row=>row.forEach(cell=>{if(cell&&!cell.gone)cell.sym=syms[idx++];}));
+  s.selected=null;
+  refreshMjBoard();
+}
+
 function setupGame(){
   if(currentGameId==='smelt')setupSmelt();
   else if(currentGameId==='sort')setupSort();
   else if(currentGameId==='memory')setupMemory();
   else if(currentGameId==='forge')setupForge();
   else if(currentGameId==='screws')setupScrews();
+  else if(currentGameId==='mahjong')setupMahjong();
 }
 
 const modal=document.getElementById('modal');
@@ -1568,6 +1817,32 @@ document.addEventListener('click',e=>{
   const action=el.dataset.action;
   if(action==='close'){closeModal();return;}
   if(action==='go'){switchTab(el.dataset.tab);return;}
+
+  if(action==='switch-account'){
+    if(!confirm('Выйти из аккаунта? Прогресс сохранится, вы сможете зайти заново.'))return;
+    syncPlayerToServer();
+    if(mjState&&mjState.timerId)clearInterval(mjState.timerId);
+    S=null;
+    localStorage.removeItem(KEY);
+    location.reload();
+    return;
+  }
+  if(action==='admin-login'){
+    const pass=prompt('Введите пароль администратора:');
+    if(pass===null)return;
+    const srv=serverLoad();
+    if(pass!==srv.adminPass){toast('Неверный пароль','danger');return;}
+    if(mjState&&mjState.timerId)clearInterval(mjState.timerId);
+    syncPlayerToServer();
+    S.isAdmin=true;
+    S.name='Администратор';
+    save();
+    activeTab='admin';
+    render();
+    toast('🛡️ Вход в админ-панель','admin');
+    return;
+  }
+
   if(action==='quiz'){
     const task=taskById('quiz');if(!task||task.done)return;
     const q=QUIZ[S.daily.quizIndex];const i=Number(el.dataset.i);
@@ -1591,12 +1866,21 @@ document.addEventListener('click',e=>{
     serverSave(srv);toast('✓ Отправлено','ok');render();
     return;
   }
-  if(action==='open-game'){currentGameId=el.dataset.id;screwsState=null;render();return;}
-  if(action==='back-games'){stopCurrentGame();currentGameId=null;screwsState=null;render();return;}
+  if(action==='open-game'){currentGameId=el.dataset.id;screwsState=null;mjState=null;render();return;}
+  if(action==='back-games'){
+    if(mjState&&mjState.timerId){clearInterval(mjState.timerId);mjState.timerId=null;}
+    stopCurrentGame();currentGameId=null;screwsState=null;mjState=null;render();return;
+  }
   if(action==='screw-retry'){initScrewsLevel(screwsState.level);refreshScrewsBoard();toast('Перезапуск','');return;}
   if(action==='screw-reshuffle'){reshuffleScrews();toast('Поле перемешано','');return;}
   if(action==='screw-next'){const n=Math.min(screwsState.level+1,500);initScrewsLevel(n);refreshScrewsBoard();return;}
   if(action==='screw-prev'){const p=Math.max(screwsState.level-1,1);initScrewsLevel(p);refreshScrewsBoard();return;}
+
+  if(action==='mj-retry'){initMjLevel(mjState.level);refreshMjBoard();toast('Перезапуск','');return;}
+  if(action==='mj-shuffle'){shuffleMj();toast('Перемешано','');return;}
+  if(action==='mj-next'){const n=Math.min(mjState.level+1,500);initMjLevel(n);refreshMjBoard();return;}
+  if(action==='mj-prev'){const p=Math.max(mjState.level-1,1);initMjLevel(p);refreshMjBoard();return;}
+
   if(action==='admin-tab'){S.adminSubTab=el.dataset.sub;save();render();return;}
   if(action==='approve-photo'){approvePhoto(Number(el.dataset.id));return;}
   if(action==='reject-photo'){rejectPhoto(Number(el.dataset.id));return;}
@@ -1610,7 +1894,13 @@ document.addEventListener('click',e=>{
   if(action==='export-data'){exportData();return;}
   if(action==='reset-server'){resetServer();return;}
   if(action==='confirm-reset'){localStorage.removeItem(SERVER_KEY);closeModal();toast('Сервер сброшен','danger');render();return;}
-  if(action==='logout-admin'){S.isAdmin=false;S.name='';save();location.reload();return;}
+  if(action==='logout-admin'){
+    if(mjState&&mjState.timerId)clearInterval(mjState.timerId);
+    S.isAdmin=false;
+    localStorage.removeItem(KEY);
+    location.reload();
+    return;
+  }
 });
 
 document.addEventListener('change',e=>{
@@ -1628,7 +1918,10 @@ document.addEventListener('change',e=>{
 });
 
 function switchTab(tab){
-  if(tab!=='game'){stopCurrentGame();currentGameId=null;screwsState=null;}
+  if(tab!=='game'){
+    if(mjState&&mjState.timerId){clearInterval(mjState.timerId);mjState.timerId=null;}
+    stopCurrentGame();currentGameId=null;screwsState=null;mjState=null;
+  }
   activeTab=tab;
   document.querySelectorAll('nav button').forEach(b=>{b.classList.toggle('active',b.dataset.tab===tab);});
   render();
@@ -1645,6 +1938,7 @@ function boot(){
         S=saved;
         if(!S.isAdmin&&checkBanOnBoot())return;
         if(!S.screws)S.screws={unlocked:1,completed:0};
+        if(!S.mahjong)S.mahjong={unlocked:1,completed:0};
         if(!S.adminSubTab)S.adminSubTab='photos';
         ensureDaily();
         if(!S.isAdmin){const lt=taskById('login');if(lt&&!lt.done)completeTask('login');syncPlayerToServer();}
